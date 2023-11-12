@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
+import AuthScreen from "./components/Auth";
 import ChatContainer from "./components/ChatContainer/ChatContainer";
-import Login from "./components/Auth/Login";
 
 function App() {
   return (
@@ -9,7 +9,11 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<ChatContainer />} />
-          <Route path="/login" element={<Login />} />
+
+          {/* <=== Auth screen ===> */}
+          <Route path="/login" element={<AuthScreen />} />
+          <Route path="/register" element={<AuthScreen />} />
+          <Route path="/forgot-password" element={<AuthScreen />} />
         </Routes>
       </Layout>
     </div>

@@ -1,0 +1,81 @@
+.auth-screen {
+  height: 100vh;
+  background-image: url("https://cdn.pagefly.io/images/custom/mountainspinkskytwilightsunsetdusksnowcovered2560x1440826321699778651102.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+  .login-container {
+    padding-top: 20vh;
+    display: grid;
+
+    .login-content {
+      display: grid;
+      gap: 20px;
+      max-width: 600px;
+      padding-bottom: 100px;
+
+      .header-login {
+        font-size: 34px;
+        margin-bottom: 8px;
+      }
+
+      .description-login {
+        color: #fff;
+        font-weight: 300;
+      }
+
+      .form-control {
+        height: calc(1.6em + 1.875rem + 2px);
+        color: #fff;
+      }
+
+      .input-login {
+        background-color: rgb(213 213 213 / 25%);
+        color: #fff;
+        border-radius: 30px;
+        height: 50px;
+        border: none;
+      }
+
+      .input-login::placeholder {
+        color: #d2d2d2;
+      }
+
+      .button-auth {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background-color: #e8ba9e;
+        height: 50px;
+        outline: none;
+        border: none;
+        border-radius: 30px;
+        transition: box-shadow 0.3s, transform 0.3s;
+
+        .icon-loading {
+          position: absolute;
+          margin-left: 100px;
+          svg {
+            scale: 1.2;
+          }
+        }
+      }
+
+      .button-auth:hover {
+        background-color: #f3cfb8;
+      }
+
+      .disable-btn {
+        opacity: 0.9;
+        background-color: #b9a293;
+        cursor: no-drop;
+      }
+
+      .disable-btn:hover {
+        background-color: #b9a293;
+      }
+    }
+  }
+}
