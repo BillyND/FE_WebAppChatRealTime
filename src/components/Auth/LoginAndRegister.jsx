@@ -1,10 +1,8 @@
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import Link from "antd/es/typography/Link";
-import { debounce } from "lodash";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "../../utils/constant";
 import { ButtonLoginRegister } from "./ButtonLoginRegister";
 
 function LoginAndRegister() {
@@ -42,10 +40,8 @@ function LoginAndRegister() {
           size="large"
           placeholder="Email"
           className="input-login"
-          onChange={debounce(
-            (e) => handleInputChange("email", e.target.value?.trim()),
-            TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
-          )}
+          value={infoUserInput.email}
+          onChange={(e) => handleInputChange("email", e.target.value?.trim())}
         />
 
         {!isLoginPage && (
@@ -53,10 +49,10 @@ function LoginAndRegister() {
             size="large"
             placeholder="Username"
             className="input-login"
-            onChange={debounce(
-              (e) => handleInputChange("username", e.target.value?.trim()),
-              TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
-            )}
+            value={infoUserInput.username}
+            onChange={(e) =>
+              handleInputChange("username", e.target.value?.trim())
+            }
           />
         )}
 
@@ -64,29 +60,15 @@ function LoginAndRegister() {
           size="large"
           placeholder="Password"
           type="password"
-          className="input-login"
-          onChange={debounce(
-            (e) => handleInputChange("password", e.target.value?.trim()),
-            TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
-          )}
+          className="input-login password"
+          value={infoUserInput.password}
+          onChange={(e) =>
+            handleInputChange("password", e.target.value?.trim())
+          }
           iconRender={(visible) =>
             visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
           }
         />
-
-        {isLoginPage && (
-          <div
-            style={{ width: "100%" }}
-            className="d-flex justify-content-end px-2"
-          >
-            <Link
-              className="remove-style-link"
-              onClick={() => navigate("/forgot-password")}
-            >
-              Forgot Password
-            </Link>
-          </div>
-        )}
 
         <ButtonLoginRegister
           isLoginPage={isLoginPage}
