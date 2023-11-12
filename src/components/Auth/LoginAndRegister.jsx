@@ -1,66 +1,11 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Input, message } from "antd";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { Input } from "antd";
 import Link from "antd/es/typography/Link";
 import { debounce } from "lodash";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthUser } from "../../hooks/useAuthUser";
-import { postRegister } from "../../services/api";
 import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "../../utils/constant";
-
-const ButtonLoginRegister = (props) => {
-  const {
-    loadingAuth,
-    setLoadingAuth,
-    isLoginPage,
-    infoUserInput,
-    refInfoUser,
-  } = props;
-  const { login, infoUser } = useAuthUser();
-
-  const handleLogin = () => {
-    if (loadingAuth) {
-      return;
-    }
-    setLoadingAuth(true);
-    login(infoUserInput);
-  };
-
-  const handleRegister = async () => {
-    if (loadingAuth) {
-      return;
-    }
-    try {
-      setLoadingAuth(true);
-
-      console.log("===>infoUserInput:", infoUserInput);
-
-      const resRegister = await postRegister(infoUserInput);
-      refInfoUser.current.value = "";
-
-      if (resRegister?.EC === 0) {
-        message.success(resRegister?.message);
-      } else {
-        message.error(resRegister?.message);
-      }
-
-      setLoadingAuth(false);
-    } catch (error) {
-      setLoadingAuth(false);
-      message.error("Server error");
-    }
-  };
-
-  return (
-    <button
-      className={`button-auth ${loadingAuth ? "disable-btn" : ""}`}
-      onClickCapture={isLoginPage ? handleLogin : handleRegister}
-    >
-      {isLoginPage ? "SIGN IN" : "SIGN UP"}
-      {loadingAuth && <LoadingOutlined className="icon-loading" />}
-    </button>
-  );
-};
+import { ButtonLoginRegister } from "./ButtonLoginRegister";
 
 function LoginAndRegister() {
   const navigate = useNavigate();
@@ -70,26 +15,26 @@ function LoginAndRegister() {
   const isLoginPage = pathname?.includes("login");
   const refInfoUser = useRef(null);
 
+  const handleInputChange = (key, value) => {
+    setInfoUserInput({
+      ...infoUserInput,
+      [key]: value,
+    });
+  };
+
   return (
     <div className="login-container none-copy">
       <div className="text-center login-content container">
         <h1 className="header-login">{isLoginPage ? "Sign in" : "Sign up"}</h1>
         <span className="description-login">
-          {isLoginPage ? (
-            <Link
-              className="remove-style-link"
-              onClick={() => navigate("/register")}
-            >
-              {`Don't have an account yet? Register now!`}
-            </Link>
-          ) : (
-            <Link
-              className="remove-style-link"
-              onClick={() => navigate("/login")}
-            >
-              {`Already have an account? Log in now!`}
-            </Link>
-          )}
+          <Link
+            className="remove-style-link"
+            onClick={() => navigate(isLoginPage ? "/register" : "/login")}
+          >
+            {isLoginPage
+              ? `Don't have an account yet? Register now!`
+              : `Already have an account? Log in now!`}
+          </Link>
         </span>
 
         <Input
@@ -97,12 +42,10 @@ function LoginAndRegister() {
           size="large"
           placeholder="Email"
           className="input-login"
-          onChange={debounce((e) => {
-            setInfoUserInput({
-              ...infoUserInput,
-              email: e.target.value?.trim(),
-            });
-          }, TIME_DEBOUNCE_INPUT_LOGIN_REGISTER)}
+          onChange={debounce(
+            (e) => handleInputChange("email", e.target.value?.trim()),
+            TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
+          )}
         />
 
         {!isLoginPage && (
@@ -110,25 +53,25 @@ function LoginAndRegister() {
             size="large"
             placeholder="Username"
             className="input-login"
-            onChange={debounce((e) => {
-              setInfoUserInput({
-                ...infoUserInput,
-                username: e.target.value?.trim(),
-              });
-            }, TIME_DEBOUNCE_INPUT_LOGIN_REGISTER)}
+            onChange={debounce(
+              (e) => handleInputChange("username", e.target.value?.trim()),
+              TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
+            )}
           />
         )}
 
-        <Input
+        <Input.Password
           size="large"
           placeholder="Password"
+          type="password"
           className="input-login"
-          onChange={debounce((e) => {
-            setInfoUserInput({
-              ...infoUserInput,
-              password: e.target.value?.trim(),
-            });
-          }, TIME_DEBOUNCE_INPUT_LOGIN_REGISTER)}
+          onChange={debounce(
+            (e) => handleInputChange("password", e.target.value?.trim()),
+            TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
+          )}
+          iconRender={(visible) =>
+            visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+          }
         />
 
         {isLoginPage && (
@@ -149,6 +92,7 @@ function LoginAndRegister() {
           isLoginPage={isLoginPage}
           loadingAuth={loadingAuth}
           setLoadingAuth={setLoadingAuth}
+          setInfoUserInput={setInfoUserInput}
           infoUserInput={infoUserInput}
           refInfoUser={refInfoUser}
         />

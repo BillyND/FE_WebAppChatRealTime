@@ -24,7 +24,7 @@ export const postRegister = ({ email, username, password }) => {
 };
 
 export const postLogin = ({ email, password }) => {
-  return axios.post("auth/login", { email, password }, tokenHeaders());
+  return axios.post("auth/login", { email, password });
 };
 
 export const getAllAccount = () => {
