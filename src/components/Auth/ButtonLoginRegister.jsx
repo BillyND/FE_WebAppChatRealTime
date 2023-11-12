@@ -118,7 +118,7 @@ export const ButtonLoginRegister = ({
       className={`button-auth ${loadingAuth ? "disable-btn" : ""}`}
       onClickCapture={isLoginPage ? handleLogin : handleRegister}
     >
-      {isLoginPage ? "SIGN IN" : "SIGN UP"}
+      {isLoginPage ? "SIGN IN" : "SIGN UP "}
       {loadingAuth && <LoadingOutlined className="icon-loading" />}
     </button>
   );
