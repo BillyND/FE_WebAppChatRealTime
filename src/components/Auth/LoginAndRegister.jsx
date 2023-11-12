@@ -39,9 +39,9 @@ const ButtonLoginRegister = (props) => {
       refInfoUser.current.value = "";
 
       if (resRegister?.EC === 0) {
-        message.success("Register success!");
+        message.success(resRegister?.message);
       } else {
-        message.error("Please check your email / username / password!");
+        message.error(resRegister?.message);
       }
 
       setLoadingAuth(false);
