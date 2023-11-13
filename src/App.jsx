@@ -2,13 +2,14 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import AuthScreen from "./components/Auth";
 import ChatContainer from "./components/ChatContainer/ChatContainer";
+import HomePage from "./components/Home/HomePage";
 
 function App() {
   return (
     <div className="App">
       <Layout>
         <Routes>
-          <Route path="/" element={<ChatContainer />} />
+          <Route path="/" element={<HomePage />} />
 
           {/* <=== Auth screen ===> */}
           <Route path="/login" element={<AuthScreen />} />

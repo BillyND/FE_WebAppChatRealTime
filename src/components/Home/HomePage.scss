@@ -1,0 +1,53 @@
+.home-container {
+  background-color: #130f1f;
+  width: 100%;
+  height: 100vh;
+  color: #fff;
+
+  display: grid;
+  grid-template-columns: 25% auto 25%;
+
+  .home-content {
+    .search-home-container {
+      .search-input {
+        border-radius: 7px;
+
+        .ant-input-affix-wrapper {
+          border-radius: 0;
+          border-radius: 8px;
+          outline: none !important;
+          border: none !important;
+          background-color: rgb(252 252 252 / 18%);
+          height: 50px;
+
+          input {
+            background-color: transparent;
+            color: #fff;
+          }
+
+          input::placeholder {
+            color: #c4bfbf;
+          }
+        }
+
+        .ant-input-group-addon {
+          display: none;
+        }
+
+        .icon-search {
+          font-size: 20px;
+          svg {
+            fill: #dcdcdc;
+          }
+        }
+
+        .anticon-close-circle {
+          font-size: 14px;
+          svg {
+            fill: #dcdcdc;
+          }
+        }
+      }
+    }
+  }
+}

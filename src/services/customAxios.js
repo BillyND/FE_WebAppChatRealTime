@@ -1,6 +1,7 @@
 import axios from "axios";
 import asyncWait from "../utils/asysnWait";
 import { KEY_INFO_USER } from "../utils/constant";
+import { infoUserSubscription } from "../utils/initGlobalState";
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 const NO_RETRY_HEADER = "x-no-retry";
 
@@ -20,9 +21,10 @@ let instance = axios.create({
 });
 
 // Function to get the access token from localStorage
-export const getAccessToken = () => {
-  const infoUser = JSON.parse(localStorage.getItem(KEY_INFO_USER));
-  return infoUser?.accessToken;
+export const getInfoUserLocal = () => {
+  const infoUser = JSON.parse(localStorage.getItem(KEY_INFO_USER)) || {};
+  infoUserSubscription.updateState(infoUser);
+  return infoUser;
 };
 
 // Handle refresh Token
@@ -38,7 +40,7 @@ const handleRefreshToken = async () => {
 
 // Function to set the access token in the header
 const setAccessToken = () => {
-  const accessToken = getAccessToken();
+  const accessToken = getInfoUserLocal()?.accessToken;
   if (accessToken) {
     instance.defaults.headers.common = {
       Authorization: `Bearer ${accessToken}`,

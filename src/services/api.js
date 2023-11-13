@@ -1,4 +1,4 @@
-import axios, { getAccessToken } from "./customAxios";
+import axios, { getInfoUserLocal } from "./customAxios";
 
 // <=====Trigger header token=====> //
 export const getTriggerToken = async () => {
@@ -6,7 +6,7 @@ export const getTriggerToken = async () => {
 };
 
 const tokenHeaders = () => {
-  const token = getAccessToken();
+  const token = getInfoUserLocal()?.accessToken;
   return {
     headers: {
       Authorization: "Bearer " + token,

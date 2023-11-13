@@ -4,6 +4,8 @@ import Link from "antd/es/typography/Link";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ButtonLoginRegister } from "./ButtonLoginRegister";
+import { debounce } from "lodash";
+import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "../../utils/constant";
 
 function LoginAndRegister() {
   const navigate = useNavigate();
@@ -40,7 +42,6 @@ function LoginAndRegister() {
           size="large"
           placeholder="Email"
           className="input-login"
-          value={infoUserInput.email}
           onChange={(e) => handleInputChange("email", e.target.value?.trim())}
         />
 
@@ -49,10 +50,10 @@ function LoginAndRegister() {
             size="large"
             placeholder="Username"
             className="input-login"
-            value={infoUserInput.username}
-            onChange={(e) =>
-              handleInputChange("username", e.target.value?.trim())
-            }
+            onChange={debounce(
+              (e) => handleInputChange("username", e.target.value?.trim()),
+              TIME_DEBOUNCE_INPUT_LOGIN_REGISTER
+            )}
           />
         )}
 
@@ -61,7 +62,6 @@ function LoginAndRegister() {
           placeholder="Password"
           type="password"
           className="input-login password"
-          value={infoUserInput.password}
           onChange={(e) =>
             handleInputChange("password", e.target.value?.trim())
           }
