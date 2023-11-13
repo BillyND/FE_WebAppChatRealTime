@@ -16,6 +16,8 @@ function App() {
           <Route path="/login" element={<AuthScreen />} />
           <Route path="/register" element={<AuthScreen />} />
           <Route path="/forgot-password" element={<AuthScreen />} />
+
+          <Route path="*" element={<HomePage />} />
         </Routes>
       </Layout>
     </div>

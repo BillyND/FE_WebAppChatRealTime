@@ -18,7 +18,7 @@ function NavMenu(props) {
   const { accessToken } = useAuthUser();
 
   const handleNavigation = (route) => {
-    if (pathname?.includes(route)) return;
+    if (pathname === route) return;
 
     navigate(route);
   };

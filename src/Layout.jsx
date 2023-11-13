@@ -13,11 +13,13 @@ const Layout = ({ children }) => {
     const shouldRedirectToHome =
       accessToken && isOnLoginRegisterPage && isNotOnHomePage;
 
+    const shouldRedirectToLogin = !accessToken && !isOnLoginRegisterPage;
+
     if (shouldRedirectToHome) {
       navigate("/");
     }
 
-    if (!accessToken) {
+    if (shouldRedirectToLogin) {
       navigate("/login");
     }
   }, [pathname]);
