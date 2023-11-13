@@ -16,6 +16,10 @@ const Layout = ({ children }) => {
     if (shouldRedirectToHome) {
       navigate("/");
     }
+
+    if (!accessToken) {
+      navigate("/login");
+    }
   }, [pathname]);
 
   return (

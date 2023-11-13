@@ -8,7 +8,10 @@
   grid-template-columns: 25% auto 25%;
 
   .home-content {
+    gap: 24px;
+
     .search-home-container {
+      height: 50px;
       .search-input {
         border-radius: 7px;
 

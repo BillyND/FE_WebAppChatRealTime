@@ -1,0 +1,76 @@
+.new-post-container {
+  display: grid;
+  background-color: #454545ba;
+  border-radius: 8px;
+  width: 100%;
+  padding: 12px 16px 10px 16px;
+  -webkit-font-smoothing: antialiased;
+
+  .input-post {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    .avatar-user {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+    }
+
+    .button-input {
+      cursor: pointer;
+      height: 40px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border-radius: 30px;
+      background-color: rgb(85 85 85);
+      padding: 8px 12px;
+      font-size: 16px;
+      color: rgb(203, 204, 206);
+
+      &:hover {
+        background-color: rgb(123 123 123);
+      }
+    }
+  }
+
+  .option-post {
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    .option {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(252, 252, 252, 0.18);
+      }
+
+      .icon-image {
+        width: 24px;
+        height: 24px;
+        background-size: contain;
+        background-image: url("https://cdn.pagefly.io/images/custom/74AGEvEtBm1699876288030.png");
+      }
+
+      .icon-feeling {
+        width: 24px;
+        height: 24px;
+        background-size: contain;
+        background-image: url("https://cdn.pagefly.io/images/custom/RWOIsUgWGL1699876287200.png");
+      }
+    }
+  }
+
+  hr {
+    border-color: rgb(98, 98, 98);
+  }
+}

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Contact.scss";
 import { MessageOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 
 function Contact(props) {
+  const [listContact, setListContact] = useState([1, 2, 3, 3, 3, 3, 3, 3]);
+
   return (
     <div className="contact-container pb-4">
       <span className="title-contact">Contact</span>
       <div className="content-contact">
-        {[1, 2, 3, 3, 3, 3, 3, 3].map((user) => {
+        {listContact.map((user, index) => {
+          if (index > 4) return null;
+
           return (
             <div className="item-contact" key={user}>
               <div
@@ -24,9 +28,11 @@ function Contact(props) {
         })}
       </div>
 
-      <Flex justify="center">
-        <span className="button-view-all-inbox">View all</span>
-      </Flex>
+      {listContact?.length > 5 && (
+        <Flex justify="center">
+          <span className="button-view-all-inbox">View all</span>
+        </Flex>
+      )}
     </div>
   );
 }

@@ -5,18 +5,47 @@ export const modalSubscription = createSubscription({});
 export const useModal = () => {
   const { state, setState } = useSubscription(modalSubscription);
 
-  const openModal = (key = "") => {
-    if (key) {
-      setState({ ...state, [key]: true });
+  const openModal = (key = "", condition) => {
+    if (condition) {
+      setState({
+        ...state,
+        [key]: {
+          visible: true,
+          condition,
+        },
+      });
+
+      return;
     }
-    document.documentElement.style.setProperty("overflow", "hidden");
+
+    if (key) {
+      setState({
+        ...state,
+        [key]: true,
+      });
+    }
+    // document.documentElement.style.setProperty("overflow", "hidden");
   };
 
-  const closeModal = (key = "") => {
-    if (key) {
-      setState({ ...state, [key]: false });
+  const closeModal = (key = "", condition) => {
+    if (condition) {
+      setState({
+        ...state,
+        [key]: {
+          visible: false,
+          condition: "null",
+        },
+      });
+      return;
     }
-    document.documentElement.style.removeProperty("overflow");
+
+    if (key) {
+      setState({
+        ...state,
+        [key]: false,
+      });
+    }
+    // document.documentElement.style.removeProperty("overflow");
   };
 
   return { state, openModal, closeModal };
