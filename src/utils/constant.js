@@ -1,15 +1,17 @@
 export const windowWidth = window.innerWidth;
 
 export const initInfoUser = {
-  _id: "",
-  email: "",
-  password: "",
-  isAdmin: false,
-  name: "",
-  age: 0,
-  gender: "",
-  createdAt: "",
-  updatedAt: "",
+  infoUser: {
+    _id: "",
+    email: "",
+    password: "",
+    isAdmin: false,
+    name: "",
+    age: 0,
+    gender: "",
+    createdAt: "",
+    updatedAt: "",
+  },
   accessToken: "",
   refreshToken: "",
 };

@@ -1,17 +1,17 @@
+import React, { useEffect, useState } from "react";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { AutoComplete } from "antd";
-import Search from "antd/es/input/Search";
-import React, { useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
+import Search from "antd/es/input/Search";
 
 function SearchHome(props) {
   const [optionsSearch, setOptionsSearch] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
-  const [loadingSearch, setLoadingSearch] = useState("");
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const debounceSearch = useDebounce(inputSearch, 300);
 
   useEffect(() => {
-    if (inputSearch?.trim()) {
+    if (inputSearch.trim()) {
       setLoadingSearch(true);
     }
   }, [inputSearch]);
@@ -21,17 +21,13 @@ function SearchHome(props) {
   }, [debounceSearch]);
 
   const handleSearchUser = () => {
-    console.log(">>>debounceSearch:", debounceSearch);
     setLoadingSearch(false);
+    // Add logic for search functionality here
   };
 
   return (
     <div className="search-home-container">
-      <AutoComplete
-        style={{ width: "100%" }}
-        options={optionsSearch}
-        size="large"
-      >
+      <AutoComplete style={{ width: "100%" }} options={optionsSearch}>
         <Search
           value={inputSearch}
           onChange={(e) => setInputSearch(e.target.value)}
@@ -39,7 +35,6 @@ function SearchHome(props) {
           prefix={<SearchOutlined className="icon-search" />}
           placeholder="Search"
           allowClear
-          size="large"
         />
       </AutoComplete>
       {loadingSearch && <LoadingOutlined />}

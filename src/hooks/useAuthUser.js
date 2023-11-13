@@ -19,7 +19,7 @@ export const useAuthUser = () => {
     localStorage?.removeItem(KEY_INFO_USER);
   };
 
-  const infoUser = state;
+  const { infoUser, accessToken, refreshToken } = state;
 
-  return { login, logout, infoUser };
+  return { login, logout, infoUser, accessToken, refreshToken };
 };

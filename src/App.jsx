@@ -12,6 +12,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
 
           {/* <=== Auth screen ===> */}
+          <Route path="/logout" element={<AuthScreen />} />
           <Route path="/login" element={<AuthScreen />} />
           <Route path="/register" element={<AuthScreen />} />
           <Route path="/forgot-password" element={<AuthScreen />} />

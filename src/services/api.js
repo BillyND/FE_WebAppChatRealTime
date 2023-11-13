@@ -1,3 +1,5 @@
+import { KEY_INFO_USER, initInfoUser } from "../utils/constant";
+import { infoUserSubscription } from "../utils/initGlobalState";
 import axios, { getInfoUserLocal } from "./customAxios";
 
 // <=====Trigger header token=====> //
@@ -31,6 +33,12 @@ export const getAllAccount = () => {
   return axios.get("auth/account", tokenHeaders());
 };
 
-export const postLogout = () => {
-  return axios.post("auth/logout", tokenHeaders());
+export const postLogout = async () => {
+  await getTriggerToken();
+  const resLogout = await axios.post("auth/logout", tokenHeaders());
+
+  localStorage.removeItem(KEY_INFO_USER);
+  infoUserSubscription.updateState(initInfoUser);
+
+  return resLogout;
 };
