@@ -42,3 +42,8 @@ export const postLogout = async () => {
 
   return resLogout;
 };
+
+// <===API POST===>
+export const createPost = (dataPost) => {
+  return axios.post("post", dataPost, tokenHeaders());
+};

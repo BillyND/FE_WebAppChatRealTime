@@ -3,7 +3,6 @@ import "./InfoUser.scss";
 import DetailUser from "./DetailUser";
 import NavMenu from "../NavMenu/NavMenu";
 import Contact from "../Contact/Contact";
-import "react-perfect-scrollbar/dist/css/styles.css";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 function InfoUser(props) {

@@ -1,13 +1,10 @@
+import { PlusCircleOutlined } from "@ant-design/icons";
 import React from "react";
-import "./NewPost.scss";
 import { useAuthUser } from "../../hooks/useAuthUser";
-import ModalNewPost from "./ModalNewPost";
 import { useModal } from "../../hooks/useModal";
-import {
-  KEW_NEW_FEELING,
-  KEW_NEW_IMAGE,
-  KEW_NEW_POST,
-} from "../../utils/constant";
+import { KEY_NEW_POST } from "../../utils/constant";
+import ModalNewPost from "./ModalNewPost";
+import "./NewPost.scss";
 
 function NewPost(props) {
   const {
@@ -19,6 +16,8 @@ function NewPost(props) {
     openModal("MODAL_NEW_POST", type);
   };
 
+  const placeHolderInputPost = `Hey ${username}, what are you thinking?`;
+
   return (
     <>
       <div className="new-post-container mt-4 none-copy">
@@ -27,11 +26,8 @@ function NewPost(props) {
             className="avatar-user"
             style={{ backgroundImage: `url(${avaUrl})` }}
           ></div>
-          <div
-            className="button-input"
-            onClick={() => handleOpeModalNewPost(KEW_NEW_POST)}
-          >
-            Hey <b className="ml-1">{username}</b>, what are you thinking?
+          <div className="button-input" onClick={() => handleOpeModalNewPost()}>
+            {placeHolderInputPost}
           </div>
         </div>
 
@@ -40,22 +36,14 @@ function NewPost(props) {
         <div className="option-post">
           <div
             className="option option-image-post"
-            onClick={() => handleOpeModalNewPost(KEW_NEW_IMAGE)}
+            onClick={() => handleOpeModalNewPost()}
           >
-            <div className="icon-image"></div>
-            <span>Image</span>
-          </div>
-
-          <div
-            className="option option-feeling-post"
-            onClick={() => handleOpeModalNewPost(KEW_NEW_FEELING)}
-          >
-            <div className="icon-feeling"></div>
-            <span>Feeling</span>
+            <PlusCircleOutlined />
+            <span>New post</span>
           </div>
         </div>
       </div>
-      <ModalNewPost />
+      <ModalNewPost placeHolderInputPost={placeHolderInputPost} />
     </>
   );
 }

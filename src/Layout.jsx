@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { getInfoUserLocal } from "./services/customAxios";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getInfoUserLocal } from "./services/customAxios";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
