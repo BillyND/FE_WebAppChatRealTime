@@ -74,8 +74,24 @@
   }
 }
 
+.ant-modal {
+  padding: 0 !important;
+}
+
 .modal-create-post {
   color: #fff;
+  position: relative;
+  background-color: #d5d5d52e;
+
+  .loading-create-post {
+    z-index: 10;
+    background-color: #8080804d;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+  }
 
   .ant-modal-content {
     background-color: #5a4e5a;

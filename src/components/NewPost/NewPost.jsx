@@ -2,7 +2,6 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { useModal } from "../../hooks/useModal";
-import { KEY_NEW_POST } from "../../utils/constant";
 import ModalNewPost from "./ModalNewPost";
 import "./NewPost.scss";
 

@@ -1,34 +1,53 @@
+import React, { useEffect, useRef, useState } from "react";
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, message } from "antd";
-import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useModal } from "../../hooks/useModal";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { createPost } from "../../services/api";
+import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
 
 function ModalNewPost({ placeHolderInputPost }) {
   const {
     state: { MODAL_NEW_POST },
     closeModal,
   } = useModal();
-  const [valueInputPost, setValueInputPost] = useState("");
-  const [selectedImage, setSelectedImage] = useState("");
-  const [loadingParseFile, setLoadingParseFile] = useState(false);
-  const refInputPost = useRef(null);
-  const debounceOpenModal = useDebounce(MODAL_NEW_POST, 100);
-  const disableBtnCreatePost = !valueInputPost?.trim() && !selectedImage;
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
 
-  const handleUpPost = async () => {
-    const dataPost = {
-      userId,
-      description: valueInputPost,
-      imageUrl: selectedImage,
-    };
+  const [valueInputPost, setValueInputPost] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
+  const [loadingParseFile, setLoadingParseFile] = useState(false);
+  const [loadingCreatePost, setLoadingCreatePost] = useState(false);
 
-    const resPost = await createPost(dataPost);
+  const refInputPost = useRef(null);
+  const debounceOpenModal = useDebounce(MODAL_NEW_POST, 100);
+  const disableBtnCreatePost =
+    (!valueInputPost?.trim() && !selectedImage) || loadingCreatePost;
+
+  const handleUpPost = async () => {
+    setLoadingCreatePost(true);
+    try {
+      const dataPost = {
+        userId,
+        description: valueInputPost?.trim(),
+        imageUrl: selectedImage,
+      };
+
+      const resPost = await createPost(dataPost);
+
+      if (resPost?.EC === 0) {
+        handleCancel();
+        message.success(resPost?.message);
+      } else {
+        message.error(resPost?.message);
+      }
+      setLoadingCreatePost(false);
+    } catch (error) {
+      setLoadingCreatePost(false);
+      message.error("Server error!");
+    }
   };
 
   useEffect(() => {
@@ -38,6 +57,8 @@ function ModalNewPost({ placeHolderInputPost }) {
   }, [debounceOpenModal]);
 
   const handleCancel = () => {
+    if (loadingCreatePost) return;
+
     handleClearAllDataPost();
     closeModal("MODAL_NEW_POST");
   };
@@ -51,73 +72,36 @@ function ModalNewPost({ placeHolderInputPost }) {
     setSelectedImage(null);
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     setLoadingParseFile(true);
     const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      if (selectedFile.type.startsWith("image")) {
-        const reader = new FileReader();
-        reader.onload = function () {
-          const img = new Image();
-          img.onload = function () {
-            const MAX_WIDTH = 800;
-            const MAX_HEIGHT = 600;
-            let width = img.width;
-            let height = img.height;
 
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-              }
-            }
+    if (!selectedFile) {
+      setLoadingParseFile(false);
+      return;
+    }
 
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
+    if (!selectedFile.type.startsWith("image")) {
+      message.error("Please select an image!");
+      setSelectedImage(null);
+      setLoadingParseFile(false);
+      return;
+    }
 
-            canvas.toBlob(
-              (blob) => {
-                const resizedFile = new File([blob], selectedFile.name, {
-                  type: "image/jpeg",
-                  lastModified: Date.now(),
-                });
-
-                if (blob.size > 500 * 1024) {
-                  message.error("Please select an image smaller than 500KB");
-                  setSelectedImage(null);
-                } else {
-                  const reader = new FileReader();
-                  reader.onload = function () {
-                    const dataURL = reader.result;
-                    setSelectedImage(dataURL);
-
-                    console.log(">>>dataURL:", dataURL);
-                  };
-                  reader.readAsDataURL(resizedFile);
-                }
-              },
-              "image/jpeg",
-              1
-            );
-          };
-          img.src = reader.result;
-          setLoadingParseFile(false);
-        };
-        reader.readAsDataURL(selectedFile);
-      } else {
-        message.error("Please select an image!");
+    try {
+      const resizedFile = await resizeImage(selectedFile);
+      if (resizedFile.size > 500 * 1024) {
+        message.error("Please select an image smaller than 500KB");
         setSelectedImage(null);
         setLoadingParseFile(false);
+        return;
       }
-    } else {
+
+      const dataURL = await readFileAsDataURL(resizedFile);
+      setSelectedImage(dataURL);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setLoadingParseFile(false);
     }
   };
@@ -138,6 +122,11 @@ function ModalNewPost({ placeHolderInputPost }) {
         </Button>
       }
     >
+      {loadingCreatePost && (
+        <div className="loading-create-post">
+          <LoadingOutlined />
+        </div>
+      )}
       <textarea
         ref={refInputPost}
         value={valueInputPost}
