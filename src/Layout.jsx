@@ -9,7 +9,8 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     const { accessToken } = getInfoUserLocal();
-    const isOnLoginRegisterPage = "/login/register"?.includes(pathname);
+    const isOnLoginRegisterPage =
+      pathname === "/login" || pathname === "/register";
     const isNotOnHomePage = pathname !== "/";
     const shouldRedirectToHome =
       accessToken && isOnLoginRegisterPage && isNotOnHomePage;

@@ -47,3 +47,7 @@ export const postLogout = async () => {
 export const createPost = (dataPost) => {
   return axios.post("post", dataPost, tokenHeaders());
 };
+
+export const getPost = (page = 1, limit = 5) => {
+  return axios.get(`post?page=${page}&limit=${limit}`, tokenHeaders());
+};
