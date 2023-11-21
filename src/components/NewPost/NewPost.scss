@@ -1,11 +1,11 @@
 .new-post-container {
   display: grid;
-  background-color: #fff;
+  background-color: #242526;
   border-radius: 8px;
   width: 100%;
   padding: 12px 16px 10px 16px;
   -webkit-font-smoothing: antialiased;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  color: #fff;
 
   .input-post {
     display: flex;
@@ -27,13 +27,13 @@
       display: flex;
       align-items: center;
       border-radius: 30px;
-      background-color: rgb(234 234 234);
+      background-color: #3a3b3c;
       padding: 8px 12px;
       font-size: 16px;
-      color: #0000;
+      color: rgb(173, 173, 173);
 
       &:hover {
-        // background-color: rgb(223, 223, 223);
+        background-color: #494a4b;
       }
     }
   }
@@ -77,16 +77,22 @@
 
 .ant-modal {
   padding: 0 !important;
+  border-radius: 10px;
+  border: 0.5px rgb(93, 93, 93) solid;
+}
+
+.ant-modal-wrap {
+  background-color: #00000099 !important;
 }
 
 .modal-create-post {
-  color: #0000;
+  color: #fff !important;
   position: relative;
-  background-color: #fff;
+  background-color: #242526;
 
   .loading-create-post {
     z-index: 10;
-    background-color: #fff;
+    background-color: #242526;
     position: absolute;
     inset: 0;
     display: flex;
@@ -95,14 +101,15 @@
   }
 
   .ant-modal-content {
-    background-color: #fff;
+    background-color: #242526;
+    border-radius: 10px !important;
   }
 
   .ant-modal-title {
-    background-color: #fff;
+    background-color: #242526;
     text-align: center;
     font-size: 20px;
-    color: #000000;
+    color: #fff !important;
   }
 
   .btn-create-post {
@@ -110,11 +117,11 @@
     height: 36px;
     border-radius: 6px;
     outline: none;
-    background-color: #ebebeb;
+    background-color: #505151;
     cursor: no-drop;
     border: none;
     outline: none;
-    color: #7d7d7d;
+    color: #858686;
 
     &.enable {
       cursor: pointer;
@@ -129,7 +136,7 @@
     border: none;
     outline: none;
     resize: none;
-    color: #000000;
+    color: #fff !important;
     height: 150px;
     font-size: 16px;
 
@@ -149,7 +156,7 @@
     transition: 0.2s;
     cursor: pointer;
     margin: 0 !important;
-    color: black;
+    color: #fff;
 
     &:hover {
       opacity: 1;
@@ -170,7 +177,7 @@
     min-height: 100px;
     display: flex;
     justify-content: center;
-    background-color: #ececec;
+    background-color: #333436;
     border-radius: 8px;
     margin: auto;
     padding: 16px;
@@ -187,7 +194,7 @@
       color: rgb(183, 183, 183);
 
       &:hover {
-        color: black !important;
+        color: #fff !important;
       }
     }
 

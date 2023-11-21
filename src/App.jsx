@@ -7,7 +7,6 @@ import HomePage from "./components/Home/HomePage";
 function App() {
   return (
     <div className="App">
-      <header className="header-container"></header>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />

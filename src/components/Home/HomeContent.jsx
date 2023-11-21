@@ -7,7 +7,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 function HomeContent(props) {
   return (
     <PerfectScrollbar style={{ height: "100vh" }}>
-      <div className="home-content pt-4 px-1">
+      <div className="home-content ">
         <SearchHome />
         <NewPost />
         <ListPost />

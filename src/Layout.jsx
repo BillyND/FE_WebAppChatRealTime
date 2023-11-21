@@ -6,17 +6,16 @@ import { getInfoUserLocal } from "./services/customAxios";
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { accessToken } = getInfoUserLocal();
+  const isOnLoginRegisterPage =
+    pathname === "/login" || pathname === "/register";
+  const isNotOnHomePage = pathname !== "/";
+  const shouldRedirectToHome =
+    accessToken && isOnLoginRegisterPage && isNotOnHomePage;
+
+  const shouldRedirectToLogin = !accessToken && !isOnLoginRegisterPage;
 
   useEffect(() => {
-    const { accessToken } = getInfoUserLocal();
-    const isOnLoginRegisterPage =
-      pathname === "/login" || pathname === "/register";
-    const isNotOnHomePage = pathname !== "/";
-    const shouldRedirectToHome =
-      accessToken && isOnLoginRegisterPage && isNotOnHomePage;
-
-    const shouldRedirectToLogin = !accessToken && !isOnLoginRegisterPage;
-
     if (shouldRedirectToHome) {
       navigate("/");
     }
@@ -28,7 +27,16 @@ const Layout = ({ children }) => {
 
   return (
     <div>
-      <main className="main-content-children">{children}</main>
+      <main
+        className={`main-content-children ${
+          !isOnLoginRegisterPage ? "has-header " : ""
+        }`}
+      >
+        {!isOnLoginRegisterPage && (
+          <header className="header-container"></header>
+        )}
+        {children}
+      </main>
     </div>
   );
 };

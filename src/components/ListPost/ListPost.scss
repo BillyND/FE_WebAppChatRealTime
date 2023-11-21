@@ -1,15 +1,15 @@
 .list-post-container {
   display: grid;
   gap: 16px;
+  color: #fff;
 
   .card-detail-post {
-    background-color: #fff;
+    background-color: #242526;
     padding: 10px;
     width: 100%;
-    border-radius: 16px;
+    border-radius: 8px;
     gap: 16px;
     display: grid;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
     .header {
       display: flex;
