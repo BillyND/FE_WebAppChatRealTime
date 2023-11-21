@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, message } from "antd";
@@ -135,7 +136,17 @@ function ModalNewPost({ placeHolderInputPost }) {
         placeholder={placeHolderInputPost}
       ></textarea>
 
-      <div className="image-preview mb-4 mt-4">
+      <div
+        className="image-preview mb-4 mt-4"
+        onClick={() => {
+          setLoadingParseFile(true);
+          const labelInputFile = document.querySelector(
+            ".container-upload-image"
+          );
+
+          labelInputFile.click();
+        }}
+      >
         {selectedImage ? (
           <>
             <img width={"200px"} src={selectedImage} />
@@ -162,6 +173,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         id="fileInput"
         style={{ display: "none" }}
         onChange={handleFileChange}
+        onCancel={() => {}}
       />
     </Modal>
   );

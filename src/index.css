@@ -79,3 +79,19 @@
 .remove-style-link:hover {
   color: #fff !important;
 }
+
+.header-container {
+  height: 70px !important;
+  width: 100%;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  z-index: 2 !important;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.main-content-children {
+  margin-top: 70px;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}

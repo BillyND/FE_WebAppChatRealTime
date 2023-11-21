@@ -13,7 +13,7 @@ function InfoUser(props) {
         <b className="divider-dashed"></b>
         <NavMenu />
         <b className="divider-dashed"></b>
-        <Contact />
+        {/* <Contact /> */}
       </div>
     </PerfectScrollbar>
   );

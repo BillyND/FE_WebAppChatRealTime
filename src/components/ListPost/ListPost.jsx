@@ -23,7 +23,7 @@ function ListPost(props) {
   };
 
   return (
-    <div className="list-post-container pt-5">
+    <div className="list-post-container pt-5 pb-5 mb-5">
       <h4>Feeds</h4>
       {listPost?.map((post) => {
         const isAuthorOfPost = post?.userId === infoUser?._id;
