@@ -3,7 +3,11 @@ import { KEY_INFO_USER, initInfoUser } from "../utils/constant";
 import { infoUserSubscription } from "../utils/initGlobalState";
 
 export const useAuthUser = () => {
-  const { state, setState } = useSubscription(infoUserSubscription);
+  const { state, setState } = useSubscription(infoUserSubscription, [
+    "infoUser",
+    "accessToken",
+    "refreshToken",
+  ]);
 
   const login = (payload) => {
     setState({
@@ -19,7 +23,7 @@ export const useAuthUser = () => {
     localStorage?.removeItem(KEY_INFO_USER);
   };
 
-  const { infoUser, accessToken, refreshToken } = state;
+  const { infoUser = {}, accessToken = {}, refreshToken = {} } = state;
 
   return { login, logout, infoUser, accessToken, refreshToken };
 };

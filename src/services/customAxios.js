@@ -9,8 +9,6 @@ const NO_RETRY_HEADER = "x-no-retry";
 const isLocalApi =
   baseURL?.includes("127.0.0.1") || baseURL?.includes("localhost");
 
-console.log("===>baseURL:", baseURL);
-
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
     await asyncWait(600);

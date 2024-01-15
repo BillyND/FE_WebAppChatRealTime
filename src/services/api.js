@@ -51,3 +51,11 @@ export const createPost = (dataPost) => {
 export const getPost = (page = 1, limit = 5) => {
   return axios.get(`post?page=${page}&limit=${limit}`, tokenHeaders());
 };
+
+export const deletePost = (id) => {
+  return axios.post(
+    `post/${id}`,
+    { userId: infoUserSubscription.state?.infoUser?._id },
+    tokenHeaders()
+  );
+};

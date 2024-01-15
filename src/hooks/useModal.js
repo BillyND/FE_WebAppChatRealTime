@@ -24,7 +24,7 @@ export const useModal = () => {
         [key]: true,
       });
     }
-    // document.documentElement.style.setProperty("overflow", "hidden");
+    document.documentElement.style.setProperty("overflow", "hidden");
   };
 
   const closeModal = (key = "", condition) => {
@@ -45,7 +45,7 @@ export const useModal = () => {
         [key]: false,
       });
     }
-    // document.documentElement.style.removeProperty("overflow");
+    document.documentElement.style.removeProperty("overflow");
   };
 
   return { state, openModal, closeModal };

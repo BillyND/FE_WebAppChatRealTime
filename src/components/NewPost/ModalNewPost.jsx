@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, message } from "antd";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -7,6 +7,7 @@ import { useModal } from "../../hooks/useModal";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { createPost } from "../../services/api";
 import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
+import { handleGetListPost } from "../ListPost/ListPost";
 
 function ModalNewPost({ placeHolderInputPost }) {
   const {
@@ -19,16 +20,19 @@ function ModalNewPost({ placeHolderInputPost }) {
 
   const [valueInputPost, setValueInputPost] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
-  const [loadingParseFile, setLoadingParseFile] = useState(false);
-  const [loadingCreatePost, setLoadingCreatePost] = useState(false);
+  const [loadings, setLoadings] = useState({
+    parseFile: false,
+    createPost: false,
+  });
 
   const refInputPost = useRef(null);
   const debounceOpenModal = useDebounce(MODAL_NEW_POST, 100);
   const disableBtnCreatePost =
-    (!valueInputPost?.trim() && !selectedImage) || loadingCreatePost;
+    (!valueInputPost?.trim() && !selectedImage) || loadings.createPost;
 
   const handleUpPost = async () => {
-    setLoadingCreatePost(true);
+    setLoadings({ ...loadings, createPost: true });
+
     try {
       const dataPost = {
         userId,
@@ -36,18 +40,19 @@ function ModalNewPost({ placeHolderInputPost }) {
         imageUrl: selectedImage,
       };
 
-      const resPost = await createPost(dataPost);
+      const [resPost] = await Promise.all([
+        await createPost(dataPost),
+        handleGetListPost(1, 5),
+      ]);
 
-      if (resPost?.EC === 0) {
-        handleCancel();
-        message.success(resPost?.message);
-      } else {
-        message.error(resPost?.message);
-      }
-      setLoadingCreatePost(false);
+      const isSuccess = resPost?.EC === 0;
+      isSuccess
+        ? (handleCancel(), message.success(resPost?.message))
+        : message.error(resPost?.message);
     } catch (error) {
-      setLoadingCreatePost(false);
       message.error("Server error!");
+    } finally {
+      setLoadings({ ...loadings, createPost: false });
     }
   };
 
@@ -58,7 +63,7 @@ function ModalNewPost({ placeHolderInputPost }) {
   }, [debounceOpenModal]);
 
   const handleCancel = () => {
-    if (loadingCreatePost) return;
+    if (loadings.createPost) return;
 
     handleClearAllDataPost();
     closeModal("MODAL_NEW_POST");
@@ -74,27 +79,28 @@ function ModalNewPost({ placeHolderInputPost }) {
   };
 
   const handleFileChange = async (event) => {
-    setLoadingParseFile(true);
+    setLoadings({ ...loadings, parseFile: true });
     const selectedFile = event.target.files[0];
 
     if (!selectedFile) {
-      setLoadingParseFile(false);
+      setLoadings({ ...loadings, parseFile: false });
       return;
     }
 
     if (!selectedFile.type.startsWith("image")) {
       message.error("Please select an image!");
       setSelectedImage(null);
-      setLoadingParseFile(false);
+      setLoadings({ ...loadings, parseFile: false });
       return;
     }
 
     try {
       const resizedFile = await resizeImage(selectedFile);
+
       if (resizedFile.size > 500 * 1024) {
         message.error("Please select an image smaller than 500KB");
         setSelectedImage(null);
-        setLoadingParseFile(false);
+        setLoadings({ ...loadings, parseFile: false });
         return;
       }
 
@@ -102,8 +108,9 @@ function ModalNewPost({ placeHolderInputPost }) {
       setSelectedImage(dataURL);
     } catch (error) {
       console.error(error);
+      message.error("Image is incorrect, please choose another image!");
     } finally {
-      setLoadingParseFile(false);
+      setLoadings({ ...loadings, parseFile: false });
     }
   };
 
@@ -123,7 +130,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         </Button>
       }
     >
-      {loadingCreatePost && (
+      {loadings.createPost && (
         <div className="loading-create-post">
           <LoadingOutlined />
         </div>
@@ -136,17 +143,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         placeholder={placeHolderInputPost}
       ></textarea>
 
-      <div
-        className="image-preview mb-4 mt-4"
-        onClick={() => {
-          setLoadingParseFile(true);
-          const labelInputFile = document.querySelector(
-            ".container-upload-image"
-          );
-
-          labelInputFile.click();
-        }}
-      >
+      <div className="image-preview mb-4 mt-4">
         {selectedImage ? (
           <>
             <img width={"200px"} src={selectedImage} />
@@ -161,7 +158,7 @@ function ModalNewPost({ placeHolderInputPost }) {
             <span>Add image</span>
           </label>
         )}
-        {loadingParseFile && (
+        {loadings.parseFile && (
           <div className="loading-upload-image">
             <LoadingOutlined />
           </div>
