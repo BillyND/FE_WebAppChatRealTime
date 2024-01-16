@@ -50,5 +50,25 @@
         border-radius: 16px;
       }
     }
+
+    hr {
+      margin: 4px 0 4px 0;
+      background-color: rgb(87, 87, 87);
+    }
+
+    .btn-like-comment {
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      padding: 8px;
+    }
+
+    .btn-like-comment:hover {
+      background-color: #505050;
+    }
+
+    .liked {
+      color: #0068ff;
+    }
   }
 }
