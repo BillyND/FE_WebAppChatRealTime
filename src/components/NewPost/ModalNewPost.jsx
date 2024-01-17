@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unknown-property */
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, message } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { useAuthUser } from "../../hooks/useAuthUser";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useModal } from "../../hooks/useModal";
-import { useAuthUser } from "../../hooks/useAuthUser";
 import { createPost } from "../../services/api";
 import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
-import { handleGetListPost } from "../ListPost/ListPost";
+import { handleGetListPost } from "../../utils/utilities";
 
 function ModalNewPost({ placeHolderInputPost }) {
   const {
@@ -30,28 +30,38 @@ function ModalNewPost({ placeHolderInputPost }) {
   const disableBtnCreatePost =
     (!valueInputPost?.trim() && !selectedImage) || loadings.createPost;
 
+  /**
+   * Handles the process of creating and updating posts.
+   */
   const handleUpPost = async () => {
+    // Set loading state for post creation
     setLoadings({ ...loadings, createPost: true });
 
     try {
+      // Prepare data for creating a new post
       const dataPost = {
         userId,
         description: valueInputPost?.trim(),
         imageUrl: selectedImage,
       };
 
+      // Use Promise.all to await both post creation and list update concurrently
       const [resPost] = await Promise.all([
         await createPost(dataPost),
-        handleGetListPost(1, 5),
+        handleGetListPost({ page: 1, limit: 5 }),
       ]);
 
+      // Check if post creation was successful
       const isSuccess = resPost?.EC === 0;
+
+      // Display success or error message based on the result
       isSuccess
         ? (handleCancel(), message.success(resPost?.message))
         : message.error(resPost?.message);
     } catch (error) {
       message.error("Server error!");
     } finally {
+      // Reset loading state after completion (whether successful or not)
       setLoadings({ ...loadings, createPost: false });
     }
   };

@@ -1,0 +1,34 @@
+import { debounce } from "lodash";
+import { useEffect, useState } from "react";
+import { TIME_DELAY_SEARCH_INPUT } from "../constants/ConstantHomePage";
+import { useDebounce } from "./useDebounce";
+
+export function useScrollToBottom(scrollContainerRef) {
+  const [isBottom, setIsBottom] = useState(false);
+  const debounceIsBottom = useDebounce(isBottom, TIME_DELAY_SEARCH_INPUT / 4);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } =
+        scrollContainerRef.current;
+      if (scrollTop + clientHeight + 400 >= scrollHeight) {
+        setIsBottom(true);
+      } else {
+        setIsBottom(false);
+      }
+    };
+
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.removeEventListener("scroll", handleScroll);
+        setIsBottom(false);
+      }
+    };
+  }, []);
+
+  return { isBottom: debounceIsBottom };
+}

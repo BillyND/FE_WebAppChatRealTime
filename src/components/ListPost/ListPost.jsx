@@ -1,23 +1,14 @@
-import { DeleteOutlined } from "@ant-design/icons";
 import { createSubscription, useSubscription } from "global-state-hook";
 import React, { useEffect } from "react";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { useModal } from "../../hooks/useModal";
-import { deletePost, getPost } from "../../services/api";
+import { deletePost } from "../../services/api";
+import { handleGetListPost } from "../../utils/utilities";
 import ConfirmModal from "../Modals/ConfirmModal";
-import "./ListPost.scss";
 import DetailPost from "./DetailPost";
+import "./ListPost.scss";
 
 export const listPostSubs = createSubscription({ listPost: [] });
-
-export const handleGetListPost = async ({ page, limit }) => {
-  const resListPost = await getPost(page, limit);
-
-  listPostSubs.updateState({
-    ...resListPost,
-    listPost: resListPost?.["results"],
-  });
-};
 
 function ListPost(props) {
   const { infoUser } = useAuthUser();
@@ -36,11 +27,15 @@ function ListPost(props) {
     setState({
       loading: true,
     });
+
+    const filterDeleted =
+      listPost.filter((item) => item._id !== postIdDelete) || [];
+
     await deletePost(listPostSubs.state["postIdDelete"])
       .then(() => {
         setState({
           ...state,
-          listPost: listPost.filter((item) => item._id !== postIdDelete),
+          listPost: filterDeleted,
         });
       })
       .finally(() => {
@@ -48,13 +43,13 @@ function ListPost(props) {
           loading: false,
         });
         closeModal("CONFIRM_DELETE_POST");
-        handleGetListPost(1, 5);
+        filterDeleted.length < 5 && handleGetListPost({ page: 1, limit: 5 });
       });
   };
 
   return (
     <>
-      <div className="list-post-container pt-5 pb-5 mb-5">
+      <div className="list-post-container pt-5 mb-5">
         <h4>Feeds</h4>
         {listPost?.map((post) => {
           const isAuthorOfPost = post?.userId === infoUser?._id;

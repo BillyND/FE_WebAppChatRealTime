@@ -8,7 +8,7 @@
     padding: 10px;
     width: 100%;
     border-radius: 8px;
-    gap: 16px;
+    gap: 8px;
     display: grid;
 
     .header {
@@ -69,6 +69,11 @@
 
     .liked {
       color: #0068ff;
+    }
+
+    .button-list-liker-post {
+      width: fit-content;
+      padding-right: 8px;
     }
   }
 }

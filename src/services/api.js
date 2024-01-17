@@ -59,3 +59,11 @@ export const deletePost = (id) => {
     tokenHeaders()
   );
 };
+
+export const updateLikeOfPost = (id) => {
+  return axios.post(
+    `/post/likes/${id}`,
+    { userId: infoUserSubscription.state?.infoUser?._id },
+    tokenHeaders()
+  );
+};
