@@ -103,6 +103,15 @@ body {
 .ant-modal-content {
   background-color: #242526 !important;
   border-radius: 10px !important;
+
+  .ant-modal-close-x {
+    opacity: 0.6;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
 
 .ant-modal-title {
@@ -110,4 +119,47 @@ body {
   text-align: center;
   font-size: 20px;
   color: #fff !important;
+}
+
+.search-home-container {
+  height: 50px;
+  .search-input {
+    border-radius: 7px;
+
+    .ant-input-affix-wrapper {
+      border-radius: 0;
+      border-radius: 8px;
+      outline: none !important;
+      border: none !important;
+      background-color: rgb(252 252 252 / 18%);
+      height: 50px;
+
+      input {
+        background-color: transparent;
+        color: #fff;
+      }
+
+      input::placeholder {
+        color: #9a9a9aa3;
+      }
+    }
+
+    .ant-input-group-addon {
+      display: none;
+    }
+
+    .icon-search {
+      font-size: 20px;
+      svg {
+        fill: #dcdcdc;
+      }
+    }
+
+    .anticon-close-circle {
+      font-size: 14px;
+      svg {
+        fill: #dcdcdc;
+      }
+    }
+  }
 }

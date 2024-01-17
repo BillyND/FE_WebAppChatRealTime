@@ -1,14 +1,12 @@
 import React from "react";
-import SearchHome from "./SearchHome";
-import NewPost from "../NewPost/NewPost";
-import ListPost from "../ListPost/ListPost";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import ListPost from "../ListPost/ListPost";
+import NewPost from "../NewPost/NewPost";
 
-function HomeContent(props) {
+function HomeContent() {
   return (
     <PerfectScrollbar style={{ height: "100vh" }}>
-      <div className="home-content ">
-        <SearchHome />
+      <div className="home-content">
         <NewPost />
         <ListPost />
       </div>

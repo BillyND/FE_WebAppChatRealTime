@@ -9,7 +9,7 @@ function DetailUser(props) {
   return (
     <div className="detail-user-container">
       <div className="avatar-container">
-        <img src={avaUrl} className="avatar" alt="User Avatar" />
+        <img src={avaUrl} className="avatar" alt="User Avatar" loading="lazy" />
       </div>
 
       <span className="name-user">{username}</span>

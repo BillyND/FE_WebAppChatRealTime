@@ -1,0 +1,1 @@
+export const TIME_DELAY_SEARCH_INPUT = 300;

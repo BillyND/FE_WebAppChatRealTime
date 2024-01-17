@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getInfoUserLocal } from "./services/customAxios";
+import SearchHome from "./components/Home/SearchHome";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -27,16 +28,7 @@ const Layout = ({ children }) => {
 
   return (
     <div>
-      <main
-        className={`main-content-children ${
-          !isOnLoginRegisterPage ? "has-header " : ""
-        }`}
-      >
-        {!isOnLoginRegisterPage && (
-          <header className="header-container"></header>
-        )}
-        {children}
-      </main>
+      <main className={`main-content-children`}>{children}</main>
     </div>
   );
 };

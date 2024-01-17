@@ -61,7 +61,7 @@ function DetailPost(props) {
       />
       {imageUrl && (
         <div className="image">
-          <img src={imageUrl} />
+          <img src={imageUrl} loading="lazy" />
         </div>
       )}
       <hr />

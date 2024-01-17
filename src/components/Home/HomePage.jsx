@@ -4,7 +4,7 @@ import InfoUser from "../InfoUser/InfoUser";
 import HomeContent from "./HomeContent";
 import NewFriends from "../NewFriends/NewFriends";
 
-function HomePage(props) {
+function HomePage() {
   return (
     <div className="home-container">
       <InfoUser />

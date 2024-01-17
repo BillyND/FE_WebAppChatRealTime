@@ -1,59 +1,15 @@
 .home-container {
   width: 100%;
   min-height: 100vh;
-  // color: #fff;
 
   display: grid;
-  grid-template-columns: 20% auto 20%;
+  grid-template-columns: 25% auto 25%;
 
   .home-content {
     margin-top: 20px;
     margin-bottom: 20px;
     gap: 24px;
-    padding: 0 100px !important;
+    padding: 0 10% !important;
     background-color: #18191a;
-
-    .search-home-container {
-      height: 50px;
-      .search-input {
-        border-radius: 7px;
-
-        .ant-input-affix-wrapper {
-          border-radius: 0;
-          border-radius: 8px;
-          outline: none !important;
-          border: none !important;
-          background-color: rgb(252 252 252 / 18%);
-          height: 50px;
-
-          input {
-            background-color: transparent;
-            color: #fff;
-          }
-
-          input::placeholder {
-            color: #c4bfbf;
-          }
-        }
-
-        .ant-input-group-addon {
-          display: none;
-        }
-
-        .icon-search {
-          font-size: 20px;
-          svg {
-            fill: #dcdcdc;
-          }
-        }
-
-        .anticon-close-circle {
-          font-size: 14px;
-          svg {
-            fill: #dcdcdc;
-          }
-        }
-      }
-    }
   }
 }
