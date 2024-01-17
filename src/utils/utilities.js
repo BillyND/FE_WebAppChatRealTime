@@ -17,9 +17,11 @@ export const handleGetListPost = async ({ page, limit }) => {
     // Fetch posts from the API
     const resListPost = (await getPost(page, limit)) || {};
 
+    const { results = [] } = resListPost;
+
     // Combine the existing list of posts with the newly fetched posts, removing duplicates, and sort by createdAt
     const newListPost = unionBy(
-      [...listPostSubs.state.listPost, ...resListPost.results],
+      [...listPostSubs.state.listPost, ...results],
       "_id"
     ).sort((item1, item2) => {
       const createdAt1 = new Date(item1.createdAt).getTime();

@@ -12,7 +12,7 @@ import { handleGetListPost } from "../../utils/utilities";
 function HomeContent() {
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
-  const [loadingNewPost, setLoadingNewPost] = useState(false);
+  const [loadingNewPost, setLoadingNewPost] = useState(true);
 
   useEffect(() => {
     isBottom && handleFetchNewPost();
