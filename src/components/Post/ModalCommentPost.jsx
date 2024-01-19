@@ -22,7 +22,7 @@ function ModalCommentPost(props) {
       className="modal-comment-post"
       width={700}
     >
-      <PerfectScrollbar style={{ maxHeight: "calc(100vh - 150px)" }}>
+      <div style={{ overflowY: "scroll", maxHeight: "calc(100vh - 150px)" }}>
         <DetailPost
           {...props}
           loop={true}
@@ -34,7 +34,7 @@ function ModalCommentPost(props) {
         <SpinnerLoading
           className={`pt-4 ${loadingComment ? "show" : "hide"}`}
         />
-      </PerfectScrollbar>
+      </div>
     </Modal>
   );
 }
