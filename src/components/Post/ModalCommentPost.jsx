@@ -14,7 +14,7 @@ function ModalCommentPost(props) {
 
   return (
     <Modal
-      style={{ top: 40 }}
+      style={{ top: 30 }}
       title={`Post by ${username}`}
       open={openComment}
       onCancel={() => setOpenComment(false)}
@@ -22,7 +22,7 @@ function ModalCommentPost(props) {
       className="modal-comment-post"
       width={700}
     >
-      <PerfectScrollbar style={{ overflowY: "scroll", maxHeight: "70vh" }}>
+      <PerfectScrollbar style={{ maxHeight: "calc(100vh - 150px)" }}>
         <DetailPost
           {...props}
           loop={true}
