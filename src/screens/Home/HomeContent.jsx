@@ -11,8 +11,19 @@ import { handleGetListPost } from "../../utils/utilities";
 import { useSubscription } from "global-state-hook";
 
 export const SpinnerLoading = ({ style, className }) => (
-  <Flex style={style} className={`transition-02 ${className}`} justify="center">
-    <LoadingOutlined className="icon-loading" />
+  <Flex
+    style={{
+      ...style,
+      position: "relative",
+      height: "60px",
+    }}
+    className={`transition-02 ${className}`}
+    justify="center"
+  >
+    <LoadingOutlined
+      className="icon-loading"
+      style={{ position: "absolute" }}
+    />
   </Flex>
 );
 
