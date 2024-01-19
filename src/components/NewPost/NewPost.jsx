@@ -9,7 +9,7 @@ function NewPost(props) {
   const {
     infoUser: { avaUrl, username },
   } = useAuthUser();
-  const { openModal } = useModal();
+  const { openModal } = useModal(["MODAL_NEW_POST"]);
 
   const handleOpeModalNewPost = (type) => {
     openModal("MODAL_NEW_POST", type);

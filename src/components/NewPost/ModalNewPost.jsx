@@ -13,7 +13,7 @@ function ModalNewPost({ placeHolderInputPost }) {
   const {
     state: { MODAL_NEW_POST },
     closeModal,
-  } = useModal();
+  } = useModal(["MODAL_NEW_POST"]);
   const {
     infoUser: { _id: userId },
   } = useAuthUser();

@@ -11,7 +11,7 @@ export function useScrollToBottom(scrollContainerRef) {
     const handleScroll = () => {
       const { scrollTop, clientHeight, scrollHeight } =
         scrollContainerRef.current;
-      if (scrollTop + clientHeight + 400 >= scrollHeight) {
+      if (scrollTop + clientHeight + 10 >= scrollHeight) {
         setIsBottom(true);
       } else {
         setIsBottom(false);

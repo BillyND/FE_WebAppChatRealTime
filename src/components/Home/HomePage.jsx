@@ -1,6 +1,6 @@
 import React from "react";
 import "./HomePage.scss";
-import InfoUser from "../InfoUser/InfoUser";
+import InfoUser from "../User/InfoUser";
 import HomeContent from "./HomeContent";
 import NewFriends from "../NewFriends/NewFriends";
 

@@ -17,7 +17,7 @@ import {
 
 function DetailPost(props) {
   const { post, isAuthorOfPost } = props;
-  const { openModal } = useModal();
+  const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
   const { infoUser } = useAuthUser();
   const {
     likerIds = [],

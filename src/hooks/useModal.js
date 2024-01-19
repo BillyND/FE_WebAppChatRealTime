@@ -2,8 +2,8 @@ import { createSubscription, useSubscription } from "global-state-hook";
 
 export const modalSubscription = createSubscription({});
 
-export const useModal = () => {
-  const { state, setState } = useSubscription(modalSubscription);
+export const useModal = ([keys]) => {
+  const { state, setState } = useSubscription(modalSubscription, [keys]);
 
   const openModal = (key = "", condition) => {
     if (condition) {
