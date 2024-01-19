@@ -96,6 +96,7 @@ body {
 
 .ant-modal-content {
   background-color: #242526 !important;
+  color: #fff;
   border-radius: 10px !important;
 
   .ant-modal-close-x {
@@ -168,4 +169,34 @@ body {
 
 .cursor-pointer {
   cursor: pointer !important;
+}
+
+.spinner-loading {
+  scale: 3;
+}
+
+.icon-loading {
+  // margin-top: -20px;
+  width: fit-content;
+  scale: 3;
+  svg {
+    fill: #fff !important;
+  }
+}
+
+hr {
+  &.gray {
+    margin: 4px 0 4px 0;
+    background-color: rgb(87, 87, 87);
+  }
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hide {
+  opacity: 0;
+  visibility: hidden;
 }

@@ -11,12 +11,20 @@ import { SOURCE_IMAGE_LIKED, TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
 import { listPostSubs } from "./ListPost";
+import ModalCommentPost from "./ModalCommentPost";
 
 function DetailPost(props) {
-  const { post, isAuthorOfPost } = props;
-  const [currentPost, setCurrentPost] = useState(post || {});
-  const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
-  const { infoUser } = useAuthUser();
+  const {
+    post,
+    isAuthorOfPost,
+    loop = false,
+    hasFooter = true,
+    hasDelete = true,
+  } = props;
+  const { listPost } = listPostSubs.state;
+  const {
+    infoUser: { _id: userId },
+  } = useAuthUser();
   const {
     likerIds = [],
     _id: postId = "",
@@ -24,23 +32,34 @@ function DetailPost(props) {
     imageUrl = "",
     username = "",
     description = "",
-  } = currentPost;
-  const { _id: userId = "" } = infoUser || {};
+  } = post;
+  const [openComment, setOpenComment] = useState(false);
+  const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
 
   const handleLike = async () => {
+    // If the user ID is in likerIds, remove it; otherwise, add it
     const updatedLikerIds = likerIds.includes(userId)
       ? likerIds.filter((liker) => liker !== userId)
-      : [...likerIds, userId];
+      : [...post.likerIds, userId];
 
-    setCurrentPost((prev) => {
-      return {
-        ...prev,
-        likerIds: updatedLikerIds,
-      };
+    const updatedList = listPost.map((post) => {
+      // Check if the post ID matches the target post ID
+      if (post?._id === postId) {
+        return {
+          ...post,
+          likerIds: updatedLikerIds,
+        };
+      }
+      // If the post ID does not match the target post ID, return the original post
+      return post;
+    });
+
+    listPostSubs.updateState({
+      listPost: updatedList,
     });
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
-    debounceUpdateLikes(postId);
+    debounceUpdateLikes(postId, updatedList);
   };
 
   const debounceUpdateLikes = useCallback(
@@ -50,10 +69,12 @@ function DetailPost(props) {
     []
   );
 
-  const handleComment = () => {};
+  const handleComment = () => {
+    openModal("MODAL_COMMENT_POST");
+  };
 
   return (
-    <div className="card-detail-post">
+    <div className="card-detail-post p-3">
       <div className="header">
         <div className="info-user">
           <div
@@ -62,7 +83,7 @@ function DetailPost(props) {
           />
           <div className="name">{username}</div>
         </div>
-        {isAuthorOfPost && (
+        {isAuthorOfPost && hasDelete && (
           <DeleteOutlined
             onClick={() => {
               openModal("CONFIRM_DELETE_POST");
@@ -99,26 +120,45 @@ function DetailPost(props) {
           </Flex>
         )}
 
-        <hr />
-        <Flex gap={"8px"} className="none-copy">
-          <Flex
-            gap={"8px"}
-            className={`btn-like-comment ${
-              likerIds?.length > 0 && likerIds?.includes(userId) ? "liked" : ""
-            }`}
-            justify="center"
-            onClick={handleLike}
-          >
-            <LikeOutlined style={{ height: "20px" }} />
-            <span style={{ height: "20px" }}>Like</span>
-          </Flex>
+        {hasFooter && (
+          <>
+            <hr className="gray" />
+            <Flex gap={"8px"} className="none-copy">
+              <Flex
+                gap={"8px"}
+                className={`btn-like-comment ${
+                  likerIds?.length > 0 && likerIds?.includes(userId)
+                    ? "liked"
+                    : ""
+                }`}
+                justify="center"
+                onClick={handleLike}
+              >
+                <LikeOutlined style={{ height: "20px" }} />
+                <span style={{ height: "20px" }}>Like</span>
+              </Flex>
 
-          <Flex gap={"8px"} className="btn-like-comment" justify="center">
-            <CommentOutlined style={{ height: "20px" }} />
-            <span style={{ height: "20px" }}>Comment</span>
-          </Flex>
-        </Flex>
+              <Flex
+                gap={"8px"}
+                className="btn-like-comment"
+                justify="center"
+                onClick={() => setOpenComment(true)}
+              >
+                <CommentOutlined style={{ height: "20px" }} />
+                <span style={{ height: "20px" }}>Comment</span>
+              </Flex>
+            </Flex>
+          </>
+        )}
       </div>
+      {!loop && (
+        <ModalCommentPost
+          post={post}
+          {...props}
+          openComment={openComment}
+          setOpenComment={setOpenComment}
+        />
+      )}
     </div>
   );
 }

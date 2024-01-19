@@ -11,7 +11,7 @@ const isLocalApi =
 
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
-    await asyncWait(600);
+    // await asyncWait(600);
   }
 };
 

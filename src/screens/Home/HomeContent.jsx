@@ -10,14 +10,19 @@ import NewPost from "../../components/Post/NewPost";
 import { handleGetListPost } from "../../utils/utilities";
 import { useSubscription } from "global-state-hook";
 
+export const SpinnerLoading = ({ style, className }) => (
+  <Flex style={style} className={`transition-02 ${className}`} justify="center">
+    <LoadingOutlined className="icon-loading" />
+  </Flex>
+);
+
 function HomeContent() {
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
   const {
     state: { loading },
     setState,
-  } = useSubscription(listPostSubs, ["loading"]);
-  console.log("===>loading", loading);
+  } = useSubscription(listPostSubs);
 
   useEffect(() => {
     isBottom && handleFetchNewPost();
@@ -42,15 +47,9 @@ function HomeContent() {
       <div className="home-content">
         <NewPost />
         <ListPost />
-        <Flex
-          className="transition-02"
-          justify="center"
-          style={{
-            opacity: loading ? "1" : "0",
-          }}
-        >
-          <LoadingOutlined className="icon-loading-new-post" />
-        </Flex>
+        <SpinnerLoading
+          style={{ opacity: loading ? "1" : "0", marginTop: "-20px" }}
+        />
       </div>
     </PerfectScrollbar>
   );

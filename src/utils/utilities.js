@@ -42,3 +42,13 @@ export const handleGetListPost = async ({ page, limit }) => {
     console.log("===> Error handleGetListPost:", error);
   }
 };
+
+export const compareChange = (values) => {
+  try {
+    return values.some(
+      (value) => JSON.stringify(value) !== JSON.stringify(values[0])
+    );
+  } catch (error) {
+    return false;
+  }
+};
