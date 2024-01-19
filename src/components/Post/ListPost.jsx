@@ -8,15 +8,15 @@ import ConfirmModal from "../../Modals/ConfirmModal";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
 
-export const listPostSubs = createSubscription({ listPost: [] });
+export const listPostSubs = createSubscription({ listPost: [], loading: true });
 
-function ListPost(props) {
+function ListPost() {
   const { infoUser } = useAuthUser();
   const {
     state,
     state: { listPost, postIdDelete, loading },
     setState,
-  } = useSubscription(listPostSubs, ["listPost", "loading"]);
+  } = useSubscription(listPostSubs, ["listPost"]);
   const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
 
   useEffect(() => {

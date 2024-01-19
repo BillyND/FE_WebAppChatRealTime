@@ -8,22 +8,30 @@ import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
 import ListPost, { listPostSubs } from "../../components/Post/ListPost";
 import NewPost from "../../components/Post/NewPost";
 import { handleGetListPost } from "../../utils/utilities";
+import { useSubscription } from "global-state-hook";
 
 function HomeContent() {
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
-  const [loadingNewPost, setLoadingNewPost] = useState(false);
+  const {
+    state: { loading },
+    setState,
+  } = useSubscription(listPostSubs, ["loading"]);
+  console.log("===>loading", loading);
 
   useEffect(() => {
     isBottom && handleFetchNewPost();
   }, [isBottom]);
 
   const handleFetchNewPost = debounce(async () => {
-    console.log("===>here");
-    setLoadingNewPost(true);
+    setState({
+      loading: true,
+    });
     const { next } = listPostSubs.state;
     next && (await handleGetListPost(next));
-    setLoadingNewPost(false);
+    setState({
+      loading: false,
+    });
   }, TIME_DELAY_SEARCH_INPUT);
 
   return (
@@ -38,7 +46,7 @@ function HomeContent() {
           className="transition-02"
           justify="center"
           style={{
-            opacity: loadingNewPost ? "1" : "0",
+            opacity: loading ? "1" : "0",
           }}
         >
           <LoadingOutlined className="icon-loading-new-post" />

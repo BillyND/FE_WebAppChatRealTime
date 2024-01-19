@@ -9,10 +9,9 @@ import { getPost } from "../services/api";
  */
 export const handleGetListPost = async ({ page, limit }) => {
   try {
-    // Check if both page and limit are provided
-    if (!page || !limit) {
-      return;
-    }
+    listPostSubs.updateState({
+      loading: true,
+    });
 
     // Fetch posts from the API
     const resListPost = await getPost(page, limit);
@@ -34,9 +33,12 @@ export const handleGetListPost = async ({ page, limit }) => {
       ...resListPost,
       next: resListPost.next,
       listPost: newListPost,
+      loading: false,
     });
   } catch (error) {
-    // Log any errors that occur during the process
+    listPostSubs.updateState({
+      loading: false,
+    });
     console.log("===> Error handleGetListPost:", error);
   }
 };
