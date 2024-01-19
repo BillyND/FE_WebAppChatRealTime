@@ -4,7 +4,7 @@ import { useAuthUser } from "../../hooks/useAuthUser";
 import { useModal } from "../../hooks/useModal";
 import { deletePost } from "../../services/api";
 import { handleGetListPost } from "../../utils/utilities";
-import ConfirmModal from "../Modals/ConfirmModal";
+import ConfirmModal from "../UI/Modals/ConfirmModal";
 import DetailPost from "./DetailPost";
 import "./ListPost.scss";
 
@@ -17,7 +17,7 @@ function ListPost(props) {
     state: { listPost, postIdDelete },
     setState,
   } = useSubscription(listPostSubs, ["listPost"]);
-  const { state: modalState, closeModal } = useModal();
+  const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
 
   useEffect(() => {
     handleGetListPost({ page: 1, limit: 5 });
