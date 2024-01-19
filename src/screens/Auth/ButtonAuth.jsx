@@ -1,12 +1,12 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { message } from "antd";
-import { useAuthUser } from "../../hooks/useAuthUser";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { postLogin, postRegister } from "../../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { regexValidateEmail } from "../../utils/constant";
 
-export const ButtonLoginRegister = ({
+export const ButtonAuth = ({
   loadingAuth,
   setLoadingAuth,
   isLoginPage,

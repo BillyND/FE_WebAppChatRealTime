@@ -3,22 +3,23 @@ import { Flex } from "antd";
 import { debounce } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { TIME_DELAY_SEARCH_INPUT } from "../../constants/ConstantHomePage";
-import { useScrollToBottom } from "../../hooks/useScrollBottom";
-import ListPost, { listPostSubs } from "../ListPost/ListPost";
-import NewPost from "../NewPost/NewPost";
+import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
+import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
+import ListPost, { listPostSubs } from "../../components/Post/ListPost";
+import NewPost from "../../components/Post/NewPost";
 import { handleGetListPost } from "../../utils/utilities";
 
 function HomeContent() {
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
-  const [loadingNewPost, setLoadingNewPost] = useState(true);
+  const [loadingNewPost, setLoadingNewPost] = useState(false);
 
   useEffect(() => {
     isBottom && handleFetchNewPost();
   }, [isBottom]);
 
   const handleFetchNewPost = debounce(async () => {
+    console.log("===>here");
     setLoadingNewPost(true);
     const { next } = listPostSubs.state;
     next && (await handleGetListPost(next));

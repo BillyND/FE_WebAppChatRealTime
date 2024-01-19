@@ -1,6 +1,6 @@
 import React from "react";
+import SearchHome from "../../screens/Home/SearchHome";
 import "./NewFriends.scss";
-import SearchHome from "../Home/SearchHome";
 function NewFriends(props) {
   return (
     <div className="new-friends-container p-4">

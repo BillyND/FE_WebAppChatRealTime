@@ -2,7 +2,7 @@ import axios from "axios";
 import asyncWait from "../utils/asysnWait";
 import { KEY_INFO_USER } from "../utils/constant";
 import { infoUserSubscription } from "../utils/initGlobalState";
-import { getTriggerToken } from "./api";
+
 export const baseURL = import.meta.env.VITE_BACKEND_URL;
 const NO_RETRY_HEADER = "x-no-retry";
 
@@ -11,7 +11,7 @@ const isLocalApi =
 
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
-    await asyncWait(600);
+    // await asyncWait(300);
   }
 };
 
@@ -22,7 +22,7 @@ let instance = axios.create({
 // Function to get the access token from localStorage
 export const getInfoUserLocal = () => {
   const infoUser = JSON.parse(localStorage.getItem(KEY_INFO_USER)) || {};
-  infoUserSubscription.updateState(infoUser);
+  infoUserSubscription.state = infoUser;
   return infoUser;
 };
 

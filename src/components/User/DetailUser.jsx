@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuthUser } from "../../hooks/useAuthUser";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
 
 function DetailUser(props) {
   const {

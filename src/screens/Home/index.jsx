@@ -1,10 +1,10 @@
 import React from "react";
-import "./HomePage.scss";
-import InfoUser from "../User/InfoUser";
+import "./HomeScreen.scss";
+import InfoUser from "../../components/User/InfoUser";
 import HomeContent from "./HomeContent";
-import NewFriends from "../NewFriends/NewFriends";
+import NewFriends from "../../components/NewFriends/NewFriends";
 
-function HomePage() {
+export default function HomeScreen() {
   return (
     <div className="home-container">
       <InfoUser />
@@ -13,5 +13,3 @@ function HomePage() {
     </div>
   );
 }
-
-export default HomePage;

@@ -1,9 +1,8 @@
 import React from "react";
-import "./InfoUser.scss";
-import DetailUser from "./DetailUser";
-import NavMenu from "../NavMenu/NavMenu";
-import Contact from "../Contact/Contact";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import NavMenu from "../NavMenu/NavMenu";
+import DetailUser from "./DetailUser";
+import "./User.scss";
 
 function InfoUser(props) {
   return (

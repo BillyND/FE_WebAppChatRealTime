@@ -2,9 +2,9 @@
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useAuthUser } from "../../hooks/useAuthUser";
-import { useDebounce } from "../../hooks/useDebounce";
-import { useModal } from "../../hooks/useModal";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { useDebounce } from "../../utils/hooks/useDebounce";
+import { useModal } from "../../utils/hooks/useModal";
 import { createPost } from "../../services/api";
 import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
 import { handleGetListPost } from "../../utils/utilities";

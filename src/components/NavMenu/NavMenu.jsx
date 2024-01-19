@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/api";
-import { useAuthUser } from "../../hooks/useAuthUser";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
 
 function NavMenu(props) {
   const navigate = useNavigate();

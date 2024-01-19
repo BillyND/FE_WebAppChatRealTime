@@ -1,6 +1,5 @@
-import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import { TIME_DELAY_SEARCH_INPUT } from "../constants/ConstantHomePage";
+import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import { useDebounce } from "./useDebounce";
 
 export function useScrollToBottom(scrollContainerRef) {

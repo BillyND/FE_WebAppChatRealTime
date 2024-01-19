@@ -94,12 +94,6 @@ body {
   box-shadow: rgba(198, 198, 198, 0.16) 0px 1px 4px;
 }
 
-.main-content-children.has-header {
-  margin-top: 70px;
-  height: calc(100vh - 70px);
-  overflow: hidden;
-}
-
 .ant-modal-content {
   background-color: #242526 !important;
   border-radius: 10px !important;

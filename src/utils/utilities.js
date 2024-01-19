@@ -1,5 +1,5 @@
 import { unionBy } from "lodash";
-import { listPostSubs } from "../components/ListPost/ListPost";
+import { listPostSubs } from "../components/Post/ListPost";
 import { getPost } from "../services/api";
 
 /**
@@ -15,7 +15,7 @@ export const handleGetListPost = async ({ page, limit }) => {
     }
 
     // Fetch posts from the API
-    const resListPost = (await getPost(page, limit)) || {};
+    const resListPost = await getPost(page, limit);
 
     const { results = [] } = resListPost;
 

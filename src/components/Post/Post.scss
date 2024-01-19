@@ -1,3 +1,82 @@
+.list-post-container {
+  display: grid;
+  gap: 16px;
+  color: #fff;
+
+  .card-detail-post {
+    background-color: #242526;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    gap: 8px;
+    display: grid;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .info-user {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+
+      .icon-delete {
+        cursor: pointer;
+        font-size: 20px;
+        color: gray;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+
+    .image {
+      width: 100%;
+
+      img {
+        width: 100%;
+        border-radius: 16px;
+      }
+    }
+
+    hr {
+      margin: 4px 0 4px 0;
+      background-color: rgb(87, 87, 87);
+    }
+
+    .btn-like-comment {
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      padding: 8px;
+    }
+
+    .btn-like-comment:hover {
+      background-color: #505050;
+    }
+
+    .liked {
+      color: #0068ff;
+    }
+
+    .button-list-liker-post {
+      width: fit-content;
+      padding-right: 8px;
+    }
+  }
+}
 .new-post-container {
   display: grid;
   background-color: #242526;

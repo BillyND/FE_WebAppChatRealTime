@@ -1,10 +1,9 @@
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { AutoComplete } from "antd";
 import Search from "antd/es/input/Search";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
 import { debounce } from "lodash";
-import { TIME_DELAY_SEARCH_INPUT } from "../../constants/ConstantHomePage";
+import React, { useCallback, useState } from "react";
+import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 
 function SearchHome(props) {
   const [optionsSearch, setOptionsSearch] = useState([]);
@@ -19,8 +18,6 @@ function SearchHome(props) {
         value,
         loading: false,
       });
-
-      console.log("===>here", value);
     }, TIME_DELAY_SEARCH_INPUT),
     []
   );

@@ -1,25 +1,51 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "./Layout";
-import AuthScreen from "./components/Auth";
-import ChatContainer from "./components/ChatContainer/ChatContainer";
-import HomePage from "./components/Home/HomePage";
+import { useEffect } from "react";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import AuthScreen from "./screens/Auth/AuthScreen";
+import HomeScreen from "./screens/Home";
+import { getInfoUserLocal } from "./services/customAxios";
+
+const TriggerNavigate = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { accessToken } = getInfoUserLocal();
+  const isOnLoginRegisterPage =
+    pathname === "/login" || pathname === "/register";
+  const isNotOnHomePage = pathname !== "/";
+  const shouldRedirectToHome =
+    accessToken && isOnLoginRegisterPage && isNotOnHomePage;
+
+  const shouldRedirectToLogin = !accessToken && !isOnLoginRegisterPage;
+
+  useEffect(() => {
+    if (shouldRedirectToHome) {
+      navigate("/");
+    }
+
+    if (shouldRedirectToLogin) {
+      navigate("/login");
+    }
+  }, [pathname]);
+  return <></>;
+};
 
 function App() {
   return (
     <div className="App">
-      <Layout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
+      {/* Component to trigger navigate */}
+      <TriggerNavigate />
 
-          {/* <=== Auth screen ===> */}
-          <Route path="/logout" element={<AuthScreen />} />
-          <Route path="/login" element={<AuthScreen />} />
-          <Route path="/register" element={<AuthScreen />} />
-          <Route path="/forgot-password" element={<AuthScreen />} />
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
 
-          <Route path="*" element={<HomePage />} />
-        </Routes>
-      </Layout>
+        {/* <=== Auth screen ===> */}
+        <Route path="/logout" element={<AuthScreen />} />
+        <Route path="/login" element={<AuthScreen />} />
+        <Route path="/register" element={<AuthScreen />} />
+        <Route path="/forgot-password" element={<AuthScreen />} />
+
+        <Route path="*" element={<HomeScreen />} />
+      </Routes>
     </div>
   );
 }

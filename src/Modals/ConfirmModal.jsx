@@ -1,6 +1,6 @@
 import { Button, Flex, Modal } from "antd";
 import React from "react";
-import "./ConfirmModal.scss";
+import "./Modal.scss";
 
 function ConfirmModal(props) {
   const { open, onOk, onCancel, title, children, loading, footer } = props;

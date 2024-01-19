@@ -4,19 +4,17 @@ import {
   LikeOutlined,
 } from "@ant-design/icons";
 import { Flex } from "antd";
-import React from "react";
-import { useModal } from "../../hooks/useModal";
-import { listPostSubs } from "./ListPost";
-import { useAuthUser } from "../../hooks/useAuthUser";
-import { updateLikeOfPost } from "../../services/api";
 import { debounce } from "lodash";
-import {
-  SOURCE_IMAGE_LIKED,
-  TIME_DELAY_SEARCH_INPUT,
-} from "../../constants/ConstantHomePage";
+import React, { useCallback, useState } from "react";
+import { updateLikeOfPost } from "../../services/api";
+import { SOURCE_IMAGE_LIKED, TIME_DELAY_FETCH_API } from "../../utils/constant";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { useModal } from "../../utils/hooks/useModal";
+import { listPostSubs } from "./ListPost";
 
 function DetailPost(props) {
   const { post, isAuthorOfPost } = props;
+  const [currentPost, setCurrentPost] = useState(post || {});
   const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
   const { infoUser } = useAuthUser();
   const {
@@ -26,44 +24,31 @@ function DetailPost(props) {
     imageUrl = "",
     username = "",
     description = "",
-  } = post || {};
-
+  } = currentPost;
   const { _id: userId = "" } = infoUser || {};
 
   const handleLike = async () => {
-    const { listPost } = listPostSubs.state;
+    const updatedLikerIds = likerIds.includes(userId)
+      ? likerIds.filter((liker) => liker !== userId)
+      : [...likerIds, userId];
 
-    const updatedList = listPost.map((post) => {
-      // Check if the post ID matches the target post ID
-      if (post?._id === postId) {
-        // If the user ID is in likerIds, remove it; otherwise, add it
-        const updatedLikerIds = likerIds.includes(userId)
-          ? likerIds.filter((liker) => liker !== userId)
-          : [...post.likerIds, userId];
-
-        return {
-          ...post,
-          likerIds: updatedLikerIds,
-        };
-      }
-      // If the post ID does not match the target post ID, return the original post
-      return post;
-    });
-
-    // Assume this function updates the state with the new list of posts
-    listPostSubs.updateState({
-      listPost: updatedList,
+    setCurrentPost((prev) => {
+      return {
+        ...prev,
+        likerIds: updatedLikerIds,
+      };
     });
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
-    (function () {
-      const debouncedUpdateLike = debounce(() => {
-        updateLikeOfPost(postId);
-      }, TIME_DELAY_SEARCH_INPUT);
-
-      debouncedUpdateLike();
-    })();
+    debounceUpdateLikes(postId);
   };
+
+  const debounceUpdateLikes = useCallback(
+    debounce((postId) => {
+      updateLikeOfPost(postId);
+    }, TIME_DELAY_FETCH_API),
+    []
+  );
 
   const handleComment = () => {};
 
@@ -117,7 +102,6 @@ function DetailPost(props) {
         <hr />
         <Flex gap={"8px"} className="none-copy">
           <Flex
-            border
             gap={"8px"}
             className={`btn-like-comment ${
               likerIds?.length > 0 && likerIds?.includes(userId) ? "liked" : ""
@@ -129,12 +113,7 @@ function DetailPost(props) {
             <span style={{ height: "20px" }}>Like</span>
           </Flex>
 
-          <Flex
-            border
-            gap={"8px"}
-            className="btn-like-comment"
-            justify="center"
-          >
+          <Flex gap={"8px"} className="btn-like-comment" justify="center">
             <CommentOutlined style={{ height: "20px" }} />
             <span style={{ height: "20px" }}>Comment</span>
           </Flex>
