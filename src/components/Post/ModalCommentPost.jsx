@@ -1,5 +1,5 @@
-import { Modal } from "antd";
 import React, { useState } from "react";
+import BaseModal from "../../Modals/BaseModal";
 import { SpinnerLoading } from "../../screens/Home/HomeContent";
 import DetailPost from "./DetailPost";
 
@@ -12,29 +12,25 @@ function ModalCommentPost(props) {
   const [loadingComment, setLoadingComment] = useState(false);
 
   return (
-    <Modal
-      style={{ top: 30 }}
-      title={`Post by ${username}`}
+    <BaseModal
+      width={700}
       open={openComment}
       onCancel={() => setOpenComment(false)}
+      title={`Post by ${username}`}
       footer={<></>}
       className="modal-comment-post"
-      width={700}
+      style={{ top: 20, position: "relative" }}
     >
-      <div style={{ overflowY: "scroll", maxHeight: "calc(100vh - 150px)" }}>
-        <DetailPost
-          {...props}
-          loop={true}
-          openedComment={false}
-          hasDelete={false}
-        />
-        <hr className="gray" />
-
-        <SpinnerLoading
-          className={`pt-4 ${loadingComment ? "show" : "hide"}`}
-        />
-      </div>
-    </Modal>
+      <DetailPost
+        {...props}
+        loop={true}
+        openedComment={false}
+        hasDelete={false}
+      />
+      <hr className="gray" />
+      <SpinnerLoading className={`mt-4 ${loadingComment ? "show" : "hide"}`} />
+      <textarea style={{ position: "absolute", bottom: 0 }}></textarea>
+    </BaseModal>
   );
 }
 

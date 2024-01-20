@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 /* eslint-disable react/display-name */
 import {
   CommentOutlined,
@@ -13,6 +14,7 @@ import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
 import ModalCommentPost from "./ModalCommentPost";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
+import BaseModal from "../../Modals/BaseModal";
 
 const DetailPost = React.memo((props) => {
   const {
@@ -152,6 +154,7 @@ const DetailPost = React.memo((props) => {
           </>
         )}
       </div>
+
       {!loop && (
         <ModalCommentPost
           post={post}

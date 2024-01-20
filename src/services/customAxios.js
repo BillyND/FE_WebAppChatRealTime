@@ -2,6 +2,7 @@ import axios from "axios";
 import asyncWait from "../utils/asysnWait";
 import { KEY_INFO_USER } from "../utils/constant";
 import { infoUserSubscription } from "../utils/globalStates/initGlobalState";
+import { passLocalStorage } from "../utils/passLocalStorage";
 
 export const baseURL = import.meta.env.VITE_BACKEND_URL;
 const NO_RETRY_HEADER = "x-no-retry";
@@ -11,7 +12,7 @@ const isLocalApi =
 
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
-    // await asyncWait(6000);
+    await asyncWait(600);
   }
 };
 
@@ -19,18 +20,16 @@ let instance = axios.create({
   baseURL: baseURL + "v1/api/",
 });
 
-// Function to get the access token from localStorage
+// Function to get the access token from passLocalStorage
 export const getInfoUserLocal = () => {
-  const infoUser = JSON.parse(localStorage.getItem(KEY_INFO_USER)) || {};
+  const infoUser = passLocalStorage.getItem(KEY_INFO_USER) || {};
   infoUserSubscription.state = infoUser;
   return infoUser;
 };
 
 // Handle refresh Token
 const handleRefreshToken = async () => {
-  const refreshLocal = JSON.parse(
-    localStorage?.getItem(KEY_INFO_USER)
-  )?.refreshToken;
+  const refreshLocal = passLocalStorage?.getItem(KEY_INFO_USER)?.refreshToken;
   const res = await instance.post("/auth/refresh", { refreshLocal });
   if (res && res.data) {
     return res.data;
@@ -82,7 +81,7 @@ instance.interceptors.response.use(
       if (data && data.accessToken && data.refreshToken) {
         error.config.headers["Authorization"] = `Bearer ${data.accessToken}`;
 
-        let infoUser = JSON.parse(localStorage.getItem(KEY_INFO_USER));
+        let infoUser = passLocalStorage.getItem(KEY_INFO_USER);
 
         infoUser = {
           ...infoUser,
@@ -90,7 +89,7 @@ instance.interceptors.response.use(
           refreshToken: data.refreshToken,
         };
 
-        localStorage.setItem(KEY_INFO_USER, JSON.stringify(infoUser));
+        passLocalStorage.setItem(KEY_INFO_USER, infoUser);
         return instance.request(error.config);
       } else return;
     }
@@ -100,7 +99,7 @@ instance.interceptors.response.use(
       +error.response.status === 400 &&
       error.config.url === "/auth/refresh"
     ) {
-      localStorage.removeItem(KEY_INFO_USER);
+      passLocalStorage.removeItem(KEY_INFO_USER);
       // window.location.href = "/login";
     }
 

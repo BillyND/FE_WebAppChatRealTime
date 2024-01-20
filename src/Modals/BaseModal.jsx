@@ -2,15 +2,12 @@ import { Button, Flex, Modal } from "antd";
 import React from "react";
 import "./Modal.scss";
 
-function ConfirmModal(props) {
-  const { open, onOk, onCancel, title, children, loading, footer } = props;
+function BaseModal(props) {
+  const { onOk, onCancel, children, loading, footer, content, style } = props;
 
   return (
     <Modal
-      className="modal-confirm"
-      title={title}
-      open={open}
-      onCancel={onCancel}
+      {...props}
       footer={
         footer || (
           <Flex justify="end">
@@ -21,11 +18,14 @@ function ConfirmModal(props) {
           </Flex>
         )
       }
+      style={style}
     >
-      <hr />
-      <p className="children-confirm-modal">{children}</p>
+      <hr className="gray" />
+      <div style={{ overflowY: "scroll", maxHeight: "calc(100vh - 150px)" }}>
+        {content || children}
+      </div>
     </Modal>
   );
 }
 
-export default ConfirmModal;
+export default BaseModal;

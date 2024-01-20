@@ -1,6 +1,5 @@
 import { useSubscription } from "global-state-hook";
 import React, { useEffect } from "react";
-import ConfirmModal from "../../Modals/ConfirmModal";
 import { deletePost } from "../../services/api";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
@@ -8,6 +7,7 @@ import { useModal } from "../../utils/hooks/useModal";
 import { handleGetListPost } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
+import BaseModal from "../../Modals/BaseModal";
 
 function ListPost() {
   const { infoUser } = useAuthUser();
@@ -61,7 +61,7 @@ function ListPost() {
           );
         })}
       </div>
-      <ConfirmModal
+      <BaseModal
         open={modalState["CONFIRM_DELETE_POST"]}
         onCancel={() => closeModal("CONFIRM_DELETE_POST")}
         onOk={handleConfirmDeletePost}
@@ -69,7 +69,7 @@ function ListPost() {
         loading={state?.loading}
       >
         Post will be permanently deleted. Do you agree?
-      </ConfirmModal>
+      </BaseModal>
     </>
   );
 }
