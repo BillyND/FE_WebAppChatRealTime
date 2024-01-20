@@ -1,6 +1,5 @@
 import { Modal } from "antd";
 import React, { useState } from "react";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import { SpinnerLoading } from "../../screens/Home/HomeContent";
 import DetailPost from "./DetailPost";
 

@@ -170,6 +170,10 @@
   position: relative;
   background-color: #242526;
 
+  .ant-modal-content {
+    max-height: calc(100vh - 32px);
+  }
+
   .loading-create-post {
     z-index: 10;
     background-color: #242526;
@@ -207,7 +211,7 @@
     outline: none;
     resize: none;
     color: #fff !important;
-    height: 150px;
+    height: 200px;
     font-size: 16px;
 
     &::placeholder {
@@ -245,6 +249,7 @@
 
   .image-preview {
     min-height: 100px;
+    max-height: 200px;
     display: flex;
     justify-content: center;
     background-color: #333436;

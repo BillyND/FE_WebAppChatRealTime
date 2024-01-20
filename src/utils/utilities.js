@@ -1,6 +1,6 @@
 import { unionBy } from "lodash";
-import { listPostSubs } from "../components/Post/ListPost";
 import { getPost } from "../services/api";
+import { listPostSubs } from "./globalStates/initGlobalState";
 
 /**
  * Fetches and handles the list of posts.

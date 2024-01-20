@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import {
   CommentOutlined,
   DeleteOutlined,
@@ -10,10 +11,10 @@ import { updateLikeOfPost } from "../../services/api";
 import { SOURCE_IMAGE_LIKED, TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
-import { listPostSubs } from "./ListPost";
 import ModalCommentPost from "./ModalCommentPost";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 
-function DetailPost(props) {
+const DetailPost = React.memo((props) => {
   const {
     post,
     isAuthorOfPost,
@@ -161,6 +162,5 @@ function DetailPost(props) {
       )}
     </div>
   );
-}
-
+});
 export default DetailPost;

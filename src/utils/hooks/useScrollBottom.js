@@ -21,6 +21,7 @@ export function useScrollToBottom(scrollContainerRef) {
       scrollContainerRef.current.addEventListener("scroll", handleScroll);
     }
 
+    // Cleanup the event listener on component unmount
     return () => {
       if (scrollContainerRef.current) {
         scrollContainerRef.current.removeEventListener("scroll", handleScroll);

@@ -1,6 +1,6 @@
 import { useSubscription } from "global-state-hook";
 import { KEY_INFO_USER, initInfoUser } from "../constant";
-import { infoUserSubscription } from "../initGlobalState";
+import { infoUserSubscription } from "../globalStates/initGlobalState";
 
 export const useAuthUser = () => {
   const { state, setState } = useSubscription(infoUserSubscription, [

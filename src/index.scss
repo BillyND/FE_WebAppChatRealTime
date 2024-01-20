@@ -95,6 +95,7 @@ body {
 }
 
 .ant-modal-content {
+  padding: 16px !important;
   background-color: #242526 !important;
   color: #fff;
   border-radius: 10px !important;
@@ -107,6 +108,14 @@ body {
       opacity: 1;
     }
   }
+}
+
+.ant-modal-close-x {
+  margin-top: -5px;
+}
+
+.ant-modal-header {
+  margin-bottom: 20px !important;
 }
 
 .ant-modal-title {
@@ -199,4 +208,12 @@ hr {
 .hide {
   opacity: 0;
   visibility: hidden;
+}
+
+.enable-scroll {
+  overflow-y: scroll;
+}
+
+.disable-scroll {
+  overflow-y: hidden;
 }

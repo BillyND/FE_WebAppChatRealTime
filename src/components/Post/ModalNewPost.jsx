@@ -8,8 +8,10 @@ import { useDebounce } from "../../utils/hooks/useDebounce";
 import { createPost } from "../../services/api";
 import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
 import { handleGetListPost } from "../../utils/utilities";
+import { useWindowSize } from "../../utils/hooks/useWindowSize";
 
 function ModalNewPost({ placeHolderInputPost }) {
+  const { isMobile } = useWindowSize();
   const {
     state: { MODAL_NEW_POST },
     closeModal,
@@ -126,6 +128,8 @@ function ModalNewPost({ placeHolderInputPost }) {
 
   return (
     <Modal
+      style={{ top: isMobile ? 16 : null }}
+      width={isMobile ? 1000 : 500}
       className="modal-create-post none-copy"
       title={<span className="">Create post</span>}
       open={MODAL_NEW_POST}
@@ -140,48 +144,50 @@ function ModalNewPost({ placeHolderInputPost }) {
         </Button>
       }
     >
-      {loadings.createPost && (
-        <div className="loading-create-post">
-          <LoadingOutlined />
-        </div>
-      )}
-      <textarea
-        ref={refInputPost}
-        value={valueInputPost}
-        onChange={(e) => setValueInputPost(e.target.value)}
-        className="input-content-post pt-3"
-        placeholder={placeHolderInputPost}
-      ></textarea>
-
-      <div className="image-preview mb-4 mt-4">
-        {selectedImage ? (
-          <>
-            <img width={"200px"} src={selectedImage} loading="lazy" />
-            <CloseCircleOutlined
-              className="icon-clear-image"
-              onClick={handleClearImage}
-            />
-          </>
-        ) : (
-          <label htmlFor="fileInput" className="container-upload-image">
-            <div className="upload-image"></div>
-            <span>Add image</span>
-          </label>
-        )}
-        {loadings.parseFile && (
-          <div className="loading-upload-image">
+      <div>
+        {loadings.createPost && (
+          <div className="loading-create-post">
             <LoadingOutlined />
           </div>
         )}
-      </div>
+        <textarea
+          ref={refInputPost}
+          value={valueInputPost}
+          onChange={(e) => setValueInputPost(e.target.value)}
+          className="input-content-post pt-3"
+          placeholder={placeHolderInputPost}
+        ></textarea>
 
-      <input
-        type="file"
-        id="fileInput"
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-        onCancel={() => {}}
-      />
+        <div className="image-preview mb-4 mt-4">
+          {selectedImage ? (
+            <>
+              <img width={"200px"} src={selectedImage} loading="lazy" />
+              <CloseCircleOutlined
+                className="icon-clear-image"
+                onClick={handleClearImage}
+              />
+            </>
+          ) : (
+            <label htmlFor="fileInput" className="container-upload-image">
+              <div className="upload-image"></div>
+              <span>Add image</span>
+            </label>
+          )}
+          {loadings.parseFile && (
+            <div className="loading-upload-image">
+              <LoadingOutlined />
+            </div>
+          )}
+        </div>
+
+        <input
+          type="file"
+          id="fileInput"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+          onCancel={() => {}}
+        />
+      </div>
     </Modal>
   );
 }

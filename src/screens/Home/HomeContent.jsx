@@ -5,10 +5,11 @@ import React, { useEffect, useRef, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
-import ListPost, { listPostSubs } from "../../components/Post/ListPost";
+import ListPost from "../../components/Post/ListPost";
 import NewPost from "../../components/Post/NewPost";
 import { handleGetListPost } from "../../utils/utilities";
 import { useSubscription } from "global-state-hook";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 
 export const SpinnerLoading = ({ style, className }) => (
   <Flex

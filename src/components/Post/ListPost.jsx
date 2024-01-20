@@ -1,20 +1,19 @@
-import { createSubscription, useSubscription } from "global-state-hook";
+import { useSubscription } from "global-state-hook";
 import React, { useEffect } from "react";
+import ConfirmModal from "../../Modals/ConfirmModal";
+import { deletePost } from "../../services/api";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
-import { deletePost } from "../../services/api";
 import { handleGetListPost } from "../../utils/utilities";
-import ConfirmModal from "../../Modals/ConfirmModal";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
-
-export const listPostSubs = createSubscription({ listPost: [], loading: true });
 
 function ListPost() {
   const { infoUser } = useAuthUser();
   const {
     state,
-    state: { listPost, postIdDelete, loading },
+    state: { listPost, postIdDelete },
     setState,
   } = useSubscription(listPostSubs, ["listPost"]);
   const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
@@ -51,8 +50,8 @@ function ListPost() {
     <>
       <div className="list-post-container pt-5 mb-5">
         <h4>Feeds</h4>
-        {listPost?.map((post) => {
-          const isAuthorOfPost = post?.userId === infoUser?._id;
+        {listPost?.map((post = {}) => {
+          const isAuthorOfPost = post.userId === infoUser._id;
           return (
             <DetailPost
               key={post._id}
