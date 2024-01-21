@@ -49,7 +49,7 @@ function ModalCommentPost(props) {
   const { comments, loading, posting, tempComment = "" } = post;
 
   useEffect(() => {
-    postId && fetchCommentsInPost();
+    postId && comments.length && fetchCommentsInPost();
     detailPostSubs.state.commentEdit = null;
   }, []);
 
