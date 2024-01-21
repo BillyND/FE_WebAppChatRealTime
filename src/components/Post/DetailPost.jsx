@@ -8,7 +8,11 @@ import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback, useState } from "react";
 import { updateLikeOfPost } from "../../services/api";
-import { SOURCE_IMAGE_LIKED, TIME_DELAY_FETCH_API } from "../../utils/constant";
+import {
+  SOURCE_IMAGE_COMMENT,
+  SOURCE_IMAGE_LIKED,
+  TIME_DELAY_FETCH_API,
+} from "../../utils/constant";
 import {
   detailPostSubs,
   listPostSubs,
@@ -40,7 +44,8 @@ const DetailPost = (props) => {
     imageUrl = "",
     username = "",
     description = "",
-  } = state[postId];
+    countComment,
+  } = post;
   const [openComment, setOpenComment] = useState(false);
   const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
 
@@ -115,18 +120,31 @@ const DetailPost = (props) => {
         </div>
       )}
       <div>
-        {likerIds.length > 0 && (
-          <Flex
-            gap={"8px"}
-            className="pb-1 cursor-pointer button-list-liker-post none-copy"
-            align="center"
-            justify="center"
-          >
-            <img width={18} src={SOURCE_IMAGE_LIKED} />
-            <a className="text-disabled">{likerIds.length}</a>
-          </Flex>
-        )}
+        <Flex gap={8}>
+          {likerIds.length > 0 && (
+            <Flex
+              gap={4}
+              className="pb-1 cursor-pointer button-list-liker-post none-copy"
+              align="center"
+              justify="center"
+            >
+              <LikeOutlined style={{ height: "20px" }} />
+              <a className="text-disabled">{likerIds.length}</a>
+            </Flex>
+          )}
 
+          {countComment > 0 && (
+            <Flex
+              gap={4}
+              className="pb-1 cursor-pointer button-list-liker-post none-copy"
+              align="center"
+              justify="center"
+            >
+              <CommentOutlined style={{ height: "20px" }} />
+              <a className="text-disabled">{countComment}</a>
+            </Flex>
+          )}
+        </Flex>
         {hasFooter && (
           <>
             <hr className="gray" />

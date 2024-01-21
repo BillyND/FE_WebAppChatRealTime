@@ -7,7 +7,7 @@ function BaseModal(props) {
     onOk,
     onCancel,
     children,
-    loading,
+    loadingFooter,
     footer,
     content,
     style,
@@ -21,7 +21,7 @@ function BaseModal(props) {
         footer || (
           <Flex justify="end">
             <Button onClick={onCancel}>Cancel</Button>
-            <Button type="primary" loading={loading} onClick={onOk}>
+            <Button type="primary" loading={loadingFooter} onClick={onOk}>
               Ok
             </Button>
           </Flex>

@@ -1,6 +1,7 @@
 import { unionBy } from "lodash";
 import { getPost } from "../services/api";
 import { listPostSubs } from "./globalStates/initGlobalState";
+import { message } from "antd";
 
 /**
  * Fetches and handles the list of posts.
@@ -70,7 +71,7 @@ export const scrollToBottomOfElement = (elementId) => {
     const currentScrollTop = elementHasScrollBottom.scrollTop;
 
     /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
-    const numSteps = 10;
+    const numSteps = 20;
 
     /*** Calculate the distance to move in each step ***/
     const scrollStep = (scrollHeight - currentScrollTop) / numSteps;
@@ -99,4 +100,35 @@ export const scrollToBottomOfElement = (elementId) => {
     console.error("===> Error scrollToBottomOfElement:", error);
     elementHasScrollBottom.scrollTop = scrollHeight;
   }
+};
+
+export const formatTimeAgo = (timeInMilliseconds) => {
+  const now = Date.now();
+  let formattedTime = timeInMilliseconds;
+
+  try {
+    formattedTime = Number(new Date(timeInMilliseconds));
+  } catch (error) {
+    console.error("===> Error formatTimeAgo:", error);
+  }
+
+  const timeDiff = now - formattedTime;
+  const minutes = Math.floor(timeDiff / (1000 * 60));
+  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+
+  if (minutes < 60) {
+    return `${minutes || 1} minute${minutes > 1 ? "s" : ""}`;
+  } else if (hours < 24) {
+    return `${hours} hour${hours > 1 ? "s" : ""}`;
+  } else if (days < 7) {
+    return `${days} day${days > 1 ? "s" : ""}`;
+  } else {
+    return `${weeks} week${weeks > 1 ? "s" : ""}`;
+  }
+};
+
+export const showPopupError = (error) => {
+  message.error(error || "Server error!");
 };

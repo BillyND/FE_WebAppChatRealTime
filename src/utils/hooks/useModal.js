@@ -6,7 +6,6 @@ export const useModal = ([keys]) => {
   const { state, setState } = useSubscription(modalSubscription, [keys]);
 
   const openModal = (key = "", condition) => {
-    console.log("===>key:", key);
     if (condition) {
       setState({
         ...state,

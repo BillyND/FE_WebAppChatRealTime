@@ -1,17 +1,15 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { Flex, message } from "antd";
-import React, { Fragment, useEffect, useState } from "react";
+import { message } from "antd";
+import { useSubscription } from "global-state-hook";
+import React, { Fragment, useEffect } from "react";
 import BaseModal from "../../UI/BaseModal";
 import { SpinnerLoading } from "../../screens/Home/HomeContent";
+import { getCommentsInPost } from "../../services/api";
 import { SOURCE_IMAGE_SEND } from "../../utils/constant";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import DetailPost from "./DetailPost";
-import { useSubscription } from "global-state-hook";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
-import { addCommentToPost, getCommentsInPost } from "../../services/api";
-import { scrollToBottomOfElement } from "../../utils/utilities";
-import { UserThumbnail } from "../../UI/UserThumbnail";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import DetailPost from "./DetailPost";
+import { DetailComment } from "./DetailtComment";
+import { FooterComment } from "./FooterComment";
+import { showPopupError } from "../../utils/utilities";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   return (
@@ -29,46 +27,6 @@ export const ButtonSend = ({ disabled, onClick }) => {
   );
 };
 
-const DetailComment = (props) => {
-  const { comment, infoUser, posting } = props;
-  const { avaUrl, username, _id: userId } = infoUser || {};
-  const { content, ownerId } = comment;
-  const isOwnerOfComment = userId === ownerId;
-
-  return (
-    <Flex gap={12}>
-      <UserThumbnail avaUrl={avaUrl} size={32} />
-      <div className="wrap-detail-comment">
-        <Flex gap={6}>
-          {isOwnerOfComment && (
-            <div className="control-comment  none-copy">
-              <DeleteOutlined className="control-delete cursor-pointer" />
-              <EditOutlined className="control-edit cursor-pointer" />
-            </div>
-          )}
-          <div>
-            <div className="detail-comment">
-              <span className="owner-name">{username}</span>
-              <div
-                style={{
-                  display: "grid",
-                  gap: "16px",
-                }}
-                dangerouslySetInnerHTML={{
-                  __html: content.replace(/\n/g, "<br/>"),
-                }}
-              />{" "}
-            </div>
-            <span className="sub-content-comment px-2">
-              {posting ? "Writing ..." : "1 minutes"}
-            </span>
-          </div>
-        </Flex>
-      </div>
-    </Flex>
-  );
-};
-
 function ModalCommentPost(props) {
   const {
     openComment,
@@ -77,15 +35,10 @@ function ModalCommentPost(props) {
     postId,
   } = props;
   const {
-    infoUser,
-    infoUser: { avaUrl, _id: userId },
-  } = useAuthUser();
-  const {
     state: { [postId]: post },
     setState,
   } = useSubscription(detailPostSubs, [postId]);
-  const { comments, loading, posting, tempComment } = post;
-  const [valueComment, setValueComment] = useState("");
+  const { comments, loading, posting, tempComment = "" } = post;
 
   useEffect(() => {
     postId && fetchCommentsInPost();
@@ -110,43 +63,7 @@ function ModalCommentPost(props) {
       });
     } catch (err) {
       console.error("===> Error fetchCommentsInPost:", err);
-      message.error("Server error!");
-    }
-  };
-
-  const handlePostComment = async () => {
-    try {
-      const tempComment = valueComment;
-      setState({
-        [postId]: {
-          ...post,
-          posting: true,
-          tempComment,
-        },
-      });
-      setValueComment("");
-      scrollToBottomOfElement(postId);
-
-      const resAddComment =
-        (await addCommentToPost({
-          postId,
-          ownerId: userId,
-          content: tempComment,
-        })) || [];
-
-      setState({
-        [postId]: {
-          ...post,
-          posting: false,
-          comments: [...comments, resAddComment],
-        },
-      });
-
-      setValueComment("");
-      scrollToBottomOfElement(postId);
-    } catch (error) {
-      console.error("===>Error handlePostComment", error);
-      message.error("Server error!");
+      showPopupError();
     }
   };
 
@@ -156,27 +73,7 @@ function ModalCommentPost(props) {
       open={openComment}
       onCancel={() => setOpenComment(false)}
       title={`Post by ${username}`}
-      footer={
-        <>
-          <div className="box-comment-post">
-            <Flex gap={12}>
-              <UserThumbnail avaUrl={avaUrl} size={32} />
-              <textarea
-                value={valueComment}
-                onChange={(e) => setValueComment(e.target.value)}
-                rows={4}
-                placeholder="Write your comment..."
-                className="input-comment"
-              ></textarea>
-              <ButtonSend
-                onClick={handlePostComment}
-                disabled={!valueComment.trim() || loading || posting}
-              />
-            </Flex>
-          </div>
-          <div style={{ minHeight: "110px" }} />
-        </>
-      }
+      footer={<FooterComment postId={postId} />}
       className="modal-comment-post"
       style={{ top: 20, position: "relative" }}
       scrollId={postId}
@@ -193,7 +90,7 @@ function ModalCommentPost(props) {
         {comments?.map((comment, index) => {
           return (
             <Fragment key={`${comment?._id}-${index}`}>
-              <DetailComment comment={comment} infoUser={infoUser} />
+              <DetailComment comment={comment} postId={postId} />
             </Fragment>
           );
         })}
@@ -202,9 +99,7 @@ function ModalCommentPost(props) {
           <DetailComment
             comment={{
               content: tempComment,
-              ownerId: infoUser._id,
             }}
-            infoUser={infoUser}
             posting={posting}
           />
         )}

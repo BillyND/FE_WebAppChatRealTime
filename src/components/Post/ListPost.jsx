@@ -54,7 +54,7 @@ function ListPost() {
       <div className="list-post-container pt-5 mb-5">
         <h4>Feeds</h4>
         {listPost?.map((post = {}) => {
-          const { _id: postId } = post;
+          const { _id: postId, comments: countComment } = post;
           const isAuthorOfPost = post.userId === infoUser._id;
 
           detailPostSubs.state = {
@@ -64,6 +64,7 @@ function ListPost() {
               ...post,
               comments: [],
               loading: false,
+              countComment,
             },
           };
 

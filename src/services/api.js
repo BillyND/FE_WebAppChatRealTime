@@ -54,9 +54,8 @@ export const getPost = (page = 1, limit = 5) => {
 };
 
 export const deletePost = (id) => {
-  return axios.post(
-    `post/${id}`,
-    { userId: infoUserSubscription.state?.infoUser?._id },
+  return axios.delete(
+    `post/${id}/${infoUserSubscription.state?.infoUser?._id}`,
     tokenHeaders()
   );
 };
@@ -76,4 +75,9 @@ export const getCommentsInPost = (postId) => {
 export const addCommentToPost = (payload) => {
   const { postId } = payload;
   return axios.post(`post/comment/${postId}`, payload, tokenHeaders());
+};
+
+export const deleteCommentOfPost = (payload) => {
+  const { commentId, ownerId } = payload;
+  return axios.delete(`post/comment/${commentId}/${ownerId}`, tokenHeaders());
 };

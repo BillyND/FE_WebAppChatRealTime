@@ -7,7 +7,7 @@ import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useDebounce } from "../../utils/hooks/useDebounce";
 import { createPost } from "../../services/api";
 import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
-import { handleGetListPost } from "../../utils/utilities";
+import { handleGetListPost, showPopupError } from "../../utils/utilities";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
 
 function ModalNewPost({ placeHolderInputPost }) {
@@ -61,7 +61,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         ? (handleCancel(), message.success(resPost?.message))
         : message.error(resPost?.message);
     } catch (error) {
-      message.error("Server error!");
+      showPopupError();
     } finally {
       // Reset loading state after completion (whether successful or not)
       setLoadings({ ...loadings, createPost: false });
