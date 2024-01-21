@@ -10,7 +10,7 @@ import { useModal } from "../../utils/hooks/useModal";
 import { handleGetListPost } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
-import BaseModal from "../../Modals/BaseModal";
+import BaseModal from "../../UI/BaseModal";
 
 function ListPost() {
   const { infoUser } = useAuthUser();

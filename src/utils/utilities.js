@@ -70,7 +70,7 @@ export const scrollToBottomOfElement = (elementId) => {
     const currentScrollTop = elementHasScrollBottom.scrollTop;
 
     /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
-    const numSteps = 30;
+    const numSteps = 10;
 
     /*** Calculate the distance to move in each step ***/
     const scrollStep = (scrollHeight - currentScrollTop) / numSteps;

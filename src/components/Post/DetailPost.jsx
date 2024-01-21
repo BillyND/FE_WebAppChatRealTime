@@ -16,6 +16,7 @@ import {
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
 import ModalCommentPost from "./ModalCommentPost";
+import { UserThumbnail } from "../../UI/UserThumbnail";
 
 const DetailPost = (props) => {
   const {
@@ -86,10 +87,7 @@ const DetailPost = (props) => {
     <div className="card-detail-post p-3">
       <div className="header">
         <div className="info-user">
-          <div
-            className="avatar"
-            style={{ backgroundImage: `url(${avaUrl})` }}
-          />
+          <UserThumbnail avaUrl={avaUrl} size={40} />
           <div className="name">{username}</div>
         </div>
         {isAuthorOfPost && hasDelete && (

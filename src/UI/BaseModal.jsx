@@ -1,9 +1,18 @@
 import { Button, Flex, Modal } from "antd";
 import React from "react";
-import "./Modal.scss";
+import "./UI.scss";
 
 function BaseModal(props) {
-  const { onOk, onCancel, children, loading, footer, content, style } = props;
+  const {
+    onOk,
+    onCancel,
+    children,
+    loading,
+    footer,
+    content,
+    style,
+    scrollId,
+  } = props;
 
   return (
     <Modal
@@ -21,7 +30,12 @@ function BaseModal(props) {
       style={style}
     >
       <hr className="gray" />
-      {content || children}
+      <div
+        id={scrollId}
+        style={{ overflowY: "scroll", maxHeight: "calc(100vh - 250px)" }}
+      >
+        {content || children}
+      </div>
     </Modal>
   );
 }

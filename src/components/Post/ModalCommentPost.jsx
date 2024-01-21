@@ -1,15 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Flex, message } from "antd";
-import { useSubscription } from "global-state-hook";
-import React, { useEffect, useState } from "react";
-import BaseModal from "../../Modals/BaseModal";
+import React, { Fragment, useEffect, useState } from "react";
+import BaseModal from "../../UI/BaseModal";
 import { SpinnerLoading } from "../../screens/Home/HomeContent";
-import { addCommentToPost, getCommentsInPost } from "../../services/api";
 import { SOURCE_IMAGE_SEND } from "../../utils/constant";
-import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { scrollToBottomOfElement } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
+import { useSubscription } from "global-state-hook";
+import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
+import { addCommentToPost, getCommentsInPost } from "../../services/api";
+import { scrollToBottomOfElement } from "../../utils/utilities";
+import { UserThumbnail } from "../../UI/UserThumbnail";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   return (
@@ -27,6 +29,46 @@ export const ButtonSend = ({ disabled, onClick }) => {
   );
 };
 
+const DetailComment = (props) => {
+  const { comment, infoUser, posting } = props;
+  const { avaUrl, username, _id: userId } = infoUser || {};
+  const { content, ownerId } = comment;
+  const isOwnerOfComment = userId === ownerId;
+
+  return (
+    <Flex gap={12}>
+      <UserThumbnail avaUrl={avaUrl} size={32} />
+      <div className="wrap-detail-comment">
+        <Flex gap={6}>
+          {isOwnerOfComment && (
+            <div className="control-comment  none-copy">
+              <DeleteOutlined className="control-delete cursor-pointer" />
+              <EditOutlined className="control-edit cursor-pointer" />
+            </div>
+          )}
+          <div>
+            <div className="detail-comment">
+              <span className="owner-name">{username}</span>
+              <div
+                style={{
+                  display: "grid",
+                  gap: "16px",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: content.replace(/\n/g, "<br/>"),
+                }}
+              />{" "}
+            </div>
+            <span className="sub-content-comment px-2">
+              {posting ? "Writing ..." : "1 minutes"}
+            </span>
+          </div>
+        </Flex>
+      </div>
+    </Flex>
+  );
+};
+
 function ModalCommentPost(props) {
   const {
     openComment,
@@ -35,32 +77,21 @@ function ModalCommentPost(props) {
     postId,
   } = props;
   const {
-    infoUser: { avaUrl, username: currentUserName, _id: userId },
+    infoUser,
+    infoUser: { avaUrl, _id: userId },
   } = useAuthUser();
   const {
-    state: {
-      [postId]: post,
-      [postId]: { comments, loading },
-    },
+    state: { [postId]: post },
     setState,
   } = useSubscription(detailPostSubs, [postId]);
-  const initValueComment = {
-    avaUrl: "",
-    content: "",
-    createdAt: "",
-    ownerId: "",
-    postId: "",
-    updatedAt: "",
-    username: "",
-  };
-  const [valueComment, setValueComment] = useState(initValueComment);
+  const { comments, loading, posting, tempComment } = post;
+  const [valueComment, setValueComment] = useState("");
 
   useEffect(() => {
-    postId && !comments.length && fetchCommentsInPost();
+    postId && fetchCommentsInPost();
   }, []);
 
   const fetchCommentsInPost = async () => {
-    scrollToBottomOfElement(postId);
     setState({
       [postId]: {
         ...post,
@@ -68,59 +99,55 @@ function ModalCommentPost(props) {
       },
     });
 
-    const resComments = await getCommentsInPost(postId).catch((err) => {
-      console.error("===> Error fetchCommentsInPost:", err);
-      return [];
-    });
-
-    setState({
-      [postId]: {
-        ...post,
-        loading: false,
-        comments: resComments || [],
-      },
-    });
-  };
-
-  const handlePostComment = async () => {
     try {
-      setState({
-        [postId]: {
-          ...post,
-          loading: true,
-        },
-      });
-
-      const resAddComment = await addCommentToPost({
-        postId,
-        ownerId: userId,
-        ...valueComment,
-      }).catch((error) => {
-        console.error("===>Error handlePostComment:", error);
-        return [];
-      });
-
+      const resComments = (await getCommentsInPost(postId)) || [];
       setState({
         [postId]: {
           ...post,
           loading: false,
-          comments: [...comments, resAddComment || []],
+          comments: resComments,
         },
       });
-      setValueComment(initValueComment);
+    } catch (err) {
+      console.error("===> Error fetchCommentsInPost:", err);
+      message.error("Server error!");
+    }
+  };
+
+  const handlePostComment = async () => {
+    try {
+      const tempComment = valueComment;
+      setState({
+        [postId]: {
+          ...post,
+          posting: true,
+          tempComment,
+        },
+      });
+      setValueComment("");
+      scrollToBottomOfElement(postId);
+
+      const resAddComment =
+        (await addCommentToPost({
+          postId,
+          ownerId: userId,
+          content: tempComment,
+        })) || [];
+
+      setState({
+        [postId]: {
+          ...post,
+          posting: false,
+          comments: [...comments, resAddComment],
+        },
+      });
+
+      setValueComment("");
       scrollToBottomOfElement(postId);
     } catch (error) {
       console.error("===>Error handlePostComment", error);
       message.error("Server error!");
     }
-  };
-
-  const onChangeComment = (content) => {
-    setValueComment({
-      content,
-      username: currentUserName,
-      time: Date.now(),
-    });
   };
 
   return (
@@ -129,61 +156,61 @@ function ModalCommentPost(props) {
       open={openComment}
       onCancel={() => setOpenComment(false)}
       title={`Post by ${username}`}
-      footer={<></>}
+      footer={
+        <>
+          <div className="box-comment-post">
+            <Flex gap={12}>
+              <UserThumbnail avaUrl={avaUrl} size={32} />
+              <textarea
+                value={valueComment}
+                onChange={(e) => setValueComment(e.target.value)}
+                rows={4}
+                placeholder="Write your comment..."
+                className="input-comment"
+              ></textarea>
+              <ButtonSend
+                onClick={handlePostComment}
+                disabled={!valueComment.trim() || loading || posting}
+              />
+            </Flex>
+          </div>
+          <div style={{ minHeight: "110px" }} />
+        </>
+      }
       className="modal-comment-post"
       style={{ top: 20, position: "relative" }}
+      scrollId={postId}
     >
-      <div
-        style={{ overflowY: "scroll", maxHeight: "calc(100vh - 150px)" }}
-        id={postId}
-      >
-        <DetailPost
-          {...props}
-          loop={true}
-          openedComment={false}
-          hasDelete={false}
-        />
-        <hr className="gray" />
+      <DetailPost
+        {...props}
+        loop={true}
+        openedComment={false}
+        hasDelete={false}
+      />
+      <hr className="gray mb-2" />
 
+      <div className="list-comment mb-2">
         {comments?.map((comment, index) => {
-          const { content } = comment || {};
           return (
-            <div
-              key={`${comment}-${index}`}
-              style={{
-                display: "grid",
-                gap: "16px",
-              }}
-              dangerouslySetInnerHTML={{
-                __html: content.replace(/\n/g, "<br/>"),
-              }}
-            />
+            <Fragment key={`${comment?._id}-${index}`}>
+              <DetailComment comment={comment} infoUser={infoUser} />
+            </Fragment>
           );
         })}
 
-        {loading && <SpinnerLoading className={`mt-4`} />}
-
-        <div className="box-comment-post">
-          <Flex gap={12}>
-            <div
-              className="avatar"
-              style={{ backgroundImage: `url(${avaUrl})` }}
-            />
-            <textarea
-              value={valueComment.content}
-              onChange={(e) => onChangeComment(e.target.value)}
-              rows={4}
-              placeholder="Write your comment..."
-              className="input-comment"
-            ></textarea>
-            <ButtonSend
-              onClick={handlePostComment}
-              disabled={!valueComment.content.trim() || loading}
-            />
-          </Flex>
-        </div>
-        <div style={{ minHeight: "110px" }} />
+        {posting && (
+          <DetailComment
+            comment={{
+              content: tempComment,
+              ownerId: infoUser._id,
+            }}
+            infoUser={infoUser}
+            posting={posting}
+          />
+        )}
       </div>
+
+      {loading && <SpinnerLoading className={`mt-4`} />}
     </BaseModal>
   );
 }
