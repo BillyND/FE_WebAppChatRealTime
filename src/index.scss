@@ -217,3 +217,13 @@ hr {
 .disable-scroll {
   overflow-y: hidden;
 }
+
+.cursor-no-drop {
+  cursor: no-drop !important;
+
+  &:hover {
+    svg {
+      fill: gray !important;
+    }
+  }
+}

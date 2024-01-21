@@ -27,10 +27,15 @@ function ModalDeleteComment(props) {
         ownerId: userId,
       }) || [];
 
+      const newListComment = comments.filter(
+        (comment) => comment._id !== commentId
+      );
+
       setState({
         [postId]: {
           ...post,
-          comments: comments.filter((comment) => comment._id !== commentId),
+          comments: newListComment,
+          countComment: newListComment.length,
         },
       });
 

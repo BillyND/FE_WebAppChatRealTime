@@ -1,9 +1,13 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
-import React, { useState } from "react";
+import { useSubscription } from "global-state-hook";
+import React, { useRef, useState } from "react";
 import { UserThumbnail } from "../../UI/UserThumbnail";
+import { updateCommentOfPost } from "../../services/api";
+import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { formatTimeAgo } from "../../utils/utilities";
+import { formatTimeAgo, showPopupError } from "../../utils/utilities";
+import { InputComment } from "./FooterComment";
 import ModalDeleteComment from "./ModalDeleteComment";
 
 export const DetailComment = (props) => {
@@ -11,6 +15,11 @@ export const DetailComment = (props) => {
   const {
     infoUser: { avaUrl, _id: userId, username: currentUserName },
   } = useAuthUser();
+  const {
+    state: { [postId]: post, commentEdit },
+    setState,
+  } = useSubscription(detailPostSubs, [postId, "commentEdit"]);
+  const { comments = [] } = post || {};
   const {
     _id: commentId,
     content,
@@ -20,6 +29,45 @@ export const DetailComment = (props) => {
   } = comment;
   const [openDelete, setOpenDelete] = useState(false);
   const isOwnerOfComment = userId === ownerId;
+  const [localValueComment, setLocalValue] = useState(content);
+  const isEdit = commentEdit === commentId;
+  const refInputComment = useRef(null);
+
+  const handleUpdateComment = async () => {
+    try {
+      const updatePost = {
+        ...post,
+        comments: comments.map((comment) => {
+          if (comment?._id === commentId) {
+            return {
+              ...comment,
+              content: localValueComment,
+            };
+          }
+          return comment;
+        }),
+      };
+
+      setState({
+        [postId]: updatePost,
+        commentEdit: null,
+      });
+
+      updateCommentOfPost({
+        commentId,
+        ownerId: userId,
+        content: localValueComment,
+      });
+    } catch (error) {
+      showPopupError();
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setState({
+      commentEdit: null,
+    });
+  };
 
   return (
     <>
@@ -33,27 +81,63 @@ export const DetailComment = (props) => {
         <UserThumbnail avaUrl={avaUrl} size={32} />
         <div className="wrap-detail-comment">
           <Flex gap={6}>
-            {isOwnerOfComment && (
+            {isOwnerOfComment && !isEdit && (
               <div className="control-comment  none-copy">
                 <DeleteOutlined
-                  className="control-delete cursor-pointer"
+                  className={`control-delete ${
+                    commentId ? "cursor-pointer" : "cursor-no-drop"
+                  }`}
                   onClick={() => commentId && setOpenDelete(true)}
                 />
-                <EditOutlined className="control-edit cursor-pointer" />
+                <EditOutlined
+                  onClick={() => {
+                    setState({
+                      commentEdit: commentId,
+                    });
+                  }}
+                  className={`control-edit ${
+                    commentId ? "cursor-pointer" : "cursor-no-drop"
+                  }`}
+                />
               </div>
             )}
             <div>
-              <div className="detail-comment">
-                <span className="owner-name">{username}</span>
-                <div
-                  style={{
-                    display: "grid",
-                    gap: "16px",
-                  }}
-                  dangerouslySetInnerHTML={{
-                    __html: content.replace(/\n/g, "<br/>"),
-                  }}
-                />
+              <div
+                className="detail-comment"
+                style={{
+                  maxWidth: `calc(100vw - ${
+                    isOwnerOfComment ? "134px" : "110px"
+                  })`,
+                }}
+              >
+                {isEdit ? (
+                  <InputComment
+                    refInput={refInputComment}
+                    value={localValueComment}
+                    setValue={setLocalValue}
+                    onUpdate={handleUpdateComment}
+                    focus={true}
+                    subControl={
+                      localValueComment.trim() && (
+                        <a
+                          className="cancel-edit-comment"
+                          onClick={handleCancelEdit}
+                        >
+                          Cancel
+                        </a>
+                      )
+                    }
+                  />
+                ) : (
+                  <>
+                    <span className="owner-name">{username}</span>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: content.replace(/\n/g, "<br/>"),
+                      }}
+                    />
+                  </>
+                )}
               </div>
               <span className="sub-content-comment px-2">
                 {posting ? "Writing ..." : formatTimeAgo(createdAt)}

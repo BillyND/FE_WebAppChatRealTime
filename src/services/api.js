@@ -81,3 +81,12 @@ export const deleteCommentOfPost = (payload) => {
   const { commentId, ownerId } = payload;
   return axios.delete(`post/comment/${commentId}/${ownerId}`, tokenHeaders());
 };
+
+export const updateCommentOfPost = (payload) => {
+  const { commentId, ownerId } = payload;
+  return axios.put(
+    `post/comment/${commentId}/${ownerId}`,
+    payload,
+    tokenHeaders()
+  );
+};
