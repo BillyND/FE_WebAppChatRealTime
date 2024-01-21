@@ -32,9 +32,9 @@ const DetailPost = (props) => {
   } = props;
   const {
     state,
-    state: { [postId]: post, listPost },
+    state: { [`post-${postId}`]: post, listPost },
     setState,
-  } = useSubscription(detailPostSubs, [postId]);
+  } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
@@ -68,7 +68,7 @@ const DetailPost = (props) => {
     });
 
     setState({
-      [postId]: { ...post, likerIds: updatedLikerIds },
+      [`post-${postId}`]: { ...post, likerIds: updatedLikerIds },
     });
 
     listPostSubs.state.listPost = updatedList;

@@ -43,19 +43,21 @@ function ModalCommentPost(props) {
     postId,
   } = props;
   const {
-    state: { [postId]: post },
+    state: { [`post-${postId}`]: post },
     setState,
-  } = useSubscription(detailPostSubs, [postId]);
-  const { comments, loading, posting, tempComment = "" } = post;
+  } = useSubscription(detailPostSubs, [`post-${postId}`]);
+  const { comments, loading, posting, tempComment = "", countComment } = post;
+
+  console.log("===>tempComment:", tempComment);
 
   useEffect(() => {
-    postId && comments.length && fetchCommentsInPost();
+    postId && countComment && fetchCommentsInPost();
     detailPostSubs.state.commentEdit = null;
   }, []);
 
   const fetchCommentsInPost = async () => {
     setState({
-      [postId]: {
+      [`post-${postId}`]: {
         ...post,
         loading: true,
       },
@@ -65,7 +67,7 @@ function ModalCommentPost(props) {
       const resComments = (await getCommentsInPost(postId)) || [];
 
       setState({
-        [postId]: {
+        [`post-${postId}`]: {
           ...post,
           loading: false,
           comments: resComments,
@@ -98,20 +100,28 @@ function ModalCommentPost(props) {
 
       <div className="list-comment mb-2">
         {comments?.map((comment, index) => {
+          const { _id } = comment || {};
+
+          detailPostSubs.state = {
+            ...detailPostSubs.state,
+            [`comment-${_id}`]: {
+              ...comment,
+            },
+          };
+
           return (
-            <Fragment key={`${comment?._id}-${index}`}>
-              <DetailComment comment={comment} postId={postId} />
+            <Fragment key={`${_id}-${index}`}>
+              <DetailComment
+                comment={comment}
+                commentId={_id}
+                postId={postId}
+              />
             </Fragment>
           );
         })}
 
         {posting && (
-          <DetailComment
-            comment={{
-              content: tempComment,
-            }}
-            posting={posting}
-          />
+          <DetailComment tempComment={tempComment} posting={posting} />
         )}
       </div>
 

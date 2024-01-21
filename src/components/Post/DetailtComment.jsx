@@ -1,62 +1,60 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UserThumbnail } from "../../UI/UserThumbnail";
 import { updateCommentOfPost } from "../../services/api";
+import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { useDebounce } from "../../utils/hooks/useDebounce";
 import { formatTimeAgo, showPopupError } from "../../utils/utilities";
 import { InputComment } from "./FooterComment";
 import ModalDeleteComment from "./ModalDeleteComment";
 
 export const DetailComment = (props) => {
-  const { comment, posting, postId } = props;
+  const { posting, postId, commentId, tempComment } = props;
   const {
     infoUser: { avaUrl, _id: userId, username: currentUserName },
   } = useAuthUser();
   const {
-    state: { [postId]: post, commentEdit },
+    state: { [`comment-${commentId}`]: comment = {}, commentEdit },
     setState,
-  } = useSubscription(detailPostSubs, [postId, "commentEdit"]);
-  const { comments = [] } = post || {};
+  } = useSubscription(detailPostSubs, [`comment-${commentId}`, "commentEdit"]);
   const {
-    _id: commentId,
-    content,
+    content = tempComment,
     ownerId = userId,
     createdAt,
     username = currentUserName,
   } = comment;
   const [openDelete, setOpenDelete] = useState(false);
   const isOwnerOfComment = userId === ownerId;
-  const [localValueComment, setLocalValue] = useState(content);
+  const [localValueComment, setLocalValue] = useState("");
   const isEdit = commentEdit === commentId;
   const refInputComment = useRef(null);
+  const debounceContent = useDebounce(content, TIME_DELAY_SEARCH_INPUT / 2);
+
+  useEffect(() => {
+    setLocalValue(debounceContent.trim());
+  }, [debounceContent]);
 
   const handleUpdateComment = async () => {
     try {
-      const updatePost = {
-        ...post,
-        comments: comments.map((comment) => {
-          if (comment?._id === commentId) {
-            return {
-              ...comment,
-              content: localValueComment,
-            };
-          }
-          return comment;
-        }),
+      detailPostSubs.state.commentEdit = null;
+
+      const updateComment = {
+        ...comment,
+        content: localValueComment,
       };
 
       setState({
-        [postId]: updatePost,
-        commentEdit: null,
+        [`comment-${commentId}`]: updateComment,
       });
 
       updateCommentOfPost({
         commentId,
         ownerId: userId,
-        content: localValueComment,
+        content: localValueComment.trim(),
       });
     } catch (error) {
       showPopupError();

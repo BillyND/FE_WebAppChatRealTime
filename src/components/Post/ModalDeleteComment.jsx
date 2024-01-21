@@ -12,9 +12,9 @@ function ModalDeleteComment(props) {
     infoUser: { _id: userId },
   } = useAuthUser();
   const {
-    state: { [postId]: post },
+    state: { [`post-${postId}`]: post },
     setState,
-  } = useSubscription(detailPostSubs, [postId]);
+  } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments = [] } = post || {};
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -32,7 +32,7 @@ function ModalDeleteComment(props) {
       );
 
       setState({
-        [postId]: {
+        [`post-${postId}`]: {
           ...post,
           comments: newListComment,
           countComment: newListComment.length,

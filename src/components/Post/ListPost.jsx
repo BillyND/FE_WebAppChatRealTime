@@ -60,7 +60,7 @@ function ListPost() {
           detailPostSubs.state = {
             ...detailPostSubs.state,
             listPost,
-            [postId]: {
+            [`post-${postId}`]: {
               ...post,
               comments: [],
               loading: false,

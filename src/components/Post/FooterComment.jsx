@@ -60,9 +60,9 @@ export const FooterComment = (props) => {
     infoUser: { avaUrl, _id: userId },
   } = useAuthUser();
   const {
-    state: { [postId]: post },
+    state: { [`post-${postId}`]: post },
     setState,
-  } = useSubscription(detailPostSubs, [postId]);
+  } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments, loading, posting, tempComment = "" } = post;
   const [localValueComment, setLocalValue] = useState(tempComment);
   const refInputComment = useRef(null);
@@ -79,7 +79,7 @@ export const FooterComment = (props) => {
     e.preventDefault();
     try {
       setState({
-        [postId]: {
+        [`post-${postId}`]: {
           ...post,
           posting: true,
           tempComment: localValueComment,
@@ -97,7 +97,7 @@ export const FooterComment = (props) => {
         })) || [];
 
       setState({
-        [postId]: {
+        [`post-${postId}`]: {
           ...post,
           posting: false,
           comments: [...comments, resAddComment],
