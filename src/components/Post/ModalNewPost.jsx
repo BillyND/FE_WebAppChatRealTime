@@ -161,7 +161,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         <div className="image-preview mb-4 mt-4">
           {selectedImage ? (
             <>
-              <img width={"200px"} src={selectedImage} loading="lazy" />
+              <img src={selectedImage} loading="lazy" />
               <CloseCircleOutlined
                 className="icon-clear-image"
                 onClick={handleClearImage}

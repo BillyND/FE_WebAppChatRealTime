@@ -177,7 +177,7 @@ body {
 }
 
 .cursor-pointer {
-  cursor: pointer !important;
+  cursor: pointer;
 }
 
 .spinner-loading {
@@ -194,8 +194,8 @@ body {
 }
 
 hr {
+  margin: 4px 0 4px 0;
   &.gray {
-    margin: 4px 0 4px 0;
     background-color: rgb(87, 87, 87);
   }
 }

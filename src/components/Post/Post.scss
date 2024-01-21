@@ -10,6 +10,35 @@
   }
 }
 
+.box-comment-post {
+  min-height: 110px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #242526 !important;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  padding: 16px;
+  border-top: 1px solid rgb(48, 48, 48);
+}
+
+.info-user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .card-detail-post {
   background-color: #242526;
   // padding: 10px;
@@ -22,21 +51,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .info-user {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-
-      .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-size: contain;
-        background-repeat: no-repeat;
-      }
-    }
 
     .icon-delete {
       cursor: pointer;
@@ -248,8 +262,7 @@
   }
 
   .image-preview {
-    min-height: 100px;
-    max-height: 200px;
+    min-height: 150px;
     display: flex;
     justify-content: center;
     background-color: #333436;
@@ -259,6 +272,11 @@
     position: relative;
     align-items: center;
     position: relative;
+    img {
+      min-height: 200px;
+      max-width: 200px;
+      max-height: 200px;
+    }
 
     .icon-clear-image {
       position: absolute;
@@ -294,5 +312,50 @@
   border-radius: 50%;
   svg {
     fill: #fff;
+  }
+}
+
+.input-comment {
+  width: 100%;
+  background-color: #3a3b3c;
+  color: #fff;
+  border-color: transparent;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  border-radius: 16px;
+  padding: 10px;
+  min-height: 100px;
+  position: relative;
+
+  &::placeholder {
+    color: #858585;
+  }
+}
+
+.button-send {
+  height: fit-content;
+  padding: 8px;
+  border-radius: 50%;
+
+  &.disabled {
+    opacity: 0.2;
+    cursor: no-drop !important;
+  }
+
+  &:hover {
+    background-color: rgb(56, 56, 56);
+  }
+
+  .icon-send {
+    width: 25px;
+    min-width: 25px;
+    height: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &svg {
+      fill: red !important;
+    }
   }
 }

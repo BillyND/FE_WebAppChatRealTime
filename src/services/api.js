@@ -68,3 +68,12 @@ export const updateLikeOfPost = (id) => {
     tokenHeaders()
   );
 };
+
+export const getCommentsInPost = (postId) => {
+  return axios.get(`post/comment/${postId}`, tokenHeaders());
+};
+
+export const addCommentToPost = (payload) => {
+  const { postId } = payload;
+  return axios.post(`post/comment/${postId}`, payload, tokenHeaders());
+};

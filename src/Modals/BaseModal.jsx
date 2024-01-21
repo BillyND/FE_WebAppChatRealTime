@@ -21,9 +21,7 @@ function BaseModal(props) {
       style={style}
     >
       <hr className="gray" />
-      <div style={{ overflowY: "scroll", maxHeight: "calc(100vh - 150px)" }}>
-        {content || children}
-      </div>
+      {content || children}
     </Modal>
   );
 }

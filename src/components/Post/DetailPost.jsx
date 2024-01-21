@@ -1,41 +1,45 @@
-/* eslint-disable react/no-children-prop */
-/* eslint-disable react/display-name */
 import {
   CommentOutlined,
   DeleteOutlined,
   LikeOutlined,
 } from "@ant-design/icons";
 import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback, useState } from "react";
 import { updateLikeOfPost } from "../../services/api";
 import { SOURCE_IMAGE_LIKED, TIME_DELAY_FETCH_API } from "../../utils/constant";
+import {
+  detailPostSubs,
+  listPostSubs,
+} from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
 import ModalCommentPost from "./ModalCommentPost";
-import { listPostSubs } from "../../utils/globalStates/initGlobalState";
-import BaseModal from "../../Modals/BaseModal";
 
-const DetailPost = React.memo((props) => {
+const DetailPost = (props) => {
   const {
-    post,
-    isAuthorOfPost,
-    loop = false,
-    hasFooter = true,
+    postId,
     hasDelete = true,
+    hasFooter = true,
+    loop,
+    isAuthorOfPost,
   } = props;
-  const { listPost } = listPostSubs.state;
+  const {
+    state,
+    state: { [postId]: post, listPost },
+    setState,
+  } = useSubscription(detailPostSubs, [postId]);
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
   const {
     likerIds = [],
-    _id: postId = "",
     avaUrl = "",
     imageUrl = "",
     username = "",
     description = "",
-  } = post;
+  } = state[postId];
   const [openComment, setOpenComment] = useState(false);
   const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
 
@@ -57,9 +61,11 @@ const DetailPost = React.memo((props) => {
       return post;
     });
 
-    listPostSubs.updateState({
-      listPost: updatedList,
+    setState({
+      [postId]: { ...post, likerIds: updatedLikerIds },
     });
+
+    listPostSubs.state.listPost = updatedList;
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
     debounceUpdateLikes(postId, updatedList);
@@ -107,7 +113,7 @@ const DetailPost = React.memo((props) => {
       />
       {imageUrl && (
         <div className="image">
-          <img src={imageUrl} loading="lazy" />
+          <img src={imageUrl} />
         </div>
       )}
       <div>
@@ -155,7 +161,7 @@ const DetailPost = React.memo((props) => {
         )}
       </div>
 
-      {!loop && (
+      {!loop && openComment && (
         <ModalCommentPost
           post={post}
           {...props}
@@ -165,5 +171,5 @@ const DetailPost = React.memo((props) => {
       )}
     </div>
   );
-});
+};
 export default DetailPost;

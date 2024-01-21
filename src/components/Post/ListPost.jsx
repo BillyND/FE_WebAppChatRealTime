@@ -1,7 +1,10 @@
 import { useSubscription } from "global-state-hook";
 import React, { useEffect } from "react";
 import { deletePost } from "../../services/api";
-import { listPostSubs } from "../../utils/globalStates/initGlobalState";
+import {
+  detailPostSubs,
+  listPostSubs,
+} from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
 import { handleGetListPost } from "../../utils/utilities";
@@ -51,11 +54,23 @@ function ListPost() {
       <div className="list-post-container pt-5 mb-5">
         <h4>Feeds</h4>
         {listPost?.map((post = {}) => {
+          const { _id: postId } = post;
           const isAuthorOfPost = post.userId === infoUser._id;
+
+          detailPostSubs.state = {
+            ...detailPostSubs.state,
+            listPost,
+            [postId]: {
+              ...post,
+              comments: [],
+              loading: false,
+            },
+          };
+
           return (
             <DetailPost
-              key={post._id}
-              post={post}
+              key={postId}
+              postId={postId}
               isAuthorOfPost={isAuthorOfPost}
             />
           );

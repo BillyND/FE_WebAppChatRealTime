@@ -34,7 +34,7 @@ function HomeContent() {
   const {
     state: { loading },
     setState,
-  } = useSubscription(listPostSubs);
+  } = useSubscription(listPostSubs, ["loading"]);
 
   useEffect(() => {
     isBottom && handleFetchNewPost();
