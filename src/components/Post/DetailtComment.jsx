@@ -89,9 +89,10 @@ export const DetailComment = (props) => {
                 />
                 <EditOutlined
                   onClick={() => {
-                    setState({
-                      commentEdit: commentId,
-                    });
+                    commentId &&
+                      setState({
+                        commentEdit: commentId,
+                      });
                   }}
                   className={`control-edit ${
                     commentId ? "cursor-pointer" : "cursor-no-drop"
