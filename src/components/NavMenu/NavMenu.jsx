@@ -10,12 +10,16 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/api";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { UserThumbnail } from "../../UI/UserThumbnail";
 
 function NavMenu(props) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [loadingLogout, setLoadingLogout] = useState(false);
-  const { accessToken } = useAuthUser();
+  const {
+    accessToken,
+    infoUser: { _id: userId, username, avaUrl },
+  } = useAuthUser();
 
   const handleNavigation = (route) => {
     if (pathname === route) return;
@@ -50,6 +54,17 @@ function NavMenu(props) {
   return (
     <div className="nav-menu-container">
       <div
+        className={`nav-menu button-home ${
+          pathname === `/profile/${userId}` ? "selected" : ""
+        }`} // Check if home is selected
+        onClick={() => handleNavigation(`/profile/${userId}`)}
+      >
+        <UserThumbnail size={40} avaUrl={avaUrl} />
+        <span className="title-menu">{username}</span>
+      </div>
+      <b className="divider-dashed"></b>
+
+      <div
         className={`nav-menu button-home ${pathname === "/" ? "selected" : ""}`} // Check if home is selected
         onClick={() => handleNavigation("/")}
       >
@@ -59,13 +74,6 @@ function NavMenu(props) {
 
       {accessToken && (
         <>
-          {renderMenuItem(
-            <UserOutlined className="icon" />,
-            "Profile",
-            () => handleNavigation("/profile"),
-            "profile"
-          )}
-
           {renderMenuItem(
             <MessageOutlined className="icon" />,
             "Inbox",

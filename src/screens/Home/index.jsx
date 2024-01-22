@@ -5,13 +5,21 @@ import HomeContent from "./HomeContent";
 import NewFriends from "../../components/NewFriends/NewFriends";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
 
-export default function HomeScreen() {
+export default function HomeScreen({ path }) {
   const { isMobile } = useWindowSize();
+
+  const pathToScreen = {
+    "/": <HomeContent />,
+    "/profile": "profile",
+    "/inbox": "inbox",
+  };
+
+  console.log("===>path:", path);
 
   return (
     <div className={`home-container ${isMobile ? "mobile" : ""}`}>
       {!isMobile && <InfoUser />}
-      <HomeContent />
+      {pathToScreen?.[path]}
       {!isMobile && <NewFriends />}
     </div>
   );

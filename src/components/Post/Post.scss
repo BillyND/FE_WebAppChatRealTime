@@ -438,3 +438,8 @@
 .cancel-edit-comment {
   font-size: 13px;
 }
+
+.description {
+  overflow-wrap: break-word;
+  max-width: calc(100vw - 64px);
+}

@@ -45,8 +45,6 @@ const DetailPost = (props) => {
   const [openComment, setOpenComment] = useState(false);
   const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
 
-  console.log("===>post:", post);
-
   const handleLike = async () => {
     // If the user ID is in likerIds, remove it; otherwise, add it
     const updatedLikerIds = likerIds.includes(userId)

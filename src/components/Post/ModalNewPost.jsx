@@ -221,12 +221,13 @@ function ModalNewPost({ placeHolderInputPost }) {
           </div>
         )}
         <textarea
+          maxLength={8000}
           ref={refInputPost}
           value={valueInputPost}
           onChange={(e) => setValueInputPost(e.target.value)}
           className="input-content-post pt-3"
           placeholder={placeHolderInputPost}
-        ></textarea>
+        />
 
         <div className="image-preview mb-4 mt-4">
           {selectedImage ? (

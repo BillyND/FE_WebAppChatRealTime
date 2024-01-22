@@ -33,6 +33,16 @@ export const DetailComment = (props) => {
   const isEdit = commentEdit === commentId;
   const refInputComment = useRef(null);
   const debounceContent = useDebounce(content, TIME_DELAY_SEARCH_INPUT / 2);
+  const [widthModal, setWithModal] = useState(0);
+
+  console.log("===>widthModal:", widthModal);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const modalCommentPost = document.querySelector(".modal-comment-post");
+      setWithModal(modalCommentPost?.getBoundingClientRect()?.width);
+    }, TIME_DELAY_SEARCH_INPUT);
+  });
 
   useEffect(() => {
     setLocalValue(debounceContent.trim());
@@ -104,9 +114,7 @@ export const DetailComment = (props) => {
               <div
                 className="detail-comment"
                 style={{
-                  maxWidth: `calc(100vw - ${
-                    isOwnerOfComment ? "134px" : "110px"
-                  })`,
+                  maxWidth: `${widthModal - (isOwnerOfComment ? 102 : 80)}px`,
                 }}
               >
                 {isEdit ? (

@@ -31,6 +31,7 @@ export const InputComment = (props) => {
   return (
     <>
       <textarea
+        maxLength={8000}
         onFocus={() => setFocus(true)}
         onBlur={onBlur}
         ref={refInput}

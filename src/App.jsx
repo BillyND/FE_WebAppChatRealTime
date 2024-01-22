@@ -36,7 +36,12 @@ function App() {
       <TriggerNavigate />
 
       <Routes>
-        <Route path="/" element={<HomeScreen />} />
+        <Route path="/" element={<HomeScreen path="/" />} />
+        <Route
+          path="/profile/:userId"
+          element={<HomeScreen path={"/profile"} />}
+        />
+        <Route path="/inbox" element={<HomeScreen path={"/inbox"} />} />
 
         {/* <=== Auth screen ===> */}
         <Route path="/logout" element={<AuthScreen />} />
