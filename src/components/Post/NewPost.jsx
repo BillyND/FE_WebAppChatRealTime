@@ -15,7 +15,7 @@ function NewPost(props) {
     openModal("MODAL_NEW_POST", type);
   };
 
-  const placeHolderInputPost = `Hey ${username}, what are you thinking?`;
+  const placeHolderInputPost = `What are you thinking?`;
 
   return (
     <>

@@ -48,8 +48,6 @@ function ModalCommentPost(props) {
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments, loading, posting, tempComment = "", countComment } = post;
 
-  console.log("===>tempComment:", tempComment);
-
   useEffect(() => {
     postId && countComment && fetchCommentsInPost();
     detailPostSubs.state.commentEdit = null;

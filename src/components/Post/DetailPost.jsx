@@ -1,18 +1,16 @@
 import {
   CommentOutlined,
   DeleteOutlined,
+  EditOutlined,
   LikeOutlined,
 } from "@ant-design/icons";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback, useState } from "react";
+import { UserThumbnail } from "../../UI/UserThumbnail";
 import { updateLikeOfPost } from "../../services/api";
-import {
-  SOURCE_IMAGE_COMMENT,
-  SOURCE_IMAGE_LIKED,
-  TIME_DELAY_FETCH_API,
-} from "../../utils/constant";
+import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import {
   detailPostSubs,
   listPostSubs,
@@ -20,7 +18,6 @@ import {
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
 import ModalCommentPost from "./ModalCommentPost";
-import { UserThumbnail } from "../../UI/UserThumbnail";
 
 const DetailPost = (props) => {
   const {
@@ -31,7 +28,6 @@ const DetailPost = (props) => {
     isAuthorOfPost,
   } = props;
   const {
-    state,
     state: { [`post-${postId}`]: post, listPost },
     setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
@@ -48,6 +44,8 @@ const DetailPost = (props) => {
   } = post;
   const [openComment, setOpenComment] = useState(false);
   const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
+
+  console.log("===>post:", post);
 
   const handleLike = async () => {
     // If the user ID is in likerIds, remove it; otherwise, add it
@@ -84,10 +82,6 @@ const DetailPost = (props) => {
     []
   );
 
-  const handleComment = () => {
-    openModal("MODAL_COMMENT_POST");
-  };
-
   return (
     <div className="card-detail-post p-3">
       <div className="header">
@@ -96,16 +90,30 @@ const DetailPost = (props) => {
           <div className="name">{username}</div>
         </div>
         {isAuthorOfPost && hasDelete && (
-          <DeleteOutlined
-            onClick={() => {
-              openModal("CONFIRM_DELETE_POST");
-              listPostSubs.state = {
-                ...listPostSubs.state,
-                postIdDelete: postId,
-              };
-            }}
-            className="icon-delete"
-          />
+          <Flex gap={12}>
+            <EditOutlined
+              onClick={() => {
+                openModal("MODAL_NEW_POST");
+
+                detailPostSubs.state = {
+                  ...detailPostSubs.state,
+                  postHasUpdate: post,
+                };
+              }}
+              className="icon-delete"
+            />
+            <DeleteOutlined
+              onClick={() => {
+                openModal("CONFIRM_DELETE_POST");
+
+                listPostSubs.state = {
+                  ...listPostSubs.state,
+                  postIdDelete: postId,
+                };
+              }}
+              className="icon-delete"
+            />
+          </Flex>
         )}
       </div>
       <div

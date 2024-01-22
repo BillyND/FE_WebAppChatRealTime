@@ -1,5 +1,5 @@
 import { Button, Flex, Modal } from "antd";
-import React from "react";
+import React, { useRef } from "react";
 import "./UI.scss";
 
 function BaseModal(props) {

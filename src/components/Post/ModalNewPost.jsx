@@ -1,14 +1,24 @@
-/* eslint-disable react/no-unknown-property */
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Modal, message } from "antd";
+import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { useModal } from "../../utils/hooks/useModal";
+import { createPost, updatePost } from "../../services/api";
+import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
+import {
+  detailPostSubs,
+  listPostSubs,
+} from "../../utils/globalStates/initGlobalState";
+import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useDebounce } from "../../utils/hooks/useDebounce";
-import { createPost } from "../../services/api";
-import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
-import { handleGetListPost, showPopupError } from "../../utils/utilities";
+import { useModal } from "../../utils/hooks/useModal";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
+import {
+  compareChange,
+  handleGetListPost,
+  showPopupError,
+  mergeDataPostToListPost,
+} from "../../utils/utilities";
 
 function ModalNewPost({ placeHolderInputPost }) {
   const { isMobile } = useWindowSize();
@@ -19,54 +29,34 @@ function ModalNewPost({ placeHolderInputPost }) {
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
-
+  const {
+    state,
+    state: { postHasUpdate = {} },
+    setState,
+  } = useSubscription(detailPostSubs, ["postHasUpdate"]);
+  const { listPost = [] } = listPostSubs.state || {};
+  const { _id: postId, imageUrl = "", description = "" } = postHasUpdate;
   const [valueInputPost, setValueInputPost] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
   const [loadings, setLoadings] = useState({
     parseFile: false,
     createPost: false,
   });
-
   const refInputPost = useRef(null);
   const debounceOpenModal = useDebounce(MODAL_NEW_POST, 100);
   const disableBtnCreatePost =
-    (!valueInputPost?.trim() && !selectedImage) || loadings.createPost;
+    (!valueInputPost?.trim() && !selectedImage) ||
+    loadings.createPost ||
+    (!compareChange([imageUrl, selectedImage]) &&
+      !compareChange([description, valueInputPost]));
+  const debounceDataUpdate = useDebounce(
+    JSON.stringify(postHasUpdate),
+    TIME_DELAY_SEARCH_INPUT
+  );
 
-  /**
-   * Handles the process of creating and updating posts.
-   */
-  const handleUpPost = async () => {
-    // Set loading state for post creation
-    setLoadings({ ...loadings, createPost: true });
-
-    try {
-      // Prepare data for creating a new post
-      const dataPost = {
-        userId,
-        description: valueInputPost?.trim(),
-        imageUrl: selectedImage,
-      };
-
-      // Use Promise.all to await both post creation and list update concurrently
-      const [resPost] = await Promise.all([
-        await createPost(dataPost),
-        handleGetListPost({ page: 1, limit: 5 }),
-      ]);
-
-      // Check if post creation was successful
-      const isSuccess = resPost?.EC === 0;
-
-      // Display success or error message based on the result
-      isSuccess
-        ? (handleCancel(), message.success(resPost?.message))
-        : message.error(resPost?.message);
-    } catch (error) {
-      showPopupError();
-    } finally {
-      // Reset loading state after completion (whether successful or not)
-      setLoadings({ ...loadings, createPost: false });
-    }
-  };
+  useEffect(() => {
+    postId && handleApplyDataUpdate();
+  }, [debounceDataUpdate]);
 
   useEffect(() => {
     if (debounceOpenModal) {
@@ -74,11 +64,91 @@ function ModalNewPost({ placeHolderInputPost }) {
     }
   }, [debounceOpenModal]);
 
+  const handleApplyDataUpdate = () => {
+    const { imageUrl = "", description = "" } = postHasUpdate;
+    setSelectedImage(imageUrl);
+    setValueInputPost(description);
+  };
+
+  const handleUpPost = async () => {
+    setLoadings({ ...loadings, createPost: true });
+
+    try {
+      const dataPost = {
+        userId,
+        description: valueInputPost?.trim(),
+        imageUrl: selectedImage,
+      };
+
+      const [resPost] = await Promise.all([
+        await createPost(dataPost),
+        handleGetListPost({ page: 1, limit: 5 }),
+      ]);
+
+      const isSuccess = resPost?.EC === 0;
+
+      isSuccess
+        ? (handleCancel(), message.success(resPost?.message))
+        : message.error(resPost?.message);
+    } catch (error) {
+      showPopupError();
+    } finally {
+      setLoadings({ ...loadings, createPost: false });
+    }
+  };
+
+  const handleEditPost = async () => {
+    setLoadings({ ...loadings, createPost: true });
+
+    try {
+      const dataPost = {
+        userId,
+        description: valueInputPost?.trim(),
+        imageUrl: selectedImage,
+        postId,
+      };
+
+      const resPost = await updatePost(dataPost);
+
+      const isSuccess = resPost?.EC === 0;
+
+      if (isSuccess) {
+        handleCancel();
+        setState({
+          ...state,
+          [`post-${postId}`]: {
+            ...postHasUpdate,
+            ...dataPost,
+          },
+          postHasUpdate: {},
+        });
+
+        mergeDataPostToListPost({
+          ...postHasUpdate,
+          ...dataPost,
+        });
+
+        message.success(resPost?.message);
+      } else {
+        message.error(resPost?.message);
+      }
+    } catch (error) {
+      showPopupError();
+    } finally {
+      setLoadings({ ...loadings, createPost: false });
+    }
+  };
+
   const handleCancel = () => {
     if (loadings.createPost) return;
 
     handleClearAllDataPost();
     closeModal("MODAL_NEW_POST");
+
+    detailPostSubs.state = {
+      ...detailPostSubs.state,
+      postHasUpdate: {},
+    };
   };
 
   const handleClearImage = () => {
@@ -128,19 +198,19 @@ function ModalNewPost({ placeHolderInputPost }) {
 
   return (
     <Modal
-      style={{ top: isMobile ? 16 : null }}
+      style={{ top: isMobile ? 16 : 40 }}
       width={isMobile ? 1000 : 500}
       className="modal-create-post none-copy"
-      title={<span className="">Create post</span>}
+      title={<span className="">{postId ? "Update" : "Create"} post</span>}
       open={MODAL_NEW_POST}
       onCancel={handleCancel}
       footer={
         <Button
           disabled={disableBtnCreatePost}
           className={`btn-create-post ${!disableBtnCreatePost ? "enable" : ""}`}
-          onClick={handleUpPost}
+          onClick={postId ? handleEditPost : handleUpPost}
         >
-          Post
+          {postId ? "Update" : "Post"}
         </Button>
       }
     >
@@ -185,7 +255,6 @@ function ModalNewPost({ placeHolderInputPost }) {
           id="fileInput"
           style={{ display: "none" }}
           onChange={handleFileChange}
-          onCancel={() => {}}
         />
       </div>
     </Modal>

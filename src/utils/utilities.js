@@ -40,14 +40,15 @@ export const handleGetListPost = async ({ page, limit }) => {
     listPostSubs.updateState({
       loading: false,
     });
-    console.log("===> Error handleGetListPost:", error);
+    console.error("===> Error handleGetListPost:", error);
   }
 };
 
 export const compareChange = (values) => {
   try {
     return values.some(
-      (value) => JSON.stringify(value) !== JSON.stringify(values[0])
+      (value) =>
+        JSON.stringify(value)?.trim() !== JSON.stringify(values[0])?.trim()
     );
   } catch (error) {
     return false;
@@ -131,4 +132,23 @@ export const formatTimeAgo = (timeInMilliseconds) => {
 
 export const showPopupError = (error) => {
   message.error(error || "Server error!");
+};
+
+export const mergeDataPostToListPost = (postValue = {}) => {
+  const { postId } = postValue;
+  const { listPost } = listPostSubs.state || {};
+
+  listPostSubs.state = {
+    ...listPostSubs.state,
+    listPost: [
+      ...listPost.map((post) => {
+        if (post?._id === postId) {
+          return {
+            ...postValue,
+          };
+        }
+        return post;
+      }),
+    ],
+  };
 };

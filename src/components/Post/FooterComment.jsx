@@ -38,7 +38,7 @@ export const InputComment = (props) => {
         onChange={(e) => setValue(e.target.value)}
         rows={1}
         placeholder="Write your comment..."
-        className={`input-comment ${focus ? "full" : "mini"}`}
+        className={`input-comment ${focus || value.trim() ? "full" : "mini"}`}
         style={{
           minWidth: `${modalWidth - 120}px`,
         }}
@@ -129,7 +129,9 @@ export const FooterComment = (props) => {
         </Flex>
       </div>
       <div
-        className={`box-comment-post ${focusInput ? "full" : "mini"}`}
+        className={`box-comment-post ${
+          focusInput || localValueComment.trim() ? "full" : "mini"
+        }`}
         style={{ position: "static" }}
       />
     </>

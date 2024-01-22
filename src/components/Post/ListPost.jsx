@@ -82,7 +82,7 @@ function ListPost() {
         onCancel={() => closeModal("CONFIRM_DELETE_POST")}
         onOk={handleConfirmDeletePost}
         title="Delete post?"
-        loading={state?.loading}
+        loadingFooter={state?.loading}
       >
         Post will be permanently deleted. Do you agree?
       </BaseModal>

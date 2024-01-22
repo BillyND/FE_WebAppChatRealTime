@@ -11,7 +11,7 @@
 }
 
 .box-comment-post {
-  transition: 0.1s;
+  transition: 0.2s;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -20,6 +20,7 @@
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   padding: 16px;
+  height: fit-content;
 
   &.real {
     border-top: 1px solid rgb(48, 48, 48);
@@ -392,31 +393,31 @@
     font-size: 12px;
     color: #b0b3b8;
   }
+}
 
-  .control-comment {
-    margin-top: 4px;
-    display: grid;
-    gap: 12px;
-    height: fit-content;
+.control-comment {
+  margin-top: 4px;
+  display: grid;
+  gap: 12px;
+  height: fit-content;
 
-    .anticon {
-      width: 18px;
-      height: 18px;
+  .anticon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .control-delete,
+  .control-edit {
+    &:hover {
+      svg {
+        fill: #e4e6eb;
+      }
     }
 
-    .control-delete,
-    .control-edit {
-      &:hover {
-        svg {
-          fill: #e4e6eb;
-        }
-      }
-
-      svg {
-        width: 18px;
-        height: 18px;
-        fill: gray;
-      }
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: gray;
     }
   }
 }
