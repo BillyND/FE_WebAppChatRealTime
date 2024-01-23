@@ -19,7 +19,7 @@ function NewPost(props) {
 
   return (
     <>
-      <div className="new-post-container mt-4 none-copy">
+      <div className="new-post-container none-copy">
         <div className="input-post">
           <div
             className="avatar-user"

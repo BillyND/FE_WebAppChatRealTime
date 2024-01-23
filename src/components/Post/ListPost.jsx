@@ -11,14 +11,15 @@ import { handleGetListPost } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
 import BaseModal from "../../UI/BaseModal";
+import { SpinnerLoading } from "../../screens/Home/HomeContent";
 
 function ListPost() {
   const { infoUser } = useAuthUser();
   const {
     state,
-    state: { listPost, postIdDelete },
+    state: { listPost, postIdDelete, loading },
     setState,
-  } = useSubscription(listPostSubs, ["listPost"]);
+  } = useSubscription(listPostSubs, ["listPost", "loading"]);
   const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ function ListPost() {
 
   return (
     <>
-      <div className="list-post-container pt-5 mb-5">
+      <div className="list-post-container pt-5">
         <h4>Feeds</h4>
         {listPost?.map((post = {}) => {
           const { _id: postId, comments: countComment } = post;
@@ -77,6 +78,7 @@ function ListPost() {
           );
         })}
       </div>
+
       <BaseModal
         open={modalState["CONFIRM_DELETE_POST"]}
         onCancel={() => closeModal("CONFIRM_DELETE_POST")}

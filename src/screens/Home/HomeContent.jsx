@@ -1,15 +1,14 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
-import React, { useEffect, useRef, useState } from "react";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
-import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
+import React, { useEffect, useRef } from "react";
 import ListPost from "../../components/Post/ListPost";
 import NewPost from "../../components/Post/NewPost";
-import { handleGetListPost } from "../../utils/utilities";
-import { useSubscription } from "global-state-hook";
+import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
+import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
+import { handleGetListPost } from "../../utils/utilities";
 
 export const SpinnerLoading = ({ style, className }) => (
   <Flex
@@ -52,18 +51,20 @@ function HomeContent() {
   }, TIME_DELAY_SEARCH_INPUT);
 
   return (
-    <PerfectScrollbar
-      containerRef={(ref) => (scrollContainerRef.current = ref)}
+    <div
+      className="enable-scroll"
+      ref={scrollContainerRef}
       style={{ height: "100vh" }}
     >
       <div className="home-content">
         <NewPost />
         <ListPost />
         <SpinnerLoading
-          style={{ opacity: loading ? "1" : "0", marginTop: "-20px" }}
+          className={"pt-4"}
+          style={{ opacity: loading ? "1" : "0" }}
         />
       </div>
-    </PerfectScrollbar>
+    </div>
   );
 }
 
