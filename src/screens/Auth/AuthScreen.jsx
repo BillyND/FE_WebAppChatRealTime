@@ -32,8 +32,6 @@ export default function AuthScreen() {
 
     socketRef.current.on("getData", (data) => {
       setTestData(data);
-
-      // !data && socketRef.current.emit("initData", testData);
     });
   }, [socketRef]);
 
