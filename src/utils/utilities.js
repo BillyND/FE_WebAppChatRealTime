@@ -165,13 +165,14 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
   // Check if there is a change between postIdSocket and postId
   // and if at least one key in the keys array has changed
   if (
-    !compareChange([postIdSocket, postId]) &&
-    keys.some((key) =>
-      compareChange([
-        postSocket[key],
-        detailPostSubs.state[`post-${postId}`][key],
-      ])
-    )
+    !compareChange([postIdSocket, postId]) && keys
+      ? keys.some((key) =>
+          compareChange([
+            postSocket[key],
+            detailPostSubs.state[`post-${postId}`][key],
+          ])
+        )
+      : true
   ) {
     // Create a new object containing updates for each key in the keys array
     const updatedState = keys.reduce((acc, key) => {
@@ -194,34 +195,19 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
  * Handles updating specific data of a comment through WebSocket based on keys
  * @param {Object} commentSocket - Object containing new data from WebSocket
  * @param {string} commentId - ID of the comment
- * @param {Array} keys - Array containing keys to update values
  */
-export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
+export const handleUpdateCommentSocket = (commentSocket, commentId) => {
   const { _id: commentIdSocket } = commentSocket || {};
 
-  // Check if there is a change between commentIdSocket and commentId
-  // and if at least one key in the keys array has changed
   if (
     !compareChange([commentIdSocket, commentId]) &&
-    keys.some((key) =>
-      compareChange([
-        commentSocket[key],
-        detailPostSubs.state[`comment-${commentId}`][key],
-      ])
-    )
+    compareChange([commentSocket, detailPostSubs.state[`comment-${commentId}`]])
   ) {
-    // Create a new object containing updates for each key in the keys array
-    const updatedState = keys.reduce((acc, key) => {
-      acc[key] = commentSocket[key];
-      return acc;
-    }, {});
-
     // Update the state of the comment in the state object
     detailPostSubs.updateState({
       [`comment-${commentId}`]: {
-        ...commentSocket,
         ...detailPostSubs.state[`comment-${commentId}`],
-        ...updatedState,
+        ...commentSocket,
       },
     });
   }

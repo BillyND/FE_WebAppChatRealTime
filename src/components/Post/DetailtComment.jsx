@@ -49,7 +49,7 @@ export const DetailComment = (props) => {
       transports: ["websocket"],
     });
 
-    socketRef.current.on("getPost", (comment) => {
+    socketRef.current.on("getComment", (comment) => {
       handleUpdateCommentSocket(comment, commentId);
     });
   }, []);
@@ -86,7 +86,7 @@ export const DetailComment = (props) => {
         content: localValueComment.trim(),
       });
 
-      socketRef.current.emit("updatePost", resUpdateComment.data);
+      socketRef.current.emit("updateComment", resUpdateComment.data);
     } catch (error) {
       showPopupError();
     }
