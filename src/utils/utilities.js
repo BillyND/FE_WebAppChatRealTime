@@ -182,6 +182,7 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
     // Update the state of the post in the state object
     detailPostSubs.updateState({
       [`post-${postId}`]: {
+        ...postSocket,
         ...detailPostSubs.state[`post-${postId}`],
         ...updatedState,
       },
@@ -218,8 +219,8 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
     // Update the state of the comment in the state object
     detailPostSubs.updateState({
       [`comment-${commentId}`]: {
-        ...detailPostSubs.state[`comment-${commentId}`],
         ...commentSocket,
+        ...detailPostSubs.state[`comment-${commentId}`],
         ...updatedState,
       },
     });
