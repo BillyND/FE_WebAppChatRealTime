@@ -166,7 +166,7 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
     postSocket,
     detailPostSubs.state[`post-${postSocket}`],
   ]);
-  const isPostChangedWithKeys = keys.some((key) =>
+  const isPostChangedWithKeys = keys?.some((key) =>
     compareChange([
       postSocket[key],
       detailPostSubs.state[`post-${postId}`][key],
@@ -202,7 +202,7 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
     commentSocket,
     detailPostSubs.state[`comment-${commentId}`],
   ]);
-  const isCommentChangedWithKeys = keys.some((key) =>
+  const isCommentChangedWithKeys = keys?.some((key) =>
     compareChange([
       commentSocket[key],
       detailPostSubs.state[`comment-${commentId}`][key],
