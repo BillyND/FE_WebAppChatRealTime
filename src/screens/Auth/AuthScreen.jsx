@@ -8,6 +8,9 @@ import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "../../utils/constant";
 import "./AuthScreen.scss";
 import { ButtonAuth } from "./ButtonAuth";
 import ForgotPass from "./ForgotPass";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { io } from "socket.io-client";
+import { useEffect } from "react";
 
 export default function AuthScreen() {
   const navigate = useNavigate();
@@ -16,6 +19,27 @@ export default function AuthScreen() {
   const [infoUserInput, setInfoUserInput] = useState({});
   const isLoginPage = pathname?.includes("login");
   const refInfoUser = useRef(null);
+
+  const [testData, setTestData] = useState(0);
+
+  const socketRef = useRef();
+  const { infoUser } = useAuthUser();
+
+  useEffect(() => {
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ["websocket"],
+    });
+
+    socketRef.current.emit("getData", (data) => {
+      setTestData(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    socketRef.current.on("getData", (data) => {
+      setTestData(data);
+    });
+  }, [socketRef]);
 
   const handleInputChange = (key, value) => {
     setInfoUserInput({
@@ -28,6 +52,14 @@ export default function AuthScreen() {
 
   return (
     <div className="auth-screen">
+      <button
+        onClick={() => {
+          socketRef.current.emit("changeData", testData + 1);
+        }}
+      >
+        Test
+      </button>
+      {testData}
       {isForgotPasswordPage ? (
         <ForgotPass />
       ) : (

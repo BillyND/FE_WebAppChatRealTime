@@ -58,7 +58,7 @@ const DetailPost = (props) => {
     socketRef.current.on("getPost", (post) => {
       handleUpdatePostSocket(JSON.parse(post));
     });
-  }, [socketRef]);
+  }, []);
 
   useEffect(() => {
     socketRef.current.emit("updatePost", debouncePost);
