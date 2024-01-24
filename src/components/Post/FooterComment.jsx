@@ -1,4 +1,4 @@
-import { Flex, message } from "antd";
+import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { UserThumbnail } from "../../UI/UserThumbnail";

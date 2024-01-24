@@ -8,6 +8,7 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import { UserThumbnail } from "../../UI/UserThumbnail";
 import { updateLikeOfPost } from "../../services/api";
 import { TIME_DELAY_FETCH_API } from "../../utils/constant";
@@ -17,10 +18,8 @@ import {
 } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
+import { handleUpdatePostSocket } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
-import { io } from "socket.io-client";
-import { useDebounce } from "../../utils/hooks/useDebounce";
-import { compareChange } from "../../utils/utilities";
 
 const DetailPost = (props) => {
   const {
@@ -48,7 +47,6 @@ const DetailPost = (props) => {
   const [openComment, setOpenComment] = useState(false);
   const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
   const socketRef = useRef();
-  const debouncePost = useDebounce(JSON.stringify(post), 50);
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
@@ -56,23 +54,9 @@ const DetailPost = (props) => {
     });
 
     socketRef.current.on("getPost", (post) => {
-      handleUpdatePostSocket(JSON.parse(post));
+      handleUpdatePostSocket(post, postId);
     });
   }, []);
-
-  useEffect(() => {
-    socketRef.current.emit("updatePost", debouncePost);
-  }, [debouncePost]);
-
-  const handleUpdatePostSocket = (postSocket) => {
-    const { _id: postIdSocket } = postSocket || {};
-
-    if (!compareChange([postIdSocket, postId])) {
-      setState({
-        [`post-${postId}`]: postSocket,
-      });
-    }
-  };
 
   const handleLike = async () => {
     // If the user ID is in likerIds, remove it; otherwise, add it
@@ -99,12 +83,17 @@ const DetailPost = (props) => {
     listPostSubs.state.listPost = updatedList;
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
-    debounceUpdateLikes(postId, updatedList);
+    debounceUpdateLikes(postId, updatedLikerIds);
   };
 
   const debounceUpdateLikes = useCallback(
-    debounce((postId) => {
-      updateLikeOfPost(postId);
+    debounce(async (postId, updatedLikerIds) => {
+      await updateLikeOfPost(postId);
+
+      socketRef.current.emit("updatePost", {
+        ...post,
+        likerIds: updatedLikerIds,
+      });
     }, TIME_DELAY_FETCH_API),
     []
   );

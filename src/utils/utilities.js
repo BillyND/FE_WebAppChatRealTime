@@ -1,7 +1,7 @@
+import { message } from "antd";
 import { unionBy } from "lodash";
 import { getPost } from "../services/api";
-import { listPostSubs } from "./globalStates/initGlobalState";
-import { message } from "antd";
+import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
 
 /**
  * Fetches and handles the list of posts.
@@ -151,4 +151,39 @@ export const mergeDataPostToListPost = (postValue = {}) => {
       }),
     ],
   };
+};
+
+export const handleUpdatePostSocket = (postSocket, postId) => {
+  const { _id: postIdSocket } = postSocket || {};
+
+  if (
+    !compareChange([postIdSocket, postId]) &&
+    compareChange([postSocket, detailPostSubs.state[`post-${postId}`]])
+  ) {
+    detailPostSubs.updateState({
+      [`post-${postId}`]: postSocket,
+    });
+  }
+};
+
+export const handleUpdateCommentSocket = (commentSocket, commentId) => {
+  const { _id: commentIdSocket } = commentSocket || {};
+
+  if (
+    !compareChange([commentIdSocket, commentId]) &&
+    compareChange([commentSocket, detailPostSubs.state[`comment-${commentId}`]])
+  ) {
+    detailPostSubs.updateState({
+      [`comment-${commentId}`]: commentSocket,
+    });
+
+    // console.log("===>commentSocket:", commentSocket);
+    console.log(
+      "===>commentSocket2:",
+      compareChange([
+        commentSocket,
+        detailPostSubs.state[`comment-${commentId}`],
+      ])
+    );
+  }
 };
