@@ -50,10 +50,10 @@ export const DetailComment = (props) => {
     });
 
     socketRef.current.on("getComment", (comment) => {
-      handleUpdateCommentSocket(comment, {
-        ...commentId,
-        currentSocketId: socketRef.current?.id,
-      });
+      handleUpdateCommentSocket(
+        { ...comment, currentSocketId: socketRef.current?.id },
+        commentId
+      );
     });
   }, []);
 

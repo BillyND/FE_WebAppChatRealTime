@@ -166,8 +166,6 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
     currentSocketId,
   } = postSocket || {};
 
-  console.log("===>postSocket:", postSocket);
-
   const isIdChanged =
     !compareChange([postIdSocket, postId]) &&
     compareChange([targetSocketId, currentSocketId]);
@@ -210,6 +208,7 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
     targetSocketId,
     currentSocketId,
   } = commentSocket || {};
+
   const isIdChanged =
     !compareChange([commentIdSocket, commentId]) &&
     compareChange([targetSocketId, currentSocketId]);
