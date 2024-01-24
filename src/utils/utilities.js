@@ -193,7 +193,7 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
  * Handles updating specific data of a comment through WebSocket based on keys
  * @param {Object} commentSocket - Object containing new data from WebSocket
  * @param {string} commentId - ID of the comment
- * @param {Array} keys - Array containing keys to update values
+ * @param {Array} keys - Array containing keys to update values.
  */
 export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
   const { _id: commentIdSocket } = commentSocket || {};
