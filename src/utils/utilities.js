@@ -153,7 +153,7 @@ export const mergeDataPostToListPost = (postValue = {}) => {
   };
 };
 
-export const handleUpdatePostSocket = (postSocket, postId) => {
+export const handleUpdatePostSocket = (postSocket, postId, key) => {
   const { _id: postIdSocket } = postSocket || {};
 
   if (
@@ -161,7 +161,10 @@ export const handleUpdatePostSocket = (postSocket, postId) => {
     compareChange([postSocket, detailPostSubs.state[`post-${postId}`]])
   ) {
     detailPostSubs.updateState({
-      [`post-${postId}`]: postSocket,
+      [`post-${postId}`]: {
+        ...detailPostSubs.state[`post-${postId}`],
+        [key]: postSocket[key],
+      },
     });
   }
 };
@@ -174,16 +177,10 @@ export const handleUpdateCommentSocket = (commentSocket, commentId) => {
     compareChange([commentSocket, detailPostSubs.state[`comment-${commentId}`]])
   ) {
     detailPostSubs.updateState({
-      [`comment-${commentId}`]: commentSocket,
+      [`comment-${commentId}`]: {
+        ...detailPostSubs.state[`comment-${commentId}`],
+        ...commentSocket,
+      },
     });
-
-    // console.log("===>commentSocket:", commentSocket);
-    console.log(
-      "===>commentSocket2:",
-      compareChange([
-        commentSocket,
-        detailPostSubs.state[`comment-${commentId}`],
-      ])
-    );
   }
 };
