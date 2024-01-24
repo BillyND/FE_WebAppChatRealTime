@@ -26,7 +26,7 @@ export default function AuthScreen() {
   const { infoUser } = useAuthUser();
 
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_BACKEND_URL, {
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"],
     });
 
