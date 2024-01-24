@@ -161,62 +161,21 @@ export const mergeDataPostToListPost = (postValue = {}) => {
  */
 export const handleUpdatePostSocket = (postSocket, postId, keys) => {
   const { _id: postIdSocket } = postSocket || {};
-
-  console.log(
-    "===>keys11111:",
-    !compareChange([postIdSocket, postId]) &&
-      (keys
-        ? keys.some((key) =>
-            compareChange([
-              postSocket[key],
-              detailPostSubs.state[`post-${postId}`][key],
-            ])
-          )
-        : keys.some((key) =>
-            compareChange([
-              postSocket[key],
-              detailPostSubs.state[`post-${postId}`][key],
-            ])
-          ))
-  );
-  console.log(
-    "===>keys2222:",
-    !compareChange([postIdSocket, postId]) &&
-      (keys
-        ? keys.some((key) =>
-            compareChange([
-              postSocket[key],
-              detailPostSubs.state[`post-${postId}`][key],
-            ])
-          )
-        : keys.some((key) =>
-            compareChange([
-              postSocket[key],
-              detailPostSubs.state[`post-${postId}`][key],
-            ])
-          ))
+  const isIdChanged = !compareChange([postIdSocket, postId]);
+  const isPostChanged = compareChange([
+    postSocket,
+    detailPostSubs.state[`post-${postSocket}`],
+  ]);
+  const isPostChangedWithKeys = keys.some((key) =>
+    compareChange([
+      postSocket[key],
+      detailPostSubs.state[`post-${postId}`][key],
+    ])
   );
 
-  // Check if there is a change between postIdSocket and postId
-  // and if at least one key in the keys array has changed
-  if (
-    !compareChange([postIdSocket, postId]) &&
-    (keys
-      ? keys.some((key) =>
-          compareChange([
-            postSocket[key],
-            detailPostSubs.state[`post-${postId}`][key],
-          ])
-        )
-      : keys.some((key) =>
-          compareChange([
-            postSocket[key],
-            detailPostSubs.state[`post-${postId}`][key],
-          ])
-        ))
-  ) {
+  if (isIdChanged && (keys ? isPostChangedWithKeys : isPostChanged)) {
     // Create a new object containing updates for each key in the keys array
-    const updatedState = keys.reduce((acc, key) => {
+    const updatedState = keys?.reduce((acc, key) => {
       acc[key] = postSocket[key];
       return acc;
     }, {});
@@ -224,14 +183,8 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
     // Update the state of the post in the state object
     detailPostSubs.updateState({
       [`post-${postId}`]: keys
-        ? {
-            ...detailPostSubs.state[`post-${postId}`],
-            ...updatedState,
-          }
-        : {
-            ...detailPostSubs.state[`post-${postId}`],
-            ...postSocket,
-          },
+        ? { ...detailPostSubs.state[`post-${postId}`], ...updatedState }
+        : { ...detailPostSubs.state[`post-${postId}`], ...postSocket },
     });
   }
 };
@@ -244,40 +197,30 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
  */
 export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
   const { _id: commentIdSocket } = commentSocket || {};
+  const isIdChanged = !compareChange([commentIdSocket, commentId]);
+  const isCommentChanged = compareChange([
+    commentSocket,
+    detailPostSubs.state[`comment-${commentId}`],
+  ]);
+  const isCommentChangedWithKeys = keys.some((key) =>
+    compareChange([
+      commentSocket[key],
+      detailPostSubs.state[`comment-${commentId}`][key],
+    ])
+  );
 
-  // Check if there is a change between commentIdSocket and commentId
-  // and if at least one key in the keys array has changed
-  if (
-    !compareChange([commentIdSocket, commentId]) &&
-    (keys
-      ? keys.some((key) =>
-          compareChange([
-            commentSocket[key],
-            detailPostSubs.state[`comment-${commentId}`][key],
-          ])
-        )
-      : compareChange([
-          commentSocket,
-          detailPostSubs.state[`comment-${commentId}`],
-        ]))
-  ) {
+  if (isIdChanged && (keys ? isCommentChangedWithKeys : isCommentChanged)) {
     // Create a new object containing updates for each key in the keys array
-    const updatedState = keys?.reduce((acc, key) => {
-      acc[key] = commentSocket[key];
-      return acc;
-    }, {});
+    const updatedState = keys?.reduce(
+      (acc, key) => ({ ...acc, [key]: commentSocket[key] }),
+      {}
+    );
 
     // Update the state of the comment in the state object
     detailPostSubs.updateState({
       [`comment-${commentId}`]: keys
-        ? {
-            ...detailPostSubs.state[`comment-${commentId}`],
-            ...updatedState,
-          }
-        : {
-            ...detailPostSubs.state[`comment-${commentId}`],
-            ...commentSocket,
-          },
+        ? { ...detailPostSubs.state[`comment-${commentId}`], ...updatedState }
+        : { ...detailPostSubs.state[`comment-${commentId}`], ...commentSocket },
     });
   }
 };
