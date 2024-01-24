@@ -219,6 +219,7 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
     detailPostSubs.updateState({
       [`comment-${commentId}`]: {
         ...detailPostSubs.state[`comment-${commentId}`],
+        ...commentSocket,
         ...updatedState,
       },
     });
