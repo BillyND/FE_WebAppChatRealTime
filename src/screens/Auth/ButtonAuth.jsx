@@ -5,6 +5,7 @@ import { postLogin, postRegister } from "../../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { regexValidateEmail } from "../../utils/constant";
+import { SpinnerLoading } from "../Home/HomeContent";
 
 export const ButtonAuth = ({
   loadingAuth,
@@ -119,7 +120,11 @@ export const ButtonAuth = ({
       onClickCapture={isLoginPage ? handleLogin : handleRegister}
     >
       {isLoginPage ? "SIGN IN" : "SIGN UP "}
-      {loadingAuth && <LoadingOutlined className="icon-loading" />}
+      {loadingAuth && (
+        <LoadingOutlined
+          style={{ scale: "1.5", position: "absolute", marginLeft: "100px" }}
+        />
+      )}
     </button>
   );
 };

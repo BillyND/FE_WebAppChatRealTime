@@ -35,14 +35,12 @@ export const DetailComment = (props) => {
   const debounceContent = useDebounce(content, TIME_DELAY_SEARCH_INPUT / 2);
   const [widthModal, setWithModal] = useState(0);
 
-  console.log("===>widthModal:", widthModal);
-
   useEffect(() => {
     setTimeout(() => {
       const modalCommentPost = document.querySelector(".modal-comment-post");
       setWithModal(modalCommentPost?.getBoundingClientRect()?.width);
     }, TIME_DELAY_SEARCH_INPUT);
-  });
+  }, []);
 
   useEffect(() => {
     setLocalValue(debounceContent.trim());

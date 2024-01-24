@@ -9,6 +9,7 @@ import { useRef } from "react";
 import socketIOClient from "socket.io-client";
 import { io } from "socket.io-client";
 import { useAuthUser } from "./utils/hooks/useAuthUser";
+import TriggerSocket from "./components/TriggerSocket";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ function App() {
     <div className="App">
       {/* Component to trigger navigate */}
       <TriggerNavigate />
+      <TriggerSocket />
 
       <Routes>
         <Route path="/" element={<HomeScreen path="/" />} />
