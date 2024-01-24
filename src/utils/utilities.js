@@ -153,33 +153,73 @@ export const mergeDataPostToListPost = (postValue = {}) => {
   };
 };
 
-export const handleUpdatePostSocket = (postSocket, postId, key) => {
+/**
+ * Handles updating data of a post through WebSocket
+ * @param {Object} postSocket - Object containing new data from WebSocket
+ * @param {string} postId - ID of the post
+ * @param {Array} keys - Array containing keys to update values
+ */
+export const handleUpdatePostSocket = (postSocket, postId, keys) => {
   const { _id: postIdSocket } = postSocket || {};
 
+  // Check if there is a change between postIdSocket and postId
+  // and if at least one key in the keys array has changed
   if (
     !compareChange([postIdSocket, postId]) &&
-    compareChange([postSocket, detailPostSubs.state[`post-${postId}`]])
+    keys.some((key) =>
+      compareChange([
+        postSocket[key],
+        detailPostSubs.state[`post-${postId}`][key],
+      ])
+    )
   ) {
+    // Create a new object containing updates for each key in the keys array
+    const updatedState = keys.reduce((acc, key) => {
+      acc[key] = postSocket[key];
+      return acc;
+    }, {});
+
+    // Update the state of the post in the state object
     detailPostSubs.updateState({
       [`post-${postId}`]: {
         ...detailPostSubs.state[`post-${postId}`],
-        [key]: postSocket[key],
+        ...updatedState,
       },
     });
   }
 };
 
-export const handleUpdateCommentSocket = (commentSocket, commentId) => {
+/**
+ * Handles updating specific data of a comment through WebSocket based on keys
+ * @param {Object} commentSocket - Object containing new data from WebSocket
+ * @param {string} commentId - ID of the comment
+ * @param {Array} keys - Array containing keys to update values
+ */
+export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
   const { _id: commentIdSocket } = commentSocket || {};
 
+  // Check if there is a change between commentIdSocket and commentId
+  // and if at least one key in the keys array has changed
   if (
     !compareChange([commentIdSocket, commentId]) &&
-    compareChange([commentSocket, detailPostSubs.state[`comment-${commentId}`]])
+    keys.some((key) =>
+      compareChange([
+        commentSocket[key],
+        detailPostSubs.state[`comment-${commentId}`][key],
+      ])
+    )
   ) {
+    // Create a new object containing updates for each key in the keys array
+    const updatedState = keys.reduce((acc, key) => {
+      acc[key] = commentSocket[key];
+      return acc;
+    }, {});
+
+    // Update the state of the comment in the state object
     detailPostSubs.updateState({
       [`comment-${commentId}`]: {
         ...detailPostSubs.state[`comment-${commentId}`],
-        ...commentSocket,
+        ...updatedState,
       },
     });
   }

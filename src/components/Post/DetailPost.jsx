@@ -54,7 +54,7 @@ const DetailPost = (props) => {
     });
 
     socketRef.current.on("getPost", (post) => {
-      handleUpdatePostSocket(post, postId, "likerIds");
+      handleUpdatePostSocket(post, postId, ["likerIds"]);
     });
   }, []);
 
