@@ -160,8 +160,17 @@ export const mergeDataPostToListPost = (postValue = {}) => {
  * @param {Array} keys - Array containing keys to update values
  */
 export const handleUpdatePostSocket = (postSocket, postId, keys) => {
-  const { _id: postIdSocket } = postSocket || {};
-  const isIdChanged = !compareChange([postIdSocket, postId]);
+  const {
+    _id: postIdSocket,
+    targetSocketId,
+    currentSocketId,
+  } = postSocket || {};
+
+  console.log("===>postSocket:", postSocket);
+
+  const isIdChanged =
+    !compareChange([postIdSocket, postId]) &&
+    compareChange([targetSocketId, currentSocketId]);
   const isPostChanged = compareChange([
     postSocket,
     detailPostSubs.state[`post-${postSocket}`],
@@ -196,8 +205,14 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
  * @param {Array} keys - Array containing keys to update values.
  */
 export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
-  const { _id: commentIdSocket } = commentSocket || {};
-  const isIdChanged = !compareChange([commentIdSocket, commentId]);
+  const {
+    _id: commentIdSocket,
+    targetSocketId,
+    currentSocketId,
+  } = commentSocket || {};
+  const isIdChanged =
+    !compareChange([commentIdSocket, commentId]) &&
+    compareChange([targetSocketId, currentSocketId]);
   const isCommentChanged = compareChange([
     commentSocket,
     detailPostSubs.state[`comment-${commentId}`],
