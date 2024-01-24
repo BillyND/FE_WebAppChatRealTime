@@ -55,6 +55,10 @@ export const DetailComment = (props) => {
         commentId
       );
     });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
   }, []);
 
   useEffect(() => {

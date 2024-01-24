@@ -63,6 +63,10 @@ const DetailPost = (props) => {
         ["likerIds"]
       );
     });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
   }, []);
 
   const handleLike = async () => {
