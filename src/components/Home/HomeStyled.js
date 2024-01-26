@@ -58,7 +58,7 @@ export const WrapNavMenu = styled.div`
     }`}
   }
 
-  .icon-center {
+  .icon-nav {
     padding: 20px 40px;
     border-radius: 8px;
 

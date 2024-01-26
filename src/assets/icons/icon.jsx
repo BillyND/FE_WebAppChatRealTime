@@ -31,10 +31,10 @@ export const IconHomeActive = (...props) => (
   <div {...props}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="25"
-      height="23"
-      viewBox="0 0 25 23"
-      fill="none"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill={FILL_COLOR_ICON.ACTIVE}
     >
       <path
         d="M2 11.6534V19.5176C2 20.6222 2.89543 21.5176 4 21.5176H8C8.27614 21.5176 8.5 21.2938 8.5 21.0176V16.4501V16.2676C8.5 13.9204 10.4028 12.0176 12.75 12.0176C15.0972 12.0176 17 13.9204 17 16.2676V16.4501V21.0176C17 21.2938 17.2239 21.5176 17.5 21.5176H21.5C22.6046 21.5176 23.5 20.6222 23.5 19.5176V11.6534C23.5 10.1444 22.8185 8.71609 21.6454 7.76677L15.8954 3.11334C14.0612 1.62889 11.4388 1.62889 9.60455 3.11334L3.85455 7.76677C2.68153 8.71609 2 10.1444 2 11.6534Z"
@@ -46,16 +46,172 @@ export const IconHomeActive = (...props) => (
     </svg>
   </div>
 );
+
 export const IconHomeDeActive = (...props) => (
   <div {...props}>
-    <svg aria-label="Trang chủ" role="img" viewBox="0 0 26 26">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill={FILL_COLOR_ICON.DE_ACTIVE}
+    >
       <path
         d="M2.25 12.8855V20.7497C2.25 21.8543 3.14543 22.7497 4.25 22.7497H9.25C9.52614 22.7497 9.75 22.5258 9.75 22.2497V17.6822V16.4997C9.75 14.7048 11.2051 13.2497 13 13.2497C14.7949 13.2497 16.25 14.7048 16.25 16.4997V17.6822V22.2497C16.25 22.5258 16.4739 22.7497 16.75 22.7497H21.75C22.8546 22.7497 23.75 21.8543 23.75 20.7497V12.8855C23.75 11.3765 23.0685 9.94814 21.8954 8.99882L16.1454 4.34539C14.3112 2.86094 11.6888 2.86094 9.85455 4.34539L4.10455 8.99882C2.93153 9.94814 2.25 11.3765 2.25 12.8855Z"
         fill={FILL_COLOR_ICON.DE_ACTIVE}
         stroke={STROKE_COLOR_ICON.DE_ACTIVE}
-        strokeLinecap="round"
         strokeWidth="2.5"
-      ></path>
+        strokeLinecap="round"
+      />
+    </svg>
+  </div>
+);
+
+export const IconSearchActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill={FILL_COLOR_ICON.ACTIVE}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M3.5 11.5C3.5 7.08172 7.08172 3.5 11.5 3.5C15.9183 3.5 19.5 7.08172 19.5 11.5C19.5 15.9183 15.9183 19.5 11.5 19.5C7.08172 19.5 3.5 15.9183 3.5 11.5ZM11.5 1C5.70101 1 1 5.70101 1 11.5C1 17.299 5.70101 22 11.5 22C13.949 22 16.2023 21.1615 17.9883 19.756L22.3661 24.1339C22.8543 24.622 23.6457 24.622 24.1339 24.1339C24.622 23.6457 24.622 22.8543 24.1339 22.3661L19.756 17.9883C21.1615 16.2023 22 13.949 22 11.5C22 5.70101 17.299 1 11.5 1Z"
+        fill={FILL_COLOR_ICON.ACTIVE}
+      />
+    </svg>
+  </div>
+);
+
+export const IconSearchDeActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M3.5 11.5C3.5 7.08172 7.08172 3.5 11.5 3.5C15.9183 3.5 19.5 7.08172 19.5 11.5C19.5 15.9183 15.9183 19.5 11.5 19.5C7.08172 19.5 3.5 15.9183 3.5 11.5ZM11.5 1C5.70101 1 1 5.70101 1 11.5C1 17.299 5.70101 22 11.5 22C13.949 22 16.2023 21.1615 17.9883 19.756L22.3661 24.1339C22.8543 24.622 23.6457 24.622 24.1339 24.1339C24.622 23.6457 24.622 22.8543 24.1339 22.3661L19.756 17.9883C21.1615 16.2023 22 13.949 22 11.5C22 5.70101 17.299 1 11.5 1Z"
+        fill={STROKE_COLOR_ICON.DE_ACTIVE}
+      />
+    </svg>
+  </div>
+);
+
+export const IconPostDeActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+    >
+      <path
+        d="M22.75 13V13.15C22.75 16.5103 22.75 18.1905 22.096 19.4739C21.5208 20.6029 20.6029 21.5208 19.4739 22.096C18.1905 22.75 16.5103 22.75 13.15 22.75H12.85C9.48969 22.75 7.80953 22.75 6.52606 22.096C5.39708 21.5208 4.4792 20.6029 3.90396 19.4739C3.25 18.1905 3.25 16.5103 3.25 13.15V12.85C3.25 9.48968 3.25 7.80953 3.90396 6.52606C4.4792 5.39708 5.39708 4.4792 6.52606 3.90396C7.80953 3.25 9.48968 3.25 12.85 3.25H13"
+        stroke={STROKE_COLOR_ICON.DE_ACTIVE}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path d="M21.75 4.25L13.75 12.25Z" fill="black" />
+      <path
+        d="M21.75 4.25L13.75 12.25"
+        stroke={STROKE_COLOR_ICON.DE_ACTIVE}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  </div>
+);
+
+export const IconHeartActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+    >
+      <path
+        d="M2.5 9.85683C2.5 14.224 6.22178 18.5299 12.0332 22.2032C12.3554 22.397 12.7401 22.5909 13 22.5909C13.2703 22.5909 13.655 22.397 13.9668 22.2032C19.7782 18.5299 23.5 14.224 23.5 9.85683C23.5 6.11212 20.8698 3.5 17.4599 3.5C15.4847 3.5 13.9356 4.39792 13 5.74479C12.0851 4.40812 10.5257 3.5 8.5401 3.5C5.14059 3.5 2.5 6.11212 2.5 9.85683Z"
+        fill={FILL_COLOR_ICON.ACTIVE}
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="2.5"
+      />
+    </svg>
+  </div>
+);
+
+export const IconHeartDeActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+    >
+      <path
+        d="M2.5 9.85683C2.5 14.224 6.22178 18.5299 12.0332 22.2032C12.3554 22.397 12.7401 22.5909 13 22.5909C13.2703 22.5909 13.655 22.397 13.9668 22.2032C19.7782 18.5299 23.5 14.224 23.5 9.85683C23.5 6.11212 20.8698 3.5 17.4599 3.5C15.4847 3.5 13.9356 4.39792 13 5.74479C12.0851 4.40812 10.5257 3.5 8.5401 3.5C5.14059 3.5 2.5 6.11212 2.5 9.85683Z"
+        stroke={STROKE_COLOR_ICON.DE_ACTIVE}
+        strokeWidth="2.5"
+      />
+    </svg>
+  </div>
+);
+
+export const IconUserActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+    >
+      <path
+        d="M13 11.25C15.2091 11.25 17 9.45914 17 7.25C17 5.04086 15.2091 3.25 13 3.25C10.7909 3.25 9 5.04086 9 7.25C9 9.45914 10.7909 11.25 13 11.25Z"
+        fill={FILL_COLOR_ICON.ACTIVE}
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="2.5"
+      />
+      <path
+        d="M6.26678 23.75H19.744C21.603 23.75 22.5 23.2186 22.5 22.0673C22.5 19.3712 18.8038 15.75 13 15.75C7.19625 15.75 3.5 19.3712 3.5 22.0673C3.5 23.2186 4.39704 23.75 6.26678 23.75Z"
+        fill={FILL_COLOR_ICON.ACTIVE}
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="2.5"
+      />
+    </svg>
+  </div>
+);
+
+export const IconUserDeActive = (...props) => (
+  <div {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+    >
+      <path
+        d="M13 11.25C15.2091 11.25 17 9.45914 17 7.25C17 5.04086 15.2091 3.25 13 3.25C10.7909 3.25 9 5.04086 9 7.25C9 9.45914 10.7909 11.25 13 11.25Z"
+        stroke={STROKE_COLOR_ICON.DE_ACTIVE}
+        strokeWidth="2.5"
+      />
+      <path
+        d="M6.26678 23.75H19.744C21.603 23.75 22.5 23.2186 22.5 22.0673C22.5 19.3712 18.8038 15.75 13 15.75C7.19625 15.75 3.5 19.3712 3.5 22.0673C3.5 23.2186 4.39704 23.75 6.26678 23.75Z"
+        stroke={STROKE_COLOR_ICON.DE_ACTIVE}
+        strokeWidth="2.5"
+      />
     </svg>
   </div>
 );

@@ -5,6 +5,8 @@ import TriggerSocket from "./components/TriggerSocket";
 import { getInfoUserLocal } from "./services/customAxios";
 import AuthScreen from "./components/Auth/AuthScreen";
 import HomeScreen from "./components/Home/HomeScreen";
+import ModalNewPost from "./components/Post/ModalNewPost";
+import { placeHolderInputPost } from "./components/Post/NewPost";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -53,6 +55,7 @@ function App() {
 
         <Route path="*" element={<HomeScreen />} />
       </Routes>
+      <ModalNewPost placeHolderInputPost={placeHolderInputPost} />
     </div>
   );
 }

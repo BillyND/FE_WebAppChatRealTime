@@ -1,16 +1,24 @@
-import React, { useState } from "react";
-import { WrapNavMenu } from "./HomeStyled";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { Flex } from "antd";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
+  IconHeartActive,
+  IconHeartDeActive,
   IconHomeActive,
   IconHomeDeActive,
   IconLogo,
+  IconPostDeActive,
+  IconSearchActive,
+  IconSearchDeActive,
+  IconUserActive,
+  IconUserDeActive,
 } from "../../assets/icons/icon";
-import { useWindowSize } from "../../utils/hooks/useWindowSize";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { useLocation, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/api";
+import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { useWindowSize } from "../../utils/hooks/useWindowSize";
+import { WrapNavMenu } from "./HomeStyled";
+import { useModal } from "../../utils/hooks/useModal";
 
 function NavMenu(props) {
   const { styleApp, updateStyleApp } = useStyleApp();
@@ -19,14 +27,22 @@ function NavMenu(props) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [loadingLogout, setLoadingLogout] = useState(false);
+  const { openModal } = useModal(["MODAL_NEW_POST"]);
   const {
     accessToken,
     infoUser: { _id: userId, username, avaUrl },
   } = useAuthUser();
 
-  const handleNavigation = (route) => {
-    if (pathname === route) return;
-    navigate(route);
+  const handleNavigation = (path) => {
+    if (path === "/post") {
+      openModal("MODAL_NEW_POST");
+      return;
+    }
+
+    if (pathname === path || !path) {
+      return;
+    }
+    navigate(path);
   };
 
   const handleLogout = async () => {
@@ -35,6 +51,39 @@ function NavMenu(props) {
     setLoadingLogout(false);
     handleNavigation("/login");
   };
+
+  const optionIcon = [
+    {
+      key: "home",
+      path: "/",
+      iconActive: <IconHomeActive />,
+      iconDeActive: <IconHomeDeActive />,
+    },
+    {
+      key: "search",
+      path: "/search",
+      iconActive: <IconSearchActive />,
+      iconDeActive: <IconSearchDeActive />,
+    },
+    {
+      key: "post",
+      path: "/post",
+      iconActive: <IconPostDeActive />,
+      iconDeActive: <IconPostDeActive />,
+    },
+    {
+      key: "activity",
+      path: "/activity",
+      iconActive: <IconHeartActive />,
+      iconDeActive: <IconHeartDeActive />,
+    },
+    {
+      key: "user",
+      path: `/user/${userId}`,
+      iconActive: <IconUserActive />,
+      iconDeActive: <IconUserDeActive />,
+    },
+  ];
 
   return (
     <WrapNavMenu
@@ -45,35 +94,25 @@ function NavMenu(props) {
     >
       <div className="group-nav-menu">
         <Flex align="center" justify="center" className="group-nav pl-3">
-          <div className="icon-logo cursor-pointer transition-02">
+          <div className="icon-logo cursor-pointer transition-03">
             <IconLogo />
           </div>
         </Flex>
         <Flex align="center" justify="center" className="group-nav" gap={1}>
-          <div className="icon-center cursor-pointer transition-02">
-            <IconHomeActive />
-            {/* <IconHomeDeActive /> */}
-          </div>
+          {optionIcon.map((item) => {
+            const { key, path, iconActive, iconDeActive } = item || {};
+            const isActive = pathname === path;
 
-          <div className="icon-center cursor-pointer transition-02">
-            <IconHomeActive />
-            {/* <IconHomeDeActive /> */}
-          </div>
-
-          <div className="icon-center cursor-pointer transition-02">
-            <IconHomeActive />
-            {/* <IconHomeDeAc/tive /> */}
-          </div>
-
-          <div className="icon-center cursor-pointer transition-02">
-            <IconHomeActive />
-            {/* <IconHomeDeActive /> */}
-          </div>
-
-          <div className="icon-center cursor-pointer transition-02">
-            <IconHomeActive />
-            {/* <IconHomeDeActive /> */}
-          </div>
+            return (
+              <div
+                key={key}
+                className="icon-nav cursor-pointer transition-02"
+                onClick={() => handleNavigation(path)}
+              >
+                {isActive ? iconActive : iconDeActive}
+              </div>
+            );
+          })}
         </Flex>
         <Flex
           align="center"

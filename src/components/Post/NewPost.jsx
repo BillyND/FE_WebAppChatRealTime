@@ -2,8 +2,9 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
-import ModalNewPost from "./ModalNewPost";
 import "./Post.scss";
+
+export const placeHolderInputPost = `What are you thinking?`;
 
 function NewPost(props) {
   const {
@@ -14,8 +15,6 @@ function NewPost(props) {
   const handleOpeModalNewPost = (type) => {
     openModal("MODAL_NEW_POST", type);
   };
-
-  const placeHolderInputPost = `What are you thinking?`;
 
   return (
     <>
@@ -42,7 +41,6 @@ function NewPost(props) {
           </div>
         </div>
       </div>
-      <ModalNewPost placeHolderInputPost={placeHolderInputPost} />
     </>
   );
 }
