@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TYPE_STYLE_APP } from "../../utils/constant";
+import { BACKGROUND_STYLE_APP, TYPE_STYLE_APP } from "../../utils/constant";
 
 export const WrapHomeScreen = styled.div`
   .home-container {
@@ -21,8 +21,7 @@ export const WrapHomeScreen = styled.div`
 
 export const WrapNavMenu = styled.div`
   backdrop-filter: blur(28.5px);
-  background-color: ${(props) =>
-    props.type === TYPE_STYLE_APP.LIGHT ? "#fff" : "#101010d9"};
+  background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.color};
   width: 100%;
   height: 70px;

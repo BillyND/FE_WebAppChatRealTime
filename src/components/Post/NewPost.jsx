@@ -8,7 +8,7 @@ export const placeHolderInputPost = `What are you thinking?`;
 
 function NewPost(props) {
   const {
-    infoUser: { avaUrl, username },
+    infoUser: { avaUrl },
   } = useAuthUser();
   const { openModal } = useModal(["MODAL_NEW_POST"]);
 

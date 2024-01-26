@@ -11,9 +11,11 @@ import "./HomeScreen.scss";
 import { WrapHomeScreen } from "./HomeStyled";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import NavMenu from "./NavMenu";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
 
 export default function HomeScreen({ path }) {
   const { isMobile, isTablet } = useWindowSize();
+  const { styleApp } = useStyleApp();
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
   const { setState } = useSubscription(listPostSubs, ["loading"]);
@@ -33,23 +35,14 @@ export default function HomeScreen({ path }) {
     });
   }, TIME_DELAY_SEARCH_INPUT);
 
-  const pathToScreen = {
-    "/": <HomeContent />,
-    "/profile": "profile",
-    "/inbox": "inbox",
-  };
-
-  console.log("===>path:", path);
-
   return (
-    <WrapHomeScreen isMobile={isMobile} isTablet={isTablet}>
+    <WrapHomeScreen isMobile={isMobile} isTablet={isTablet} style={styleApp}>
       <PerfectScrollbar
         containerRef={(ref) => (scrollContainerRef.current = ref)}
         className={`home-container`}
       >
         <NavMenu />
-
-        {pathToScreen?.[path]}
+        <HomeContent />
       </PerfectScrollbar>
     </WrapHomeScreen>
   );

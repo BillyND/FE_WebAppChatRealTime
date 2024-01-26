@@ -69,11 +69,14 @@ function ListPost() {
           };
 
           return (
-            <DetailPost
-              key={postId}
-              postId={postId}
-              isAuthorOfPost={isAuthorOfPost}
-            />
+            <>
+              <DetailPost
+                key={postId}
+                postId={postId}
+                isAuthorOfPost={isAuthorOfPost}
+              />
+              <hr className="gray" />
+            </>
           );
         })}
       </div>

@@ -41,6 +41,11 @@ export const TYPE_STYLE_APP = {
   LIGHT: "light",
 };
 
+export const BACKGROUND_STYLE_APP = {
+  DARK: "#fff",
+  LIGHT: "#101010d9",
+};
+
 export const KEY_STYLE_APP = "KEY_STYLE_APP";
 
 export const STROKE_COLOR_ICON = {

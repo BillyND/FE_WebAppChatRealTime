@@ -2,8 +2,8 @@ import { Flex } from "antd";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  IconHeartActive,
-  IconHeartDeActive,
+  IconMessageActive,
+  IconMessageDeActive,
   IconHomeActive,
   IconHomeDeActive,
   IconLogo,
@@ -21,9 +21,8 @@ import { WrapNavMenu } from "./HomeStyled";
 import { useModal } from "../../utils/hooks/useModal";
 
 function NavMenu(props) {
-  const { styleApp, updateStyleApp } = useStyleApp();
+  const { styleApp } = useStyleApp();
   const { isMobile } = useWindowSize();
-  const { type, color } = styleApp;
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [loadingLogout, setLoadingLogout] = useState(false);
@@ -72,10 +71,10 @@ function NavMenu(props) {
       iconDeActive: <IconPostDeActive />,
     },
     {
-      key: "activity",
-      path: "/activity",
-      iconActive: <IconHeartActive />,
-      iconDeActive: <IconHeartDeActive />,
+      key: "message",
+      path: "/message",
+      iconActive: <IconMessageActive />,
+      iconDeActive: <IconMessageDeActive />,
     },
     {
       key: "user",
@@ -86,12 +85,7 @@ function NavMenu(props) {
   ];
 
   return (
-    <WrapNavMenu
-      type={type}
-      color={color}
-      isMobile={isMobile}
-      className="none-copy"
-    >
+    <WrapNavMenu style={styleApp} className="none-copy">
       <div className="group-nav-menu">
         <Flex align="center" justify="center" className="group-nav pl-3">
           <div className="icon-logo cursor-pointer transition-03">

@@ -29,9 +29,10 @@ function HomeContent() {
   const {
     state: { loading },
   } = useSubscription(listPostSubs, ["loading"]);
+  const { styleApp } = useStyleApp();
 
   return (
-    <div className="home-content">
+    <div className="home-content" style={styleApp}>
       <NewPost />
       <ListPost />
       <SpinnerLoading
