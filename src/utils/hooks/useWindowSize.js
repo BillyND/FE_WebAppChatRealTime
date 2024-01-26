@@ -7,7 +7,8 @@ export const useWindowSize = () => {
   const [size, setSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
-    isMobile: window.innerWidth < 768,
+    isTablet: window.innerWidth < 960,
+    isMobile: window.innerWidth < 700,
   });
 
   useEffect(() => {
@@ -15,9 +16,10 @@ export const useWindowSize = () => {
       setSize({
         width: window.innerWidth,
         height: window.innerHeight,
-        isMobile: window.innerWidth < 768,
+        isTablet: window.innerWidth < 960,
+        isMobile: window.innerWidth < 700,
       });
-    }, TIME_DELAY_SEARCH_INPUT);
+    }, TIME_DELAY_SEARCH_INPUT / 4);
 
     window.addEventListener("resize", handleResize);
 

@@ -1,11 +1,11 @@
 import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect } from "react";
 import BaseModal from "../../UI/BaseModal";
-import { SpinnerLoading } from "../../screens/Home/HomeContent";
 import { getCommentsInPost } from "../../services/api";
 import { SOURCE_IMAGE_SEND } from "../../utils/constant";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
+import { SpinnerLoading } from "../Home/HomeContent";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";

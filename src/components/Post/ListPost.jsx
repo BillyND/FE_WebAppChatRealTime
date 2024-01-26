@@ -1,5 +1,6 @@
 import { useSubscription } from "global-state-hook";
 import React, { useEffect } from "react";
+import BaseModal from "../../UI/BaseModal";
 import { deletePost } from "../../services/api";
 import {
   detailPostSubs,
@@ -10,8 +11,6 @@ import { useModal } from "../../utils/hooks/useModal";
 import { handleGetListPost } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
-import BaseModal from "../../UI/BaseModal";
-import { SpinnerLoading } from "../../screens/Home/HomeContent";
 
 function ListPost() {
   const { infoUser } = useAuthUser();

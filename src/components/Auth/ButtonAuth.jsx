@@ -5,7 +5,6 @@ import { postLogin, postRegister } from "../../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { regexValidateEmail } from "../../utils/constant";
-import { SpinnerLoading } from "../Home/HomeContent";
 
 export const ButtonAuth = ({
   loadingAuth,

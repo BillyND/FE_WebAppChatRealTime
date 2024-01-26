@@ -1,15 +1,10 @@
 import { useEffect } from "react";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import AuthScreen from "./screens/Auth/AuthScreen";
-import HomeScreen from "./screens/Home";
-import { getInfoUserLocal } from "./services/customAxios";
-import { useState } from "react";
-import { useRef } from "react";
-import socketIOClient from "socket.io-client";
-import { io } from "socket.io-client";
-import { useAuthUser } from "./utils/hooks/useAuthUser";
 import TriggerSocket from "./components/TriggerSocket";
+import { getInfoUserLocal } from "./services/customAxios";
+import AuthScreen from "./components/Auth/AuthScreen";
+import HomeScreen from "./components/Home/HomeScreen";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
