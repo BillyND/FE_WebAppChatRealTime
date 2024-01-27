@@ -17,7 +17,7 @@ import {
   listPostSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { useModal } from "../../utils/hooks/useModal";
+import { openModalWithOutRender, useModal } from "../../utils/hooks/useModal";
 import { handleUpdatePostSocket } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 
@@ -45,7 +45,6 @@ const DetailPost = (props) => {
     countComment,
   } = post;
   const [openComment, setOpenComment] = useState(false);
-  const { openModal } = useModal(["CONFIRM_DELETE_POST"]);
   const socketRef = useRef();
 
   useEffect(() => {
@@ -120,7 +119,7 @@ const DetailPost = (props) => {
           <Flex gap={12}>
             <EditOutlined
               onClick={() => {
-                openModal("MODAL_NEW_POST");
+                openModalWithOutRender("MODAL_NEW_POST");
 
                 detailPostSubs.state = {
                   ...detailPostSubs.state,
@@ -131,7 +130,7 @@ const DetailPost = (props) => {
             />
             <DeleteOutlined
               onClick={() => {
-                openModal("CONFIRM_DELETE_POST");
+                openModalWithOutRender("CONFIRM_DELETE_POST");
 
                 listPostSubs.state = {
                   ...listPostSubs.state,

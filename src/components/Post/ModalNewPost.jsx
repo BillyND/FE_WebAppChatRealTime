@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Button, Modal, message } from "antd";
+import { Button, Flex, Modal, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { createPost, updatePost } from "../../services/api";
@@ -19,6 +19,8 @@ import {
   showPopupError,
   mergeDataPostToListPost,
 } from "../../utils/utilities";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { WrapModalNewPost } from "./StyledPost";
 
 function ModalNewPost({ placeHolderInputPost }) {
   const { isMobile } = useWindowSize();
@@ -34,7 +36,11 @@ function ModalNewPost({ placeHolderInputPost }) {
     state: { postHasUpdate = {} },
     setState,
   } = useSubscription(detailPostSubs, ["postHasUpdate"]);
-  const { listPost = [] } = listPostSubs.state || {};
+  const { styleApp } = useStyleApp();
+  const { type } = styleApp || {};
+
+  console.log("===>styleApp:", type);
+
   const { _id: postId, imageUrl = "", description = "" } = postHasUpdate;
   const [valueInputPost, setValueInputPost] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
@@ -197,68 +203,74 @@ function ModalNewPost({ placeHolderInputPost }) {
   };
 
   return (
-    <Modal
-      style={{ top: isMobile ? 16 : 40 }}
-      width={isMobile ? 1000 : 500}
-      className="modal-create-post none-copy"
-      title={<span className="">{postId ? "Update" : "Create"} post</span>}
-      open={MODAL_NEW_POST}
-      onCancel={handleCancel}
-      footer={
-        <Button
-          disabled={disableBtnCreatePost}
-          className={`btn-create-post ${!disableBtnCreatePost ? "enable" : ""}`}
-          onClick={postId ? handleEditPost : handleUpPost}
-        >
-          {postId ? "Update" : "Post"}
-        </Button>
-      }
-    >
-      <div>
-        {loadings.createPost && (
-          <div className="loading-create-post">
-            <LoadingOutlined />
-          </div>
-        )}
-        <textarea
-          maxLength={8000}
-          ref={refInputPost}
-          value={valueInputPost}
-          onChange={(e) => setValueInputPost(e.target.value)}
-          className="input-content-post pt-3"
-          placeholder={placeHolderInputPost}
-        />
-
-        <div className="image-preview mb-4 mt-4">
-          {selectedImage ? (
-            <>
-              <img src={selectedImage} loading="lazy" />
-              <CloseCircleOutlined
-                className="icon-clear-image"
-                onClick={handleClearImage}
-              />
-            </>
-          ) : (
-            <label htmlFor="fileInput" className="container-upload-image">
-              <div className="upload-image"></div>
-              <span>Add image</span>
-            </label>
-          )}
-          {loadings.parseFile && (
-            <div className="loading-upload-image">
+    <WrapModalNewPost>
+      <Modal
+        style={{ top: isMobile ? 16 : 40 }}
+        width={isMobile ? 1000 : 500}
+        className={`modal-create-post ${type} none-copy`}
+        title={<span className="">{postId ? "Update" : "Create"} post</span>}
+        open={MODAL_NEW_POST}
+        onCancel={handleCancel}
+        footer={
+          <Flex justify="end">
+            <Button
+              disabled={disableBtnCreatePost}
+              className={`btn-create-post ${
+                !disableBtnCreatePost ? "enable" : ""
+              }`}
+              onClick={postId ? handleEditPost : handleUpPost}
+            >
+              {postId ? "Update" : "Post"}
+            </Button>
+          </Flex>
+        }
+      >
+        <div>
+          {loadings.createPost && (
+            <div className="loading-create-post">
               <LoadingOutlined />
             </div>
           )}
-        </div>
+          <textarea
+            maxLength={8000}
+            ref={refInputPost}
+            value={valueInputPost}
+            onChange={(e) => setValueInputPost(e.target.value)}
+            className="input-content-post pt-3"
+            placeholder={placeHolderInputPost}
+          />
 
-        <input
-          type="file"
-          id="fileInput"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-      </div>
-    </Modal>
+          <div className="image-preview mb-4 mt-4">
+            {selectedImage ? (
+              <>
+                <img src={selectedImage} loading="lazy" />
+                <CloseCircleOutlined
+                  className="icon-clear-image"
+                  onClick={handleClearImage}
+                />
+              </>
+            ) : (
+              <label htmlFor="fileInput" className="container-upload-image">
+                <div className="upload-image"></div>
+                <span>Add image</span>
+              </label>
+            )}
+            {loadings.parseFile && (
+              <div className="loading-upload-image">
+                <LoadingOutlined />
+              </div>
+            )}
+          </div>
+
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+        </div>
+      </Modal>
+    </WrapModalNewPost>
   );
 }
 

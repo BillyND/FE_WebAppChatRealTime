@@ -50,3 +50,17 @@ export const useModal = ([keys]) => {
 
   return { state, openModal, closeModal };
 };
+
+export const openModalWithOutRender = (key) => {
+  modalSubscription.updateState({
+    [key]: true,
+  });
+  document.documentElement.style.setProperty("overflow", "hidden");
+};
+
+export const closeModalModalWithOutRender = (key) => {
+  modalSubscription.updateState({
+    [key]: false,
+  });
+  document.documentElement.style.removeProperty("overflow");
+};

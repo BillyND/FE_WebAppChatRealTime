@@ -1,7 +1,7 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { useModal } from "../../utils/hooks/useModal";
+import { openModalWithOutRender } from "../../utils/hooks/useModal";
 import "./Post.scss";
 
 export const placeHolderInputPost = `What are you thinking?`;
@@ -10,10 +10,9 @@ function NewPost(props) {
   const {
     infoUser: { avaUrl },
   } = useAuthUser();
-  const { openModal } = useModal(["MODAL_NEW_POST"]);
 
   const handleOpeModalNewPost = (type) => {
-    openModal("MODAL_NEW_POST", type);
+    openModalWithOutRender("MODAL_NEW_POST", type);
   };
 
   return (

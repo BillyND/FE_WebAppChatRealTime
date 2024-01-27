@@ -5,6 +5,7 @@ import { styleAppSubscription } from "../globalStates/initGlobalState";
 import { passLocalStorage } from "../passLocalStorage";
 
 export const styleDark = {
+  backgroundModalColor: "#181818",
   backgroundColor: "#101010",
   color: "#f3f5f7",
   subColor: "#99999A",
@@ -12,6 +13,7 @@ export const styleDark = {
 };
 
 export const styleLight = {
+  backgroundModalColor: "#fff",
   backgroundColor: "#FFFFFF",
   color: "#000000",
   subColor: "#99999A",
@@ -24,9 +26,7 @@ export const useStyleApp = () => {
   useEffect(() => {
     const styleFromLocalStorage = passLocalStorage.getItem(KEY_STYLE_APP);
 
-    if (styleFromLocalStorage) {
-      updateStyleApp(styleFromLocalStorage);
-    }
+    updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.DARK);
   }, []);
 
   const updateStyleApp = (type) => {

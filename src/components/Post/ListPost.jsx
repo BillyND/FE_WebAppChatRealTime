@@ -51,8 +51,8 @@ function ListPost() {
 
   return (
     <>
-      <div className="list-post-container pt-5">
-        <h4>Feeds</h4>
+      <div className="list-post-container">
+        <hr className="gray" />
         {listPost?.map((post = {}) => {
           const { _id: postId, comments: countComment } = post;
           const isAuthorOfPost = post.userId === infoUser._id;

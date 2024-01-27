@@ -18,23 +18,28 @@ import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
 import { WrapNavMenu } from "./HomeStyled";
-import { useModal } from "../../utils/hooks/useModal";
+import { openModalWithOutRender, useModal } from "../../utils/hooks/useModal";
+import ToggleSwitch from "../../UI/ToggleSwitch";
+import { TYPE_STYLE_APP } from "../../utils/constant";
 
 function NavMenu(props) {
-  const { styleApp } = useStyleApp();
+  const { styleApp, updateStyleApp } = useStyleApp();
   const { isMobile } = useWindowSize();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [loadingLogout, setLoadingLogout] = useState(false);
-  const { openModal } = useModal(["MODAL_NEW_POST"]);
   const {
     accessToken,
     infoUser: { _id: userId, username, avaUrl },
   } = useAuthUser();
 
+  const handleToggleStyleLayout = (style) => {
+    updateStyleApp(style ? TYPE_STYLE_APP.DARK : TYPE_STYLE_APP.LIGHT);
+  };
+
   const handleNavigation = (path) => {
     if (path === "/post") {
-      openModal("MODAL_NEW_POST");
+      openModalWithOutRender("MODAL_NEW_POST");
       return;
     }
 
@@ -112,7 +117,16 @@ function NavMenu(props) {
           align="center"
           justify="center"
           className="group-nav pr-3 cursor-pointer"
+          gap={16}
         >
+          <Flex gap={4} align="center" justify="center">
+            Light{" "}
+            <ToggleSwitch
+              active={styleApp.type === TYPE_STYLE_APP.DARK}
+              onToggle={handleToggleStyleLayout}
+            />
+            Dark
+          </Flex>
           <div
             className="icon-logo cursor-pointer transition-02"
             onClick={handleLogout}
