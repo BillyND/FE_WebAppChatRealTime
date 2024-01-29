@@ -109,10 +109,10 @@ const DetailPost = (props) => {
   );
 
   return (
-    <div className="card-detail-post p-3">
+    <div className="card-detail-post">
       <div className="header">
         <div className="info-user">
-          <UserThumbnail avaUrl={avaUrl} size={40} />
+          <UserThumbnail avaUrl={avaUrl} />
           <div className="name">{username}</div>
         </div>
         {isAuthorOfPost && hasDelete && (

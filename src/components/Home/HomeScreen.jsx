@@ -7,7 +7,6 @@ import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
 import { handleGetListPost } from "../../utils/utilities";
 import HomeContent from "./HomeContent";
-import "./HomeScreen.scss";
 import { WrapHomeScreen } from "./HomeStyled";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import NavMenu from "./NavMenu";

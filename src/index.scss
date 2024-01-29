@@ -194,7 +194,7 @@
 hr {
   margin: 4px 0 4px 0;
   &.gray {
-    background-color: #777777;
+    background-color: #7777774a;
   }
 }
 
@@ -247,4 +247,10 @@ hr {
       fill: #fff;
     }
   }
+}
+
+.avatar {
+  border-radius: 50%;
+  background-size: contain;
+  background-repeat: no-repeat;
 }

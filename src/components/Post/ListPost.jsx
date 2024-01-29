@@ -1,5 +1,5 @@
 import { useSubscription } from "global-state-hook";
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import BaseModal from "../../UI/BaseModal";
 import { deletePost } from "../../services/api";
 import {
@@ -69,14 +69,10 @@ function ListPost() {
           };
 
           return (
-            <>
-              <DetailPost
-                key={postId}
-                postId={postId}
-                isAuthorOfPost={isAuthorOfPost}
-              />
+            <Fragment key={postId}>
+              <DetailPost postId={postId} isAuthorOfPost={isAuthorOfPost} />
               <hr className="gray" />
-            </>
+            </Fragment>
           );
         })}
       </div>

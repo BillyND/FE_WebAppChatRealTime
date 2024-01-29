@@ -72,3 +72,11 @@ export const WrapNavMenu = styled.div`
     }`}
   }
 `;
+
+export const WrapButtonSettings = styled.div`
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

@@ -1,26 +1,81 @@
-import { Flex } from "antd";
+import { Button, Flex, List, Popover } from "antd";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ToggleSwitch from "../../UI/ToggleSwitch";
 import {
-  IconMessageActive,
-  IconMessageDeActive,
   IconHomeActive,
   IconHomeDeActive,
   IconLogo,
+  IconMessageActive,
+  IconMessageDeActive,
   IconPostDeActive,
   IconSearchActive,
   IconSearchDeActive,
+  IconSettings,
   IconUserActive,
   IconUserDeActive,
 } from "../../assets/icons/icon";
 import { postLogout } from "../../services/api";
+import { TYPE_STYLE_APP } from "../../utils/constant";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
+import { openModalWithOutRender } from "../../utils/hooks/useModal";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
-import { WrapNavMenu } from "./HomeStyled";
-import { openModalWithOutRender, useModal } from "../../utils/hooks/useModal";
-import ToggleSwitch from "../../UI/ToggleSwitch";
-import { TYPE_STYLE_APP } from "../../utils/constant";
+import { WrapButtonSettings, WrapNavMenu } from "./HomeStyled";
+import PopoverCustom from "../../UI/PopoverCustom";
+
+const ButtonSettings = (props) => {
+  const { handleLogout } = props;
+  const [isHover, setIsHover] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const data = [
+    {
+      id: "appearance",
+      label: "Appearance",
+    },
+    {
+      id: "reportProblem",
+      label: "Report problem",
+    },
+    {
+      id: "logOut",
+      label: "Log out",
+    },
+  ];
+
+  const ListSettings = () => {
+    return (
+      <>
+        {data.map((item, index) => {
+          const { id } = item;
+          return <div key={id}>{item.label}</div>;
+        })}
+      </>
+    );
+  };
+
+  return (
+    <WrapButtonSettings
+      className="cursor-pointer"
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+    >
+      <PopoverCustom
+        onOpenChange={setIsOpen}
+        content={<ListSettings />}
+        title=""
+        trigger="click"
+        placement="bottomLeft"
+        style={{ background: "red" }}
+      >
+        <div>
+          <IconSettings isActive={isHover || isOpen} />
+        </div>
+      </PopoverCustom>
+    </WrapButtonSettings>
+  );
+};
 
 function NavMenu(props) {
   const { styleApp, updateStyleApp } = useStyleApp();
@@ -98,13 +153,13 @@ function NavMenu(props) {
           </div>
         </Flex>
         <Flex align="center" justify="center" className="group-nav" gap={1}>
-          {optionIcon.map((item) => {
+          {optionIcon.map((item, index) => {
             const { key, path, iconActive, iconDeActive } = item || {};
             const isActive = pathname === path;
 
             return (
               <div
-                key={key}
+                key={`${key}-${index}`}
                 className="icon-nav cursor-pointer transition-02"
                 onClick={() => handleNavigation(path)}
               >
@@ -116,7 +171,7 @@ function NavMenu(props) {
         <Flex
           align="center"
           justify="center"
-          className="group-nav pr-3 cursor-pointer"
+          className="group-nav pr-3"
           gap={16}
         >
           <Flex gap={4} align="center" justify="center">
@@ -127,12 +182,8 @@ function NavMenu(props) {
             />
             Dark
           </Flex>
-          <div
-            className="icon-logo cursor-pointer transition-02"
-            onClick={handleLogout}
-          >
-            Logout
-          </div>
+
+          <ButtonSettings handleLogout={handleLogout} />
         </Flex>
       </div>
     </WrapNavMenu>

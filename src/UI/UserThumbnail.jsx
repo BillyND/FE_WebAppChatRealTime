@@ -1,4 +1,4 @@
-export const UserThumbnail = ({ avaUrl, size = 40 }) => {
+export const UserThumbnail = ({ avaUrl, size = 36 }) => {
   return (
     <div
       className="avatar"

@@ -130,3 +130,20 @@ export const WrapModalNewPost = styled.div`
     }
   }
 `;
+
+export const WrapCreateNewPost = styled.div`
+  .button-post {
+    padding: 6px 16px;
+    border-radius: 250px;
+    font-weight: 600;
+    background-color: #b2b2b2;
+    color: ${(props) => props.backgroundColor};
+  }
+
+  .placeholder-create-post {
+    width: 100%;
+    cursor: text;
+    color: #999999;
+    height: 100%;
+  }
+`;

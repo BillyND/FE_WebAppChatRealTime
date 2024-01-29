@@ -38,9 +38,6 @@ function ModalNewPost({ placeHolderInputPost }) {
   } = useSubscription(detailPostSubs, ["postHasUpdate"]);
   const { styleApp } = useStyleApp();
   const { type } = styleApp || {};
-
-  console.log("===>styleApp:", type);
-
   const { _id: postId, imageUrl = "", description = "" } = postHasUpdate;
   const [valueInputPost, setValueInputPost] = useState("");
   const [selectedImage, setSelectedImage] = useState("");

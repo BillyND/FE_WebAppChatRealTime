@@ -1,34 +1,39 @@
 import { FILL_COLOR_ICON, STROKE_COLOR_ICON } from "../../utils/constant";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
 
 export const IconMoreDetail = (props) => (
-  <div {...props}>
-    <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-      <g transform="translate(-446 -350)">
-        <path d="M458 360a2 2 0 1 1-4 0 2 2 0 0 1 4 0m6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0m-12 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0"></path>
-      </g>
-    </svg>
-  </div>
+  <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+    <g transform="translate(-446 -350)">
+      <path d="M458 360a2 2 0 1 1-4 0 2 2 0 0 1 4 0m6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0m-12 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0"></path>
+    </g>
+  </svg>
 );
 
-export const IconLogo = (...props) => (
-  <div {...props}>
+export const IconLogo = () => {
+  const { styleApp } = useStyleApp();
+  const { FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="44"
       height="50"
       viewBox="0 0 44 50"
-      fill="none"
+      fill={FILL_COLOR_ICON.ACTIVE}
     >
       <path
         d="M33.8586 23.174C33.6432 23.0708 33.4245 22.9715 33.2029 22.8763C32.8169 15.7652 28.9312 11.694 22.4067 11.6523C22.3772 11.6522 22.3478 11.6522 22.3182 11.6522C18.4157 11.6522 15.1701 13.3179 13.1724 16.3491L16.7607 18.8106C18.253 16.5464 20.5951 16.0637 22.3199 16.0637C22.3399 16.0637 22.3599 16.0637 22.3796 16.0639C24.5279 16.0776 26.149 16.7022 27.1982 17.9203C27.9617 18.8071 28.4724 20.0326 28.7253 21.5791C26.8206 21.2554 24.7607 21.1559 22.5586 21.2821C16.3554 21.6394 12.3675 25.2573 12.6353 30.2844C12.7712 32.8344 14.0416 35.0281 16.2122 36.4612C18.0475 37.6727 20.4112 38.2651 22.8678 38.131C26.112 37.9531 28.657 36.7154 30.4326 34.4521C31.781 32.7333 32.6339 30.506 33.0104 27.6995C34.5565 28.6326 35.7023 29.8604 36.3352 31.3365C37.4112 33.8456 37.474 37.9687 34.1096 41.3302C31.162 44.275 27.6187 45.549 22.2639 45.5883C16.324 45.5443 11.8317 43.6393 8.91096 39.9263C6.17591 36.4495 4.76242 31.4276 4.70969 25C4.76242 18.5723 6.17591 13.5504 8.91096 10.0736C11.8317 6.36065 16.3239 4.45573 22.2639 4.41159C28.2469 4.45607 32.8174 6.37016 35.85 10.101C37.337 11.9306 38.4581 14.2315 39.1971 16.9141L43.4021 15.7922C42.5063 12.4902 41.0966 9.64471 39.1784 7.2849C35.2906 2.50174 29.6047 0.0508198 22.2785 0H22.2492C14.9379 0.0506432 9.31565 2.51089 5.53862 7.31232C2.17758 11.585 0.443855 17.5301 0.3856 24.9824L0.385418 25L0.3856 25.0176C0.443855 32.4698 2.17758 38.4151 5.53862 42.6878C9.31565 47.4891 14.9379 49.9495 22.2492 50H22.2785C28.7786 49.9549 33.3604 48.2531 37.1349 44.482C42.0732 39.5484 41.9245 33.3643 40.2969 29.568C39.1292 26.8456 36.9029 24.6344 33.8586 23.174ZM22.6355 33.7258C19.9168 33.8789 17.0923 32.6586 16.953 30.0448C16.8498 28.1068 18.3322 25.9443 22.8024 25.6867C23.3143 25.6571 23.8167 25.6427 24.3102 25.6427C25.9339 25.6427 27.4529 25.8004 28.8339 26.1023C28.3187 32.5352 25.2974 33.5797 22.6355 33.7258Z"
-        fill="white"
+        fill={FILL_COLOR_ICON.ACTIVE}
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconHomeActive = (...props) => (
-  <div {...props}>
+export const IconHomeActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -44,11 +49,14 @@ export const IconHomeActive = (...props) => (
         strokeLinecap="round"
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconHomeDeActive = (...props) => (
-  <div {...props}>
+export const IconHomeDeActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -64,11 +72,14 @@ export const IconHomeDeActive = (...props) => (
         strokeLinecap="round"
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconSearchActive = (...props) => (
-  <div {...props}>
+export const IconSearchActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -83,11 +94,14 @@ export const IconSearchActive = (...props) => (
         fill={FILL_COLOR_ICON.ACTIVE}
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconSearchDeActive = (...props) => (
-  <div {...props}>
+export const IconSearchDeActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -102,11 +116,14 @@ export const IconSearchDeActive = (...props) => (
         fill={STROKE_COLOR_ICON.DE_ACTIVE}
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconPostDeActive = (...props) => (
-  <div {...props}>
+export const IconPostDeActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -128,11 +145,14 @@ export const IconPostDeActive = (...props) => (
         strokeLinecap="round"
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconMessageActive = (...props) => (
-  <div {...props}>
+export const IconMessageActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -146,11 +166,14 @@ export const IconMessageActive = (...props) => (
         strokeWidth="2.5"
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconMessageDeActive = (...props) => (
-  <div {...props}>
+export const IconMessageDeActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -164,11 +187,14 @@ export const IconMessageDeActive = (...props) => (
         strokeWidth="2.5"
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconUserActive = (...props) => (
-  <div {...props}>
+export const IconUserActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -189,11 +215,14 @@ export const IconUserActive = (...props) => (
         strokeWidth="2.5"
       />
     </svg>
-  </div>
-);
+  );
+};
 
-export const IconUserDeActive = (...props) => (
-  <div {...props}>
+export const IconUserDeActive = () => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="26"
@@ -212,5 +241,40 @@ export const IconUserDeActive = (...props) => (
         strokeWidth="2.5"
       />
     </svg>
-  </div>
-);
+  );
+};
+
+export const IconSettings = (props) => {
+  const { isActive } = props;
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON, FILL_COLOR_ICON } = styleApp || {};
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="20"
+      viewBox="0 0 30 20"
+      fill="none"
+    >
+      <path d="M6.66665 5.95254L23.3333 5.88235Z" fill="black" />
+      <path
+        d="M6.66665 5.95254L23.3333 5.88235"
+        stroke={
+          isActive ? STROKE_COLOR_ICON.ACTIVE : STROKE_COLOR_ICON.DE_ACTIVE
+        }
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path d="M13.3333 14.1176L23.3333 14.1176Z" fill="black" />
+      <path
+        d="M13.3333 14.1176L23.3333 14.1176"
+        stroke={
+          isActive ? STROKE_COLOR_ICON.ACTIVE : STROKE_COLOR_ICON.DE_ACTIVE
+        }
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};

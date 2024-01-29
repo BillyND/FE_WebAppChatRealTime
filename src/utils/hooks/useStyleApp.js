@@ -10,6 +10,14 @@ export const styleDark = {
   color: "#f3f5f7",
   subColor: "#99999A",
   type: TYPE_STYLE_APP.DARK,
+  STROKE_COLOR_ICON: {
+    ACTIVE: "#fff",
+    DE_ACTIVE: "#4D4D4D",
+  },
+  FILL_COLOR_ICON: {
+    ACTIVE: "#fff",
+    DE_ACTIVE: "#00000000",
+  },
 };
 
 export const styleLight = {
@@ -18,14 +26,21 @@ export const styleLight = {
   color: "#000000",
   subColor: "#99999A",
   type: TYPE_STYLE_APP.LIGHT,
+  STROKE_COLOR_ICON: {
+    ACTIVE: "black",
+    DE_ACTIVE: "#B8B8B8",
+  },
+  FILL_COLOR_ICON: {
+    ACTIVE: "black",
+    DE_ACTIVE: "#00000000",
+  },
 };
 
 export const useStyleApp = () => {
-  const { state, setState } = useSubscription(styleAppSubscription);
+  const { state, setState } = useSubscription(styleAppSubscription, ["type"]);
 
   useEffect(() => {
     const styleFromLocalStorage = passLocalStorage.getItem(KEY_STYLE_APP);
-
     updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.DARK);
   }, []);
 
@@ -35,6 +50,7 @@ export const useStyleApp = () => {
         setState(styleDark);
         break;
       }
+
       case TYPE_STYLE_APP.LIGHT: {
         setState(styleLight);
         break;
