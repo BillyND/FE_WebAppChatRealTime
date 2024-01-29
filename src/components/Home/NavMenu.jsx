@@ -40,7 +40,7 @@ const ButtonSettings = (props) => {
     },
     {
       id: "logOut",
-      label: "Log out",
+      label: <Button onClick={handleLogout}>Log out</Button>,
     },
   ];
 
@@ -56,24 +56,20 @@ const ButtonSettings = (props) => {
   };
 
   return (
-    <WrapButtonSettings
-      className="cursor-pointer"
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
+    <PopoverCustom
+      onOpenChange={setIsOpen}
+      content={<ListSettings />}
+      trigger="click"
+      placement="bottomLeft"
     >
-      <PopoverCustom
-        onOpenChange={setIsOpen}
-        content={<ListSettings />}
-        title=""
-        trigger="click"
-        placement="bottomLeft"
-        style={{ background: "red" }}
+      <WrapButtonSettings
+        className="cursor-pointer"
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
       >
-        <div>
-          <IconSettings isActive={isHover || isOpen} />
-        </div>
-      </PopoverCustom>
-    </WrapButtonSettings>
+        <IconSettings isActive={isHover || isOpen} />
+      </WrapButtonSettings>
+    </PopoverCustom>
   );
 };
 
