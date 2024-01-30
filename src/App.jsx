@@ -7,6 +7,7 @@ import HomeScreen from "./components/Home/HomeScreen";
 import ModalNewPost from "./components/Post/ModalNewPost";
 import { placeHolderInputPost } from "./components/Post/NewPost";
 import { WrapStyledApp } from "./StyledApp";
+import "./global.scss";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();

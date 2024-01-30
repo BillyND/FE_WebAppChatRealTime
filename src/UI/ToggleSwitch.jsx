@@ -23,6 +23,7 @@ const SwitchContainer = styled.div`
   border-radius: 10px;
   position: relative;
   cursor: pointer;
+  transition: 0.2s !important;
 `;
 
 const SwitchHandle = styled.div`
@@ -33,7 +34,7 @@ const SwitchHandle = styled.div`
   position: absolute;
   top: 2px;
   left: ${({ isActive }) => (isActive ? "21px" : "2px")};
-  transition: 0.2s;
+  transition: 0.2s !important;
 `;
 
 export default ToggleSwitch;

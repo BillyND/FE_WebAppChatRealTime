@@ -20,7 +20,8 @@ export const WrapHomeScreen = styled.div`
 `;
 
 export const WrapNavMenu = styled.div`
-  backdrop-filter: blur(28.5px);
+  z-index: 100;
+  backdrop-filter: blur(28.5px) !important;
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.color};
   width: 100%;
@@ -79,4 +80,38 @@ export const WrapButtonSettings = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const WrapContentPopoverSettings = styled.div`
+  min-width: 170px;
+  position: absolute;
+  z-index: 100;
+  top: -10px;
+  right: -10px;
+  background: #181818;
+  border-radius: 16px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  font-size: 15px;
+  font-weight: 500;
+
+  .item-nav-menu {
+    padding: 13px;
+  }
+
+  .boundary-line-item {
+    background-color: #7777774a;
+    margin: 0;
+  }
+
+  .spinner-logout {
+    scale: 1.5;
+  }
+  .disabled {
+    opacity: 0.4;
+  }
+
+  .icon-style {
+    width: 20px;
+    height: 20px;
+  }
 `;

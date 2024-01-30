@@ -1,0 +1,141 @@
+* {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.transition-02 {
+  transition: 0.2s !important;
+}
+
+.transition-03 {
+  transition: 0.3s !important;
+}
+
+.text-disabled {
+  color: #b0b3b8 !important;
+}
+
+.spinner-loading {
+  scale: 3;
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.enable-scroll {
+  overflow-y: scroll;
+}
+
+.disable-scroll {
+  overflow-y: hidden;
+}
+
+.cursor-no-drop {
+  cursor: no-drop !important;
+
+  &:hover {
+    svg {
+      fill: gray !important;
+    }
+  }
+}
+
+.dark {
+  .ant-modal-content {
+    background-color: #181818 !important;
+  }
+
+  .ant-modal {
+    padding: 0 !important;
+    border-radius: 10px;
+    border: 0.5px rgb(93, 93, 93) solid;
+  }
+
+  .anticon-close {
+    svg {
+      fill: rgb(231, 231, 231);
+    }
+  }
+}
+
+.light {
+  .ant-modal-content,
+  .ant-modal-title {
+    color: black !important;
+    background-color: #fff !important;
+  }
+
+  .ant-modal {
+    padding: 0 !important;
+    border-radius: 10px;
+    border: 0.5px rgb(93, 93, 93) solid;
+  }
+
+  .anticon-close {
+    svg {
+      fill: black;
+    }
+  }
+}
+
+.ant-modal {
+  padding: 0 !important;
+  border-radius: 10px;
+  border: 0.5px rgb(175, 175, 175) solid;
+}
+
+.ant-modal-title {
+  background-color: #fff !important;
+}
+
+.ant-modal-close {
+  background-color: #7e7e7e00 !important;
+}
+
+.ant-modal-content {
+  max-height: calc(100vh - 40px);
+  padding: 16px !important;
+  color: #fff;
+  border-radius: 10px !important;
+
+  .ant-modal-close-x {
+    opacity: 0.6;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.none-copy * {
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -o-user-select: none !important;
+  user-select: none !important;
+}
+
+.remove-style-link {
+  color: #dbdbdb !important;
+}
+
+.remove-style-link:hover {
+  color: #fff !important;
+}

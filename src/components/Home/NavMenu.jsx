@@ -1,6 +1,7 @@
-import { Button, Flex, List, Popover } from "antd";
-import React, { useState } from "react";
+import { Button, Flex, Switch } from "antd";
+import React, { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import PopoverCustom from "../../UI/PopoverCustom";
 import ToggleSwitch from "../../UI/ToggleSwitch";
 import {
   IconHomeActive,
@@ -8,10 +9,12 @@ import {
   IconLogo,
   IconMessageActive,
   IconMessageDeActive,
+  IconMoon,
   IconPostDeActive,
   IconSearchActive,
   IconSearchDeActive,
   IconSettings,
+  IconSunlight,
   IconUserActive,
   IconUserDeActive,
 } from "../../assets/icons/icon";
@@ -21,18 +24,48 @@ import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "../../utils/hooks/useModal";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
-import { WrapButtonSettings, WrapNavMenu } from "./HomeStyled";
-import PopoverCustom from "../../UI/PopoverCustom";
+import {
+  WrapButtonSettings,
+  WrapContentPopoverSettings,
+  WrapNavMenu,
+} from "./HomeStyled";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const ButtonSettings = (props) => {
-  const { handleLogout } = props;
+  const { handleNavigation } = props;
   const [isHover, setIsHover] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const {
+    styleApp,
+    styleApp: { navMenuStyle, popoverSettings },
+    updateStyleApp,
+  } = useStyleApp();
+  const [loadingLogout, setLoadingLogout] = useState(false);
+
+  const handleToggleStyleLayout = (style) => {
+    updateStyleApp(style ? TYPE_STYLE_APP.LIGHT : TYPE_STYLE_APP.DARK);
+  };
+
+  const handleLogout = async () => {
+    setLoadingLogout(true);
+    await postLogout();
+    setLoadingLogout(false);
+    handleNavigation("/login");
+  };
 
   const data = [
     {
       id: "appearance",
-      label: "Appearance",
+      label: (
+        <Flex align="center" justify="center" gap={10}>
+          <IconMoon className={`icon-style`} />
+          <ToggleSwitch
+            active={styleApp.type === TYPE_STYLE_APP.LIGHT}
+            onToggle={handleToggleStyleLayout}
+          />
+          <IconSunlight className={`icon-style`} />
+        </Flex>
+      ),
     },
     {
       id: "reportProblem",
@@ -40,25 +73,45 @@ const ButtonSettings = (props) => {
     },
     {
       id: "logOut",
-      label: <Button onClick={handleLogout}>Log out</Button>,
+      label: (
+        <Flex justify="space-between">
+          <span>Log out</span>
+          {loadingLogout && <LoadingOutlined className="spinner-logout" />}
+        </Flex>
+      ),
+      disabled: loadingLogout,
     },
   ];
 
-  const ListSettings = () => {
-    return (
-      <>
-        {data.map((item, index) => {
-          const { id } = item;
-          return <div key={id}>{item.label}</div>;
-        })}
-      </>
-    );
-  };
+  const listSettings = (
+    <WrapContentPopoverSettings style={popoverSettings} className="none-copy">
+      {data.map((item, index) => {
+        const { id, disabled } = item;
+        const isButtonLogout = id === "logOut" && !loadingLogout;
+        const isPointer = id !== "appearance";
+
+        return (
+          <Fragment key={id}>
+            {index > 0 && <hr className="boundary-line-item" />}
+
+            <div
+              onClick={() => isButtonLogout && handleLogout()}
+              className={` item-nav-menu ${disabled ? "disabled" : ""}  ${
+                isPointer ? "cursor-pointer" : ""
+              }`}
+            >
+              {item.label}
+            </div>
+          </Fragment>
+        );
+      })}
+    </WrapContentPopoverSettings>
+  );
 
   return (
     <PopoverCustom
       onOpenChange={setIsOpen}
-      content={<ListSettings />}
+      content={listSettings}
       trigger="click"
       placement="bottomLeft"
     >
@@ -74,7 +127,11 @@ const ButtonSettings = (props) => {
 };
 
 function NavMenu(props) {
-  const { styleApp, updateStyleApp } = useStyleApp();
+  const {
+    styleApp,
+    styleApp: { navMenuStyle },
+    updateStyleApp,
+  } = useStyleApp();
   const { isMobile } = useWindowSize();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -83,10 +140,6 @@ function NavMenu(props) {
     accessToken,
     infoUser: { _id: userId, username, avaUrl },
   } = useAuthUser();
-
-  const handleToggleStyleLayout = (style) => {
-    updateStyleApp(style ? TYPE_STYLE_APP.DARK : TYPE_STYLE_APP.LIGHT);
-  };
 
   const handleNavigation = (path) => {
     if (path === "/post") {
@@ -98,13 +151,6 @@ function NavMenu(props) {
       return;
     }
     navigate(path);
-  };
-
-  const handleLogout = async () => {
-    setLoadingLogout(true);
-    await postLogout();
-    setLoadingLogout(false);
-    handleNavigation("/login");
   };
 
   const optionIcon = [
@@ -141,7 +187,7 @@ function NavMenu(props) {
   ];
 
   return (
-    <WrapNavMenu style={styleApp} className="none-copy">
+    <WrapNavMenu style={navMenuStyle} className="none-copy">
       <div className="group-nav-menu">
         <Flex align="center" justify="center" className="group-nav pl-3">
           <div className="icon-logo cursor-pointer transition-03">
@@ -170,16 +216,7 @@ function NavMenu(props) {
           className="group-nav pr-3"
           gap={16}
         >
-          <Flex gap={4} align="center" justify="center">
-            Light{" "}
-            <ToggleSwitch
-              active={styleApp.type === TYPE_STYLE_APP.DARK}
-              onToggle={handleToggleStyleLayout}
-            />
-            Dark
-          </Flex>
-
-          <ButtonSettings handleLogout={handleLogout} />
+          <ButtonSettings handleNavigation={handleNavigation} />
         </Flex>
       </div>
     </WrapNavMenu>

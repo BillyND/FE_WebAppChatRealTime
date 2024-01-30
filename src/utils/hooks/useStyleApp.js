@@ -18,6 +18,14 @@ export const styleDark = {
     ACTIVE: "#fff",
     DE_ACTIVE: "#00000000",
   },
+  navMenuStyle: {
+    backgroundColor: "#101010d9",
+    color: "#f3f5f7",
+  },
+  popoverSettings: {
+    backgroundColor: "#181818",
+    color: "#f3f5f7",
+  },
 };
 
 export const styleLight = {
@@ -34,6 +42,14 @@ export const styleLight = {
     ACTIVE: "black",
     DE_ACTIVE: "#00000000",
   },
+  navMenuStyle: {
+    backgroundColor: "#fff",
+    color: "#000000",
+  },
+  popoverSettings: {
+    backgroundColor: "#fff",
+    color: "black",
+  },
 };
 
 export const useStyleApp = () => {
@@ -41,7 +57,10 @@ export const useStyleApp = () => {
 
   useEffect(() => {
     const styleFromLocalStorage = passLocalStorage.getItem(KEY_STYLE_APP);
-    updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.DARK);
+
+    if (styleFromLocalStorage !== state.type) {
+      updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.DARK);
+    }
   }, []);
 
   const updateStyleApp = (type) => {

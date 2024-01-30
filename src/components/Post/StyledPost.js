@@ -133,6 +133,7 @@ export const WrapModalNewPost = styled.div`
 
 export const WrapCreateNewPost = styled.div`
   .button-post {
+    opacity: 0.7;
     padding: 6px 16px;
     border-radius: 250px;
     font-weight: 600;
