@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { BACKGROUND_STYLE_APP, TYPE_STYLE_APP } from "../../utils/constant";
 
 export const WrapHomeScreen = styled.div`
   .home-container {
@@ -48,18 +47,24 @@ export const WrapNavMenu = styled.div`
     }
 
     ${(props) =>
-      props.isMobile
+      props.isTablet
         ? `
-   &:active {
-      transform: scale(0.9);
-    }`
-        : `  &:hover {
-       transform: scale(1.07); 
-    }`}
+     &:active {
+        transform: scale(0.9);
+      }`
+        : ` 
+      &:hover {
+        transform: scale(1.07); 
+      }
+      
+      &:active {
+        transform: scale(0.9);
+      }
+  `}
   }
 
   .icon-nav {
-    padding: 20px 40px;
+    padding: ${(props) => (props.isTablet ? "20px 20px" : "20px 40px")};
     border-radius: 8px;
 
     ${(props) =>
@@ -68,9 +73,16 @@ export const WrapNavMenu = styled.div`
    &:active {
       transform: scale(0.9);
     }`
-        : `  &:hover {
-          background-color: #31313187;
-    }`}
+        : ` 
+       &:hover {
+         background-color: #31313187;
+      }
+      
+      &:active {
+        transform: scale(0.9);
+      }
+       
+       `}
   }
 `;
 

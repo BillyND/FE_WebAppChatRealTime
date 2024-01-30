@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { KEY_STYLE_APP, TYPE_STYLE_APP } from "../constant";
 import { styleAppSubscription } from "../globalStates/initGlobalState";
 import { passLocalStorage } from "../passLocalStorage";
+import { compareChange } from "../utilities";
 
 export const styleDark = {
   backgroundModalColor: "#181818",
@@ -58,7 +59,7 @@ export const useStyleApp = () => {
   useEffect(() => {
     const styleFromLocalStorage = passLocalStorage.getItem(KEY_STYLE_APP);
 
-    if (styleFromLocalStorage !== state.type) {
+    if (compareChange([styleFromLocalStorage, state.type])) {
       updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.DARK);
     }
   }, []);

@@ -1,4 +1,5 @@
-import { Button, Flex, Switch } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Flex } from "antd";
 import React, { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PopoverCustom from "../../UI/PopoverCustom";
@@ -29,7 +30,6 @@ import {
   WrapContentPopoverSettings,
   WrapNavMenu,
 } from "./HomeStyled";
-import { LoadingOutlined } from "@ant-design/icons";
 
 const ButtonSettings = (props) => {
   const { handleNavigation } = props;
@@ -37,7 +37,7 @@ const ButtonSettings = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     styleApp,
-    styleApp: { navMenuStyle, popoverSettings },
+    styleApp: { popoverSettings },
     updateStyleApp,
   } = useStyleApp();
   const [loadingLogout, setLoadingLogout] = useState(false);
@@ -128,17 +128,13 @@ const ButtonSettings = (props) => {
 
 function NavMenu(props) {
   const {
-    styleApp,
     styleApp: { navMenuStyle },
-    updateStyleApp,
   } = useStyleApp();
-  const { isMobile } = useWindowSize();
+  const { isMobile, isTablet } = useWindowSize();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [loadingLogout, setLoadingLogout] = useState(false);
   const {
-    accessToken,
-    infoUser: { _id: userId, username, avaUrl },
+    infoUser: { _id: userId },
   } = useAuthUser();
 
   const handleNavigation = (path) => {
@@ -186,8 +182,15 @@ function NavMenu(props) {
     },
   ];
 
+  console.log("=>>isMobile", isMobile);
+
   return (
-    <WrapNavMenu style={navMenuStyle} className="none-copy">
+    <WrapNavMenu
+      style={navMenuStyle}
+      isMobile={isMobile}
+      isTablet={isTablet}
+      className="none-copy"
+    >
       <div className="group-nav-menu">
         <Flex align="center" justify="center" className="group-nav pl-3">
           <div className="icon-logo cursor-pointer transition-03">
