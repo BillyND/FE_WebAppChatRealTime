@@ -126,7 +126,7 @@ const ButtonSettings = (props) => {
   );
 };
 
-function NavMenu(props) {
+function NavMenu() {
   const {
     styleApp: { navMenuStyle },
   } = useStyleApp();
@@ -182,11 +182,11 @@ function NavMenu(props) {
     },
   ];
 
-  console.log("=>>isMobile", isMobile);
-
   return (
     <WrapNavMenu
       style={navMenuStyle}
+      backgroundColor={navMenuStyle.backgroundColor}
+      color={navMenuStyle.color}
       isMobile={isMobile}
       isTablet={isTablet}
       className="none-copy"
@@ -197,30 +197,32 @@ function NavMenu(props) {
             <IconLogo />
           </div>
         </Flex>
-        <Flex align="center" justify="center" className="group-nav" gap={1}>
-          {optionIcon.map((item, index) => {
-            const { key, path, iconActive, iconDeActive } = item || {};
-            const isActive = pathname === path;
+        <div className="wrap-control-nav">
+          <Flex align="center" justify="center" className="group-nav" gap={1}>
+            {optionIcon.map((item, index) => {
+              const { key, path, iconActive, iconDeActive } = item || {};
+              const isActive = pathname === path;
 
-            return (
-              <div
-                key={`${key}-${index}`}
-                className="icon-nav cursor-pointer transition-02"
-                onClick={() => handleNavigation(path)}
-              >
-                {isActive ? iconActive : iconDeActive}
-              </div>
-            );
-          })}
-        </Flex>
-        <Flex
-          align="center"
-          justify="center"
-          className="group-nav pr-3"
-          gap={16}
-        >
+              return (
+                <div
+                  key={`${key}-${index}`}
+                  className="icon-nav cursor-pointer transition-02"
+                  onClick={() => handleNavigation(path)}
+                >
+                  {isActive ? iconActive : iconDeActive}
+                </div>
+              );
+            })}
+          </Flex>
+        </div>
+
+        {isMobile ? (
           <ButtonSettings handleNavigation={handleNavigation} />
-        </Flex>
+        ) : (
+          <Flex align="center" justify="center" className="group-nav pr-3">
+            <ButtonSettings handleNavigation={handleNavigation} />
+          </Flex>
+        )}
       </div>
     </WrapNavMenu>
   );

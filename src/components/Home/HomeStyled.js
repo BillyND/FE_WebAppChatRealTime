@@ -29,8 +29,10 @@ export const WrapNavMenu = styled.div`
   top: 0 !important;
 
   .group-nav-menu {
-    display: grid;
+    display: ${(props) => (props.isMobile ? "flex" : "grid")};
     grid-template-columns: 20% auto 20%;
+    justify-content: center;
+    align-items: center;
     height: 100%;
   }
 
@@ -41,6 +43,8 @@ export const WrapNavMenu = styled.div`
   }
 
   .icon-logo {
+    position: ${(p) => (p.isMobile ? "" : "fixed")};
+    left: 20px;
     svg {
       width: 32px;
       height: 32px;
@@ -84,14 +88,33 @@ export const WrapNavMenu = styled.div`
        
        `}
   }
+
+  .wrap-control-nav {
+    position: ${(p) => (p.isMobile ? "fixed" : "static")};
+    top: calc(100vh - 66px);
+    width: 100%;
+
+    ${(props) =>
+      props.isMobile &&
+      `
+        background-color: ${props.backgroundColor};
+        color: ${props.color};
+        .group-nav {
+        backdrop-filter: blur(28.5px);
+          }
+      `}
+  }
 `;
 
 export const WrapButtonSettings = styled.div`
+  position: absolute;
   width: 48px;
   height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
+  right: 10px;
+  top: 10px;
 `;
 
 export const WrapContentPopoverSettings = styled.div`
