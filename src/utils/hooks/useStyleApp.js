@@ -20,7 +20,7 @@ export const styleDark = {
     DE_ACTIVE: "#00000000",
   },
   navMenuStyle: {
-    backgroundColor: "#101010d9",
+    backgroundColor: "#101010fa",
     color: "#f3f5f7",
   },
   popoverSettings: {

@@ -19,14 +19,14 @@ export const WrapHomeScreen = styled.div`
 `;
 
 export const WrapNavMenu = styled.div`
-  z-index: 100;
-  backdrop-filter: blur(28.5px) !important;
+  z-index: 10;
+  backdrop-filter: blur(28.5px);
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.color};
   width: 100%;
   height: 70px;
-  position: fixed !important;
-  top: 0 !important;
+  position: fixed;
+  top: 0;
 
   .group-nav-menu {
     display: ${(props) => (props.isMobile ? "flex" : "grid")};
@@ -88,21 +88,35 @@ export const WrapNavMenu = styled.div`
        
        `}
   }
+`;
 
-  .wrap-control-nav {
-    position: ${(p) => (p.isMobile ? "fixed" : "static")};
-    top: calc(100vh - 66px);
-    width: 100%;
+export const WrapControlNav = styled.div`
+  position: fixed;
+  bottom: 0;
+  height: 66px;
+  width: 100%;
+  text-align: center;
+
+  .icon-nav {
+    padding: ${(props) => (props.isMobile ? "20px 20px" : "20px 40px")};
+    border-radius: 8px;
 
     ${(props) =>
-      props.isMobile &&
-      `
-        background-color: ${props.backgroundColor};
-        color: ${props.color};
-        .group-nav {
-        backdrop-filter: blur(28.5px);
-          }
-      `}
+      props.isMobile
+        ? `
+   &:active {
+      transform: scale(0.9);
+    }`
+        : ` 
+       &:hover {
+         background-color: #31313187;
+      }
+      
+      &:active {
+        transform: scale(0.9);
+      }
+       
+       `}
   }
 `;
 

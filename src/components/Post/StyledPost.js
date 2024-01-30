@@ -5,7 +5,6 @@ export const WrapModalNewPost = styled.div`
     color: #fff !important;
     position: relative;
     background-color: #242526;
-    // max-height: 95vh;
     min-height: 500px;
     overflow-y: scroll;
 

@@ -28,6 +28,7 @@ import { useWindowSize } from "../../utils/hooks/useWindowSize";
 import {
   WrapButtonSettings,
   WrapContentPopoverSettings,
+  WrapControlNav,
   WrapNavMenu,
 } from "./HomeStyled";
 
@@ -126,28 +127,16 @@ const ButtonSettings = (props) => {
   );
 };
 
-function NavMenu() {
+const ControlMenu = (props) => {
+  const { handleNavigation } = props;
+  const {
+    infoUser: { _id: userId },
+  } = useAuthUser();
+  const { pathname } = useLocation();
   const {
     styleApp: { navMenuStyle },
   } = useStyleApp();
   const { isMobile, isTablet } = useWindowSize();
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const {
-    infoUser: { _id: userId },
-  } = useAuthUser();
-
-  const handleNavigation = (path) => {
-    if (path === "/post") {
-      openModalWithOutRender("MODAL_NEW_POST");
-      return;
-    }
-
-    if (pathname === path || !path) {
-      return;
-    }
-    navigate(path);
-  };
 
   const optionIcon = [
     {
@@ -183,48 +172,81 @@ function NavMenu() {
   ];
 
   return (
-    <WrapNavMenu
-      style={navMenuStyle}
-      backgroundColor={navMenuStyle.backgroundColor}
-      color={navMenuStyle.color}
+    <WrapControlNav
       isMobile={isMobile}
-      isTablet={isTablet}
-      className="none-copy"
+      style={isMobile ? navMenuStyle : undefined}
+      className="group-nav"
     >
-      <div className="group-nav-menu">
-        <Flex align="center" justify="center" className="group-nav pl-3">
-          <div className="icon-logo cursor-pointer transition-03">
-            <IconLogo />
-          </div>
-        </Flex>
-        <div className="wrap-control-nav">
-          <Flex align="center" justify="center" className="group-nav" gap={1}>
-            {optionIcon.map((item, index) => {
-              const { key, path, iconActive, iconDeActive } = item || {};
-              const isActive = pathname === path;
+      <Flex align="center" justify="center" gap={1}>
+        {optionIcon.map((item, index) => {
+          const { key, path, iconActive, iconDeActive } = item || {};
+          const isActive = pathname === path;
 
-              return (
-                <div
-                  key={`${key}-${index}`}
-                  className="icon-nav cursor-pointer transition-02"
-                  onClick={() => handleNavigation(path)}
-                >
-                  {isActive ? iconActive : iconDeActive}
-                </div>
-              );
-            })}
+          return (
+            <div
+              key={`${key}-${index}`}
+              className="icon-nav cursor-pointer transition-02"
+              onClick={() => handleNavigation(path)}
+            >
+              {isActive ? iconActive : iconDeActive}
+            </div>
+          );
+        })}
+      </Flex>
+    </WrapControlNav>
+  );
+};
+
+function NavMenu() {
+  const {
+    styleApp: { navMenuStyle },
+  } = useStyleApp();
+  const { isMobile, isTablet } = useWindowSize();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const handleNavigation = (path) => {
+    if (path === "/post") {
+      openModalWithOutRender("MODAL_NEW_POST");
+      return;
+    }
+
+    if (pathname === path || !path) {
+      return;
+    }
+    navigate(path);
+  };
+
+  return (
+    <>
+      {isMobile && <ControlMenu handleNavigation={handleNavigation} />}
+      <WrapNavMenu
+        style={navMenuStyle}
+        backgroundColor={navMenuStyle.backgroundColor}
+        color={navMenuStyle.backgroundColor}
+        isMobile={isMobile}
+        isTablet={isTablet}
+        className="none-copy"
+      >
+        <div className="group-nav-menu">
+          <Flex align="center" justify="center" className="group-nav pl-3">
+            <div className="icon-logo cursor-pointer transition-03">
+              <IconLogo />
+            </div>
           </Flex>
-        </div>
 
-        {isMobile ? (
-          <ButtonSettings handleNavigation={handleNavigation} />
-        ) : (
-          <Flex align="center" justify="center" className="group-nav pr-3">
+          {!isMobile && <ControlMenu handleNavigation={handleNavigation} />}
+
+          {isMobile ? (
             <ButtonSettings handleNavigation={handleNavigation} />
-          </Flex>
-        )}
-      </div>
-    </WrapNavMenu>
+          ) : (
+            <Flex align="center" justify="center" className="group-nav pr-3">
+              <ButtonSettings handleNavigation={handleNavigation} />
+            </Flex>
+          )}
+        </div>
+      </WrapNavMenu>
+    </>
   );
 }
 
