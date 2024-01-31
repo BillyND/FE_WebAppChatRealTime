@@ -136,7 +136,7 @@ const ControlMenu = (props) => {
   const {
     styleApp: { navMenuStyle },
   } = useStyleApp();
-  const { isMobile, isTablet } = useWindowSize();
+  const { isMobile } = useWindowSize();
 
   const optionIcon = [
     {

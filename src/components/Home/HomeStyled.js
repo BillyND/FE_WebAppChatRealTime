@@ -96,6 +96,7 @@ export const WrapControlNav = styled.div`
   height: 66px;
   width: 100%;
   text-align: center;
+  backdrop-filter: blur(${(p) => (p.isMobile ? "28.5px" : "0")});
 
   .icon-nav {
     padding: ${(props) => (props.isMobile ? "20px 20px" : "20px 40px")};
