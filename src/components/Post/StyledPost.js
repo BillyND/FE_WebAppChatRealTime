@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { TYPE_STYLE_APP } from "../../utils/constant";
 
 export const WrapModalNewPost = styled.div`
   .modal-create-post {
@@ -132,11 +133,10 @@ export const WrapModalNewPost = styled.div`
 
 export const WrapCreateNewPost = styled.div`
   .button-post {
-    opacity: 0.7;
     padding: 6px 16px;
     border-radius: 250px;
-    font-weight: 600;
-    background-color: #b2b2b2;
+    font-weight: 500;
+    background-color: #5858587d;
     color: ${(props) => props.backgroundColor};
   }
 
@@ -145,5 +145,99 @@ export const WrapCreateNewPost = styled.div`
     cursor: text;
     color: #999999;
     height: 100%;
+  }
+`;
+
+export const WrapDetailPost = styled.div`
+  width: 100%;
+  border-radius: 8px;
+  gap: 8px;
+  display: grid;
+  padding: 0 12px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .icon-delete {
+      cursor: pointer;
+      font-size: 20px;
+      color: gray;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  .image {
+    width: 100%;
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+    }
+  }
+
+  .btn-like-comment {
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    padding: 8px;
+  }
+
+  .btn-like-comment:hover {
+    background-color: #505050;
+  }
+
+  .liked {
+    color: #0068ff;
+  }
+
+  .button-list-liker-post {
+    width: fit-content;
+    padding-right: 8px;
+  }
+
+  .line-left-post {
+    background-color: ${(p) =>
+      p.type === TYPE_STYLE_APP.DARK ? "#333638" : "#e5e5e5"};
+
+    width: 2px;
+    height: 100%;
+    margin-left: 16px;
+    border-radius: 200px;
+  }
+
+  .name {
+    font-weight: 600;
+  }
+
+  .time-post {
+    color: #777777 !important;
+  }
+`;
+
+export const StyledMenuDetailPost = styled.div`
+  min-width: 150px;
+  display: grid;
+  font-weight: 500;
+
+  .item-menu {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+
+    &.critical {
+      color: red;
+    }
+  }
+
+  .boundary-line-item {
+    background-color: #7777774a;
+    margin: 0;
   }
 `;

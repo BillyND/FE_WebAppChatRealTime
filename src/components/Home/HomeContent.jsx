@@ -7,6 +7,7 @@ import NewPost from "../../components/Post/NewPost";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { TYPE_STYLE_APP } from "../../utils/constant";
+import { useWindowSize } from "../../utils/hooks/useWindowSize";
 
 export const SpinnerLoading = ({ style, className }) => (
   <Flex
@@ -30,10 +31,11 @@ function HomeContent() {
     state: { loading },
   } = useSubscription(listPostSubs, ["loading"]);
   const { styleApp } = useStyleApp();
+  const { isMobile, isTablet } = useWindowSize();
 
   return (
     <div className="home-content" style={styleApp}>
-      <NewPost />
+      {!isMobile && <NewPost />}
       <ListPost />
       <SpinnerLoading
         className={"pt-4"}

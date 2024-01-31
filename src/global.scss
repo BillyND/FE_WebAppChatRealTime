@@ -139,3 +139,12 @@
 .remove-style-link:hover {
   color: #fff !important;
 }
+
+.ant-popover {
+  .ant-popover-arrow,
+  .ant-popover-content,
+  .ant-popover-inner {
+    // visibility: hidden !important;
+    background-color: transparent !important;
+  }
+}

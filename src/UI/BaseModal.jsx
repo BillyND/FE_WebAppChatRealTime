@@ -16,6 +16,7 @@ function BaseModal(props) {
 
   return (
     <Modal
+      zIndex={2000}
       {...props}
       footer={
         footer || (

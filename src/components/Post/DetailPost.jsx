@@ -4,10 +4,16 @@ import {
   EditOutlined,
   LikeOutlined,
 } from "@ant-design/icons";
-import { Flex } from "antd";
+import { Flex, Popover } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { io } from "socket.io-client";
 import { UserThumbnail } from "../../UI/UserThumbnail";
 import { updateLikeOfPost } from "../../services/api";
@@ -18,8 +24,12 @@ import {
 } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { openModalWithOutRender, useModal } from "../../utils/hooks/useModal";
-import { handleUpdatePostSocket } from "../../utils/utilities";
+import { formatTimeAgo, handleUpdatePostSocket } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
+import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { IconDash } from "../../assets/icons/icon";
+import PopoverCustom from "../../UI/PopoverCustom";
 
 const DetailPost = (props) => {
   const {
@@ -43,9 +53,14 @@ const DetailPost = (props) => {
     username = "",
     description = "",
     countComment,
+    createdAt,
   } = post;
   const [openComment, setOpenComment] = useState(false);
   const socketRef = useRef();
+  const {
+    styleApp: { type },
+  } = useStyleApp();
+  const [isOpenPopover, setIsOpenPopover] = useState(false);
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
@@ -108,14 +123,84 @@ const DetailPost = (props) => {
     []
   );
 
+  const dataMenuDetailPost = [
+    {
+      id: "hidden",
+      label: "Hidden",
+    },
+    {
+      id: "edit",
+      label: "Edit",
+      hidden: !(isAuthorOfPost && hasDelete),
+      onclick: () => {
+        openModalWithOutRender("MODAL_NEW_POST");
+
+        detailPostSubs.state = {
+          ...detailPostSubs.state,
+          postHasUpdate: post,
+        };
+      },
+    },
+    {
+      id: "delete",
+      label: "Delete",
+      hidden: !(isAuthorOfPost && hasDelete),
+      critical: true,
+      onclick: () => {
+        openModalWithOutRender("CONFIRM_DELETE_POST");
+
+        listPostSubs.state = {
+          ...listPostSubs.state,
+          postIdDelete: postId,
+        };
+      },
+    },
+  ];
+
+  const wrapMenuDetailPost = (
+    <StyledMenuDetailPost>
+      {dataMenuDetailPost.map((item, index) => {
+        const { id, label, critical, onclick } = item;
+        return (
+          <Fragment key={id}>
+            {index > 0 && <hr className="boundary-line-item" />}
+
+            <div
+              className={`item-menu ${critical && "critical"}`}
+              onClick={() => onclick && onclick()}
+            >
+              {label}
+            </div>
+          </Fragment>
+        );
+      })}
+    </StyledMenuDetailPost>
+  );
+
   return (
-    <div className="card-detail-post">
+    <WrapDetailPost type={type}>
       <div className="header">
         <div className="info-user">
           <UserThumbnail avaUrl={avaUrl} />
           <div className="name">{username}</div>
         </div>
-        {isAuthorOfPost && hasDelete && (
+
+        <Flex gap={10} justify="center" align="center">
+          <div className="time-post">{formatTimeAgo(createdAt)}</div>
+
+          <div className="icon-more-detail">
+            <PopoverCustom
+              placement="bottomRight"
+              content={wrapMenuDetailPost}
+              trigger="click"
+            >
+              <IconDash />
+            </PopoverCustom>
+          </div>
+        </Flex>
+      </div>
+
+      {/* {isAuthorOfPost && hasDelete && (
           <Flex gap={12}>
             <EditOutlined
               onClick={() => {
@@ -140,19 +225,26 @@ const DetailPost = (props) => {
               className="icon-delete"
             />
           </Flex>
-        )}
-      </div>
-      <div
-        className="description"
-        dangerouslySetInnerHTML={{
-          __html: description.replace(/\n/g, "<br/>"),
-        }}
-      />
-      {imageUrl && (
-        <div className="image">
-          <img src={imageUrl} />
-        </div>
-      )}
+        )} */}
+
+      <Flex gap={24}>
+        <div className="line-left-post" />
+
+        <Flex gap={8} vertical>
+          <div
+            className="description"
+            dangerouslySetInnerHTML={{
+              __html: description.replace(/\n/g, "<br/>"),
+            }}
+          />
+          {imageUrl && (
+            <div className="image">
+              <img src={imageUrl} />
+            </div>
+          )}
+        </Flex>
+      </Flex>
+
       <div>
         <Flex gap={8}>
           {likerIds.length > 0 && (
@@ -179,7 +271,8 @@ const DetailPost = (props) => {
             </Flex>
           )}
         </Flex>
-        {hasFooter && (
+
+        {/* {hasFooter && (
           <>
             <hr className="gray" />
             <Flex gap={"8px"} className="none-copy">
@@ -208,7 +301,7 @@ const DetailPost = (props) => {
               </Flex>
             </Flex>
           </>
-        )}
+        )} */}
       </div>
 
       {!loop && openComment && (
@@ -219,7 +312,7 @@ const DetailPost = (props) => {
           setOpenComment={setOpenComment}
         />
       )}
-    </div>
+    </WrapDetailPost>
   );
 };
 export default DetailPost;

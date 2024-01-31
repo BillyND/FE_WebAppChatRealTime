@@ -1,5 +1,5 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import { Flex } from "antd";
+import { Flex, Popover } from "antd";
 import React, { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PopoverCustom from "../../UI/PopoverCustom";
@@ -41,6 +41,7 @@ const ButtonSettings = (props) => {
     styleApp: { popoverSettings },
     updateStyleApp,
   } = useStyleApp();
+  const { isMobile } = useWindowSize();
   const [loadingLogout, setLoadingLogout] = useState(false);
 
   const handleToggleStyleLayout = (style) => {
@@ -85,7 +86,7 @@ const ButtonSettings = (props) => {
   ];
 
   const listSettings = (
-    <WrapContentPopoverSettings style={popoverSettings} className="none-copy">
+    <WrapContentPopoverSettings className="none-copy">
       {data.map((item, index) => {
         const { id, disabled } = item;
         const isButtonLogout = id === "logOut" && !loadingLogout;
@@ -117,6 +118,7 @@ const ButtonSettings = (props) => {
       placement="bottomLeft"
     >
       <WrapButtonSettings
+        isMobile={isMobile}
         className="cursor-pointer"
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}

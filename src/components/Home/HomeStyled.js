@@ -19,7 +19,7 @@ export const WrapHomeScreen = styled.div`
 `;
 
 export const WrapNavMenu = styled.div`
-  z-index: 10;
+  /* z-index: 10; */
   backdrop-filter: blur(28.5px);
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.color};
@@ -44,7 +44,7 @@ export const WrapNavMenu = styled.div`
 
   .icon-logo {
     position: ${(p) => (p.isMobile ? "" : "fixed")};
-    left: 20px;
+    left: 8%;
     svg {
       width: 32px;
       height: 32px;
@@ -128,22 +128,12 @@ export const WrapButtonSettings = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  right: 10px;
+  right: ${(p) => (p.isMobile ? "10px" : "8%")};
   top: 10px;
 `;
 
 export const WrapContentPopoverSettings = styled.div`
   min-width: 170px;
-  position: absolute;
-  z-index: 100;
-  top: -10px;
-  right: -10px;
-  background: #181818;
-  border-radius: 16px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  font-size: 15px;
-  font-weight: 500;
-
   .item-nav-menu {
     padding: 13px;
   }

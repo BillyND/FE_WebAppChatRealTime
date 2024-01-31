@@ -202,6 +202,7 @@ function ModalNewPost({ placeHolderInputPost }) {
   return (
     <WrapModalNewPost>
       <Modal
+        zIndex={2000}
         style={{ top: isMobile ? 16 : 40 }}
         width={isMobile ? 1000 : 500}
         className={`modal-create-post ${type} none-copy`}

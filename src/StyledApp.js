@@ -83,17 +83,18 @@ export const WrapStyledApp = styled.div`
     &.gray {
       background-color: #7777774a !important;
     }
+    border-radius: 200px;
   }
 
   .icon-more-detail {
     cursor: pointer;
-    padding: 7px;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: 0.2s;
 
     svg {
       fill: gray;
