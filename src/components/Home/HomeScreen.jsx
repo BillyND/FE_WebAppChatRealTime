@@ -42,8 +42,10 @@ export default function HomeScreen({ path }) {
         className={`home-container enable-scroll`}
       >
         <NavMenu />
-        <div id="element-top"></div>
-        <HomeContent />
+        <div>
+          <div id="element-top" />
+          <HomeContent />
+        </div>
       </div>
     </WrapHomeScreen>
   );
