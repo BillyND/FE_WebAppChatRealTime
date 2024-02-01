@@ -27,7 +27,7 @@ const WrapPopover = styled.div`
   top: -10px;
   right: -10px;
   background: #181818;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 `;
 

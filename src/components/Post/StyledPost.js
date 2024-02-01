@@ -181,14 +181,17 @@ export const WrapDetailPost = styled.div`
   }
 
   .btn-like-comment {
-    border-radius: 8px;
+    transition: 0.2s;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     cursor: pointer;
-    width: 100%;
-    padding: 8px;
+    padding: 2px;
+    margin-left: -9px;
   }
 
   .btn-like-comment:hover {
-    background-color: #505050;
+    background-color: #9f9f9f3b;
   }
 
   .liked {
@@ -204,7 +207,7 @@ export const WrapDetailPost = styled.div`
     background-color: ${(p) =>
       p.type === TYPE_STYLE_APP.DARK ? "#333638" : "#e5e5e5"};
 
-    width: 2px;
+    width: 1.5px;
     height: 100%;
     margin-left: 16px;
     border-radius: 200px;
@@ -215,7 +218,12 @@ export const WrapDetailPost = styled.div`
   }
 
   .time-post {
-    color: #777777 !important;
+    color: #999999;
+  }
+
+  .count-reaction {
+    font-size: 14px;
+    color: #999999;
   }
 `;
 

@@ -169,10 +169,12 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
   const isIdChanged =
     !compareChange([postIdSocket, postId]) &&
     compareChange([targetSocketId, currentSocketId]);
+
   const isPostChanged = compareChange([
     postSocket,
     detailPostSubs.state[`post-${postSocket}`],
   ]);
+
   const isPostChangedWithKeys = keys?.some((key) =>
     compareChange([
       postSocket[key],
@@ -236,5 +238,18 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
         ? { ...detailPostSubs.state[`comment-${commentId}`], ...updatedState }
         : { ...detailPostSubs.state[`comment-${commentId}`], ...commentSocket },
     });
+  }
+};
+
+export const handleHiddenPost = (postId) => {
+  const { listPost, next } = listPostSubs.state || {};
+  const newListPost = listPost.filter((post) => post?._id !== postId);
+
+  listPostSubs.updateState({
+    listPost: newListPost,
+  });
+
+  if (newListPost.length < 5 && next) {
+    handleGetListPost(next);
   }
 };

@@ -1,10 +1,5 @@
-import {
-  CommentOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  LikeOutlined,
-} from "@ant-design/icons";
-import { Flex, Popover } from "antd";
+import { CommentOutlined, LikeOutlined } from "@ant-design/icons";
+import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, {
@@ -15,7 +10,14 @@ import React, {
   useState,
 } from "react";
 import { io } from "socket.io-client";
+import PopoverCustom from "../../UI/PopoverCustom";
 import { UserThumbnail } from "../../UI/UserThumbnail";
+import {
+  IconDash,
+  IconHeartActive,
+  IconHeartDeActive,
+  IconMessageActive,
+} from "../../assets/icons/icon";
 import { updateLikeOfPost } from "../../services/api";
 import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import {
@@ -23,13 +25,15 @@ import {
   listPostSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { openModalWithOutRender, useModal } from "../../utils/hooks/useModal";
-import { formatTimeAgo, handleUpdatePostSocket } from "../../utils/utilities";
+import { openModalWithOutRender } from "../../utils/hooks/useModal";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import {
+  formatTimeAgo,
+  handleHiddenPost,
+  handleUpdatePostSocket,
+} from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
-import { IconDash } from "../../assets/icons/icon";
-import PopoverCustom from "../../UI/PopoverCustom";
 
 const DetailPost = (props) => {
   const {
@@ -60,7 +64,6 @@ const DetailPost = (props) => {
   const {
     styleApp: { type },
   } = useStyleApp();
-  const [isOpenPopover, setIsOpenPopover] = useState(false);
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
@@ -127,6 +130,9 @@ const DetailPost = (props) => {
     {
       id: "hidden",
       label: "Hidden",
+      onclick: () => {
+        handleHiddenPost(postId);
+      },
     },
     {
       id: "edit",
@@ -160,7 +166,9 @@ const DetailPost = (props) => {
   const wrapMenuDetailPost = (
     <StyledMenuDetailPost>
       {dataMenuDetailPost.map((item, index) => {
-        const { id, label, critical, onclick } = item;
+        const { id, label, critical, onclick, hidden } = item;
+
+        if (hidden) return null;
         return (
           <Fragment key={id}>
             {index > 0 && <hr className="boundary-line-item" />}
@@ -188,46 +196,19 @@ const DetailPost = (props) => {
         <Flex gap={10} justify="center" align="center">
           <div className="time-post">{formatTimeAgo(createdAt)}</div>
 
-          <div className="icon-more-detail">
-            <PopoverCustom
-              placement="bottomRight"
-              content={wrapMenuDetailPost}
-              trigger="click"
-            >
+          <PopoverCustom
+            placement="bottomRight"
+            content={wrapMenuDetailPost}
+            trigger="click"
+          >
+            <div className="icon-more-detail">
               <IconDash />
-            </PopoverCustom>
-          </div>
+            </div>
+          </PopoverCustom>
         </Flex>
       </div>
 
-      {/* {isAuthorOfPost && hasDelete && (
-          <Flex gap={12}>
-            <EditOutlined
-              onClick={() => {
-                openModalWithOutRender("MODAL_NEW_POST");
-
-                detailPostSubs.state = {
-                  ...detailPostSubs.state,
-                  postHasUpdate: post,
-                };
-              }}
-              className="icon-delete"
-            />
-            <DeleteOutlined
-              onClick={() => {
-                openModalWithOutRender("CONFIRM_DELETE_POST");
-
-                listPostSubs.state = {
-                  ...listPostSubs.state,
-                  postIdDelete: postId,
-                };
-              }}
-              className="icon-delete"
-            />
-          </Flex>
-        )} */}
-
-      <Flex gap={24}>
+      <Flex gap={24} className="none-copy">
         <div className="line-left-post" />
 
         <Flex gap={8} vertical>
@@ -242,40 +223,9 @@ const DetailPost = (props) => {
               <img src={imageUrl} />
             </div>
           )}
-        </Flex>
-      </Flex>
 
-      <div>
-        <Flex gap={8}>
-          {likerIds.length > 0 && (
-            <Flex
-              gap={4}
-              className="pb-1 cursor-pointer button-list-liker-post none-copy"
-              align="center"
-              justify="center"
-            >
-              <LikeOutlined style={{ height: "20px" }} />
-              <a className="text-disabled">{likerIds.length}</a>
-            </Flex>
-          )}
-
-          {countComment > 0 && (
-            <Flex
-              gap={4}
-              className="pb-1 cursor-pointer button-list-liker-post none-copy"
-              align="center"
-              justify="center"
-            >
-              <CommentOutlined style={{ height: "20px" }} />
-              <a className="text-disabled">{countComment}</a>
-            </Flex>
-          )}
-        </Flex>
-
-        {/* {hasFooter && (
-          <>
-            <hr className="gray" />
-            <Flex gap={"8px"} className="none-copy">
+          {hasFooter && (
+            <Flex gap={16} className="none-copy">
               <Flex
                 gap={"8px"}
                 className={`btn-like-comment ${
@@ -284,25 +234,48 @@ const DetailPost = (props) => {
                     : ""
                 }`}
                 justify="center"
+                align="center"
                 onClick={handleLike}
               >
-                <LikeOutlined style={{ height: "20px" }} />
-                <span style={{ height: "20px" }}>Like</span>
+                {likerIds?.includes(userId) ? (
+                  <IconHeartActive size={1.5} />
+                ) : (
+                  <IconHeartDeActive size={1.5} />
+                )}
               </Flex>
 
               <Flex
                 gap={"8px"}
                 className="btn-like-comment"
                 justify="center"
+                align="center"
                 onClick={() => setOpenComment(true)}
               >
-                <CommentOutlined style={{ height: "20px" }} />
-                <span style={{ height: "20px" }}>Comment</span>
+                <IconMessageActive size={1.5} />
               </Flex>
             </Flex>
-          </>
-        )} */}
-      </div>
+          )}
+
+          <Flex gap={8}>
+            {countComment > 0 && (
+              <a
+                className="count-reaction"
+                onClick={() => setOpenComment(true)}
+              >
+                {`${countComment} ${countComment > 1 ? "comments" : "comment"}`}
+              </a>
+            )}
+            {countComment > 0 && likerIds.length > 0 && (
+              <span className="count-reaction">&#x2022;</span>
+            )}
+            {likerIds.length > 0 && (
+              <span className="count-reaction">
+                {`${likerIds.length} ${likerIds.length > 1 ? "likes" : "like"}`}{" "}
+              </span>
+            )}
+          </Flex>
+        </Flex>
+      </Flex>
 
       {!loop && openComment && (
         <ModalCommentPost
