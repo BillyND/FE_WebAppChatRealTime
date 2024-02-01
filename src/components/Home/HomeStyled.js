@@ -26,7 +26,7 @@ export const WrapNavMenu = styled.div`
   height: 70px;
   position: fixed;
   top: 0;
-  right: 8px;
+  right: ${(p) => (p.isMobile ? "0" : "8px")};
 
   .group-nav-menu {
     display: ${(props) => (props.isMobile ? "flex" : "grid")};
