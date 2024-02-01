@@ -36,13 +36,15 @@ export default function HomeScreen({ path }) {
 
   return (
     <WrapHomeScreen isMobile={isMobile} isTablet={isTablet} style={styleApp}>
-      <PerfectScrollbar
-        containerRef={(ref) => (scrollContainerRef.current = ref)}
-        className={`home-container`}
+      <div
+        ref={scrollContainerRef}
+        // containerRef={(ref) => (scrollContainerRef.current = ref)}
+        className={`home-container enable-scroll`}
       >
         <NavMenu />
+        <div id="element-top"></div>
         <HomeContent />
-      </PerfectScrollbar>
+      </div>
     </WrapHomeScreen>
   );
 }

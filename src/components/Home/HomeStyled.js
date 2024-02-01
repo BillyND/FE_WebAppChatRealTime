@@ -19,7 +19,6 @@ export const WrapHomeScreen = styled.div`
 `;
 
 export const WrapNavMenu = styled.div`
-  /* z-index: 10; */
   backdrop-filter: blur(28.5px);
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.color};
@@ -43,6 +42,7 @@ export const WrapNavMenu = styled.div`
   }
 
   .icon-logo {
+    z-index: 1;
     position: ${(p) => (p.isMobile ? "" : "fixed")};
     left: 8%;
     svg {

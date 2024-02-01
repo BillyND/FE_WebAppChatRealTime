@@ -31,6 +31,7 @@ import {
   WrapControlNav,
   WrapNavMenu,
 } from "./HomeStyled";
+import { scrollTop } from "../../utils/scrollTop";
 
 const ButtonSettings = (props) => {
   const { handleNavigation } = props;
@@ -213,9 +214,12 @@ function NavMenu() {
       return;
     }
 
+    if (path === "/") scrollTop();
+
     if (pathname === path || !path) {
       return;
     }
+
     navigate(path);
   };
 
@@ -231,8 +235,11 @@ function NavMenu() {
         className="none-copy"
       >
         <div className="group-nav-menu">
-          <Flex align="center" justify="center" className="group-nav pl-3">
-            <div className="icon-logo cursor-pointer transition-03">
+          <Flex align="center" justify="center" className="group-nav">
+            <div
+              className="icon-logo cursor-pointer transition-03"
+              onClick={scrollTop}
+            >
               <IconLogo />
             </div>
           </Flex>
