@@ -113,8 +113,6 @@ export const scrollToTopOfElement = (elementId) => {
   /*** Get the element with the provided ID ***/
   const elementHasScrollTop = document?.getElementById(elementId);
 
-  /*** Get the total height of the content at the top of the scrollable area ***/
-  const scrollHeight = elementHasScrollTop?.scrollHeight;
   try {
     /*** Get the current scroll position ***/
     const currentScrollTop = elementHasScrollTop.scrollTop;
