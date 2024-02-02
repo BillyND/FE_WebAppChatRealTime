@@ -103,6 +103,54 @@ export const scrollToBottomOfElement = (elementId) => {
   }
 };
 
+/**
+ * Smoothly scrolls to the top of the specified element from the current scroll position.
+ * If an error occurs during smooth scrolling, it falls back to a regular scroll.
+ *
+ * @param {string} elementId - The ID of the element to scroll to the top.
+ */
+export const scrollToTopOfElement = (elementId) => {
+  /*** Get the element with the provided ID ***/
+  const elementHasScrollTop = document?.getElementById(elementId);
+
+  /*** Get the total height of the content at the top of the scrollable area ***/
+  const scrollHeight = elementHasScrollTop?.scrollHeight;
+  try {
+    /*** Get the current scroll position ***/
+    const currentScrollTop = elementHasScrollTop.scrollTop;
+
+    /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
+    const numSteps = 20;
+
+    /*** Calculate the distance to move in each step ***/
+    const scrollStep = currentScrollTop / numSteps;
+
+    /*** Initiate the smooth scroll process using requestAnimationFrame ***/
+    const smoothScroll = (currentStep) => {
+      if (currentStep <= numSteps) {
+        /*** Calculate the new scroll position based on the current position ***/
+        const newScrollTop = currentScrollTop - currentStep * scrollStep;
+
+        /*** Set the new scroll position ***/
+        elementHasScrollTop.scrollTop = newScrollTop;
+
+        /*** Recall the smoothScroll function with the next step ***/
+        requestAnimationFrame(() => smoothScroll(currentStep + 1));
+      } else {
+        /*** Ensure scrolling to the very top after completing all steps ***/
+        elementHasScrollTop.scrollTop = 0;
+      }
+    };
+
+    /*** Start the smooth scroll from step 0 ***/
+    smoothScroll(0);
+  } catch (error) {
+    /*** If an error occurs, fall back to a basic scroll to the top ***/
+    console.error("===> Error scrollToTopOfElement:", error);
+    elementHasScrollTop.scrollTop = 0;
+  }
+};
+
 export const formatTimeAgo = (timeInMilliseconds) => {
   const now = Date.now();
   let formattedTime = timeInMilliseconds;

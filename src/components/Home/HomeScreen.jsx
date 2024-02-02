@@ -36,6 +36,7 @@ export default function HomeScreen({ path }) {
   return (
     <WrapHomeScreen isMobile={isMobile} isTablet={isTablet} style={styleApp}>
       <div
+        id="home-container"
         ref={scrollContainerRef}
         // containerRef={(ref) => (scrollContainerRef.current = ref)}
         className={`home-container enable-scroll`}
