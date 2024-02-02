@@ -4,13 +4,12 @@ import React, { useEffect, useRef } from "react";
 import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { useWindowSize } from "../../utils/hooks/useWindowSize";
 import { handleGetListPost } from "../../utils/utilities";
 import HomeContent from "./HomeContent";
 import { WrapHomeScreen } from "./HomeStyled";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import NavMenu from "./NavMenu";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
 
 export default function HomeScreen({ path }) {
   const { isMobile, isTablet } = useWindowSize();

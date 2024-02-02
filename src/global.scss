@@ -52,7 +52,9 @@
 }
 
 .dark {
-  .ant-modal-content {
+  .ant-modal-content,
+  .ant-modal-title {
+    color: #fff;
     background-color: #181818 !important;
   }
 

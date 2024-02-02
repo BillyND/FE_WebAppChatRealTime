@@ -9,6 +9,7 @@ import { SpinnerLoading } from "../Home/HomeContent";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   const handleOnclick = (e) => {
@@ -47,6 +48,9 @@ function ModalCommentPost(props) {
     setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments, loading, posting, tempComment = "", countComment } = post;
+  const {
+    styleApp: { type },
+  } = useStyleApp();
 
   useEffect(() => {
     postId && countComment && fetchCommentsInPost();
@@ -84,7 +88,7 @@ function ModalCommentPost(props) {
       onCancel={() => setOpenComment(false)}
       title={`Post by ${username}`}
       footer={<FooterComment postId={postId} />}
-      className="modal-comment-post"
+      className={`modal-comment-post ${type}`}
       style={{ top: 20, position: "relative" }}
       scrollId={postId}
     >
