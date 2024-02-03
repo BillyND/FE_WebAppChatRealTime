@@ -200,13 +200,14 @@ const DetailPost = (props) => {
       <Flex gap={24} className="none-copy">
         {hasFooter && <div className="line-left-post" />}
 
-        <Flex gap={8} vertical>
+        <Flex gap={8} vertical style={{ width: "100%" }}>
           <div
             className="description"
             dangerouslySetInnerHTML={{
               __html: description.replace(/\n/g, "<br/>"),
             }}
           />
+
           {imageUrl && (
             <div className="image">
               <img src={imageUrl} />

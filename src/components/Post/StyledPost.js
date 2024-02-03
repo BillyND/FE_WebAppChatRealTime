@@ -172,8 +172,6 @@ export const WrapDetailPost = styled.div`
   }
 
   .image {
-    width: 100%;
-
     img {
       width: 100%;
       border-radius: 8px;

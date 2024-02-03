@@ -180,7 +180,7 @@ export const showPopupError = (error) => {
   message.error(error || "Server error!");
 };
 
-export const mergeDataPostToListPost = debounce((postValue = {}) => {
+export const mergeDataPostToListPost = (postValue = {}) => {
   const { _id: postId } = postValue;
   const { listPost } = listPostSubs.state || {};
 
@@ -199,9 +199,7 @@ export const mergeDataPostToListPost = debounce((postValue = {}) => {
   });
 
   listPostSubs.state = dataListPostUpdate;
-
-  listPostSubs.updateState(dataListPostUpdate);
-}, 300);
+};
 
 /**
  * Handles updating data of a post through WebSocket

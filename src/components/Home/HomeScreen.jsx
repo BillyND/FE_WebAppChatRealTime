@@ -38,8 +38,7 @@ export default function HomeScreen({ path }) {
       <div
         id="home-container"
         ref={scrollContainerRef}
-        // containerRef={(ref) => (scrollContainerRef.current = ref)}
-        className={`home-container enable-scroll`}
+        className={`home-container`}
       >
         <NavMenu />
         <div>
