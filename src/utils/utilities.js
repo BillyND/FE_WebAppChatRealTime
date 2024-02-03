@@ -1,5 +1,5 @@
 import { message } from "antd";
-import { unionBy } from "lodash";
+import { cloneDeep, debounce, unionBy } from "lodash";
 import { getPost } from "../services/api";
 import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
 
@@ -180,11 +180,11 @@ export const showPopupError = (error) => {
   message.error(error || "Server error!");
 };
 
-export const mergeDataPostToListPost = (postValue = {}) => {
+export const mergeDataPostToListPost = debounce((postValue = {}) => {
   const { _id: postId } = postValue;
   const { listPost } = listPostSubs.state || {};
 
-  listPostSubs.state = {
+  const dataListPostUpdate = cloneDeep({
     ...listPostSubs.state,
     listPost: [
       ...listPost.map((post) => {
@@ -196,15 +196,12 @@ export const mergeDataPostToListPost = (postValue = {}) => {
         return post;
       }),
     ],
-  };
+  });
 
-  console.log("===>postValue:", postValue);
+  listPostSubs.state = dataListPostUpdate;
 
-  console.log(
-    "===>listpost",
-    listPostSubs.state.listPost.filter((item) => item._id === postId)
-  );
-};
+  listPostSubs.updateState(dataListPostUpdate);
+}, 300);
 
 /**
  * Handles updating data of a post through WebSocket
