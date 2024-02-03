@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import "react-perfect-scrollbar/dist/css/styles.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { getInfoUserLocal } from "./services/customAxios";
 import AuthScreen from "./components/Auth/AuthScreen";

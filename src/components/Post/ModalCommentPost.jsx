@@ -5,11 +5,11 @@ import { getCommentsInPost } from "../../services/api";
 import { SOURCE_IMAGE_SEND } from "../../utils/constant";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { mergeDataPostToListPost, showPopupError } from "../../utils/utilities";
-import { SpinnerLoading } from "../Home/HomeContent";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { SpinnerLoading } from "../../UI/SpinnerLoading";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   const handleOnclick = (e) => {
