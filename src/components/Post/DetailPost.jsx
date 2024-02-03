@@ -31,6 +31,7 @@ import {
   formatTimeAgo,
   handleHiddenPost,
   handleUpdatePostSocket,
+  mergeDataPostToListPost,
 } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
@@ -44,7 +45,7 @@ const DetailPost = (props) => {
     isAuthorOfPost,
   } = props;
   const {
-    state: { [`post-${postId}`]: post, listPost },
+    state: { [`post-${postId}`]: post },
     setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const {
@@ -92,23 +93,11 @@ const DetailPost = (props) => {
       ? likerIds.filter((liker) => liker !== userId)
       : [...post.likerIds, userId];
 
-    const updatedList = listPost.map((post) => {
-      // Check if the post ID matches the target post ID
-      if (post?._id === postId) {
-        return {
-          ...post,
-          likerIds: updatedLikerIds,
-        };
-      }
-      // If the post ID does not match the target post ID, return the original post
-      return post;
-    });
-
     setState({
       [`post-${postId}`]: { ...post, likerIds: updatedLikerIds },
     });
 
-    listPostSubs.state.listPost = updatedList;
+    mergeDataPostToListPost({ ...post, likerIds: updatedLikerIds });
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
     debounceUpdateLikes(postId, updatedLikerIds);
@@ -209,7 +198,7 @@ const DetailPost = (props) => {
       </div>
 
       <Flex gap={24} className="none-copy">
-        <div className="line-left-post" />
+        {hasFooter && <div className="line-left-post" />}
 
         <Flex gap={8} vertical>
           <div
@@ -277,10 +266,11 @@ const DetailPost = (props) => {
         </Flex>
       </Flex>
 
-      {!loop && openComment && (
+      {!loop && (
         <ModalCommentPost
           post={post}
           {...props}
+          hasFooter={false}
           openComment={openComment}
           setOpenComment={setOpenComment}
         />

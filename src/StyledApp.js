@@ -78,14 +78,6 @@ export const WrapStyledApp = styled.div`
     }
   }
 
-  hr {
-    margin: 4px 0 4px 0;
-    &.gray {
-      background-color: #7777774a !important;
-    }
-    border-radius: 200px;
-  }
-
   .icon-more-detail {
     cursor: pointer;
     border-radius: 50%;

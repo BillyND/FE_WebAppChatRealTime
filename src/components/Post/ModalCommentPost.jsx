@@ -4,7 +4,7 @@ import BaseModal from "../../UI/BaseModal";
 import { getCommentsInPost } from "../../services/api";
 import { SOURCE_IMAGE_SEND } from "../../utils/constant";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
-import { showPopupError } from "../../utils/utilities";
+import { mergeDataPostToListPost, showPopupError } from "../../utils/utilities";
 import { SpinnerLoading } from "../Home/HomeContent";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
@@ -68,13 +68,17 @@ function ModalCommentPost(props) {
     try {
       const resComments = (await getCommentsInPost(postId)) || [];
 
+      const dataPostUpdate = {
+        ...post,
+        loading: false,
+        comments: resComments,
+      };
+
       setState({
-        [`post-${postId}`]: {
-          ...post,
-          loading: false,
-          comments: resComments,
-        },
+        [`post-${postId}`]: dataPostUpdate,
       });
+
+      mergeDataPostToListPost(dataPostUpdate);
     } catch (err) {
       console.error("===> Error fetchCommentsInPost:", err);
       showPopupError();

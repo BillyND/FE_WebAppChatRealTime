@@ -181,7 +181,7 @@ export const showPopupError = (error) => {
 };
 
 export const mergeDataPostToListPost = (postValue = {}) => {
-  const { postId } = postValue;
+  const { _id: postId } = postValue;
   const { listPost } = listPostSubs.state || {};
 
   listPostSubs.state = {
@@ -197,6 +197,13 @@ export const mergeDataPostToListPost = (postValue = {}) => {
       }),
     ],
   };
+
+  console.log("===>postValue:", postValue);
+
+  console.log(
+    "===>listpost",
+    listPostSubs.state.listPost.filter((item) => item._id === postId)
+  );
 };
 
 /**
