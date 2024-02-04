@@ -34,18 +34,15 @@ export default function HomeScreen({ path }) {
   }, TIME_DELAY_SEARCH_INPUT);
 
   return (
-    <WrapHomeScreen isMobile={isMobile} isTablet={isTablet} style={styleApp}>
-      <div
-        id="home-container"
-        ref={scrollContainerRef}
-        className={`home-container`}
-      >
-        <NavMenu />
-        <div>
-          <div id="element-top" />
-          <HomeContent />
-        </div>
-      </div>
+    <WrapHomeScreen
+      id="home-container"
+      ref={scrollContainerRef}
+      isMobile={isMobile}
+      isTablet={isTablet}
+      style={styleApp}
+    >
+      <NavMenu />
+      <HomeContent />
     </WrapHomeScreen>
   );
 }

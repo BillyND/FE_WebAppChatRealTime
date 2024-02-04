@@ -1,4 +1,3 @@
-import { CommentOutlined, LikeOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
@@ -27,6 +26,7 @@ import {
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "../../utils/hooks/useModal";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { useWindowSize } from "../../utils/hooks/useWindowSize";
 import {
   formatTimeAgo,
   handleHiddenPost,
@@ -65,6 +65,7 @@ const DetailPost = (props) => {
   const {
     styleApp: { type },
   } = useStyleApp();
+  const { isMobile } = useWindowSize();
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
@@ -175,7 +176,7 @@ const DetailPost = (props) => {
   );
 
   return (
-    <WrapDetailPost type={type}>
+    <WrapDetailPost type={type} isMobile={isMobile}>
       <div className="header">
         <div className="info-user">
           <UserThumbnail avaUrl={avaUrl} />

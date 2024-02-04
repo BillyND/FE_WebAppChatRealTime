@@ -1,20 +1,18 @@
 import styled from "styled-components";
 
 export const WrapHomeScreen = styled.div`
-  .home-container {
-    overflow-x: hidden;
-    height: 100vh;
-    width: 100%;
-    display: grid;
-    padding-top: 70px;
-    padding-bottom: 70px;
+  overflow-x: hidden;
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  padding-top: 70px;
+  padding-bottom: 70px;
 
-    .home-content {
-      gap: 24px;
-      padding: ${(props) =>
-        props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
-      background-color: #18191a;
-    }
+  .home-content {
+    gap: 24px;
+    padding: ${(props) =>
+      props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
+    background-color: #18191a;
   }
 `;
 

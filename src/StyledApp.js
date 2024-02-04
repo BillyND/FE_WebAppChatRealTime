@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { TYPE_STYLE_APP } from "./utils/constant";
 
 export const WrapStyledApp = styled.div`
   .header-container {
@@ -69,15 +70,6 @@ export const WrapStyledApp = styled.div`
     }
   }
 
-  .icon-loading {
-    // margin-top: -20px;
-    width: fit-content;
-    scale: 2;
-    svg {
-      fill: #fff !important;
-    }
-  }
-
   .icon-more-detail {
     cursor: pointer;
     border-radius: 50%;
@@ -105,5 +97,16 @@ export const WrapStyledApp = styled.div`
     border-radius: 50%;
     background-size: contain;
     background-repeat: no-repeat;
+  }
+
+  * {
+    hr {
+      margin: 4px 0 4px 0;
+      &.gray {
+        background-color: ${(p) =>
+          p.typeStyle === TYPE_STYLE_APP.DARK ? "#7777774a" : "#77777700"};
+      }
+      border-radius: 200px;
+    }
   }
 `;

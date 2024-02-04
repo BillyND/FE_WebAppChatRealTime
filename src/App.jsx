@@ -7,6 +7,7 @@ import ModalNewPost from "./components/Post/ModalNewPost";
 import { placeHolderInputPost } from "./components/Post/NewPost";
 import { WrapStyledApp } from "./StyledApp";
 import "./global.scss";
+import { useStyleApp } from "./utils/hooks/useStyleApp";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -33,8 +34,12 @@ const TriggerNavigate = () => {
 };
 
 function App() {
+  const {
+    styleApp: { type: typeStyle },
+  } = useStyleApp();
+
   return (
-    <WrapStyledApp className="App">
+    <WrapStyledApp className="App" typeStyle={typeStyle}>
       {/* Component to trigger navigate */}
       <TriggerNavigate />
 

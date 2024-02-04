@@ -84,49 +84,49 @@ export const WrapModalNewPost = styled.div`
         margin: 0 !important;
       }
     }
+  }
 
-    .image-preview {
-      min-height: 150px;
+  .image-preview {
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    background-color: #333436;
+    border-radius: 8px;
+    margin: auto;
+    padding: 16px;
+    position: relative;
+    align-items: center;
+    position: relative;
+    img {
+      min-height: 200px;
+      max-width: 200px;
+      max-height: 200px;
+    }
+
+    .icon-clear-image {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 30px;
+      cursor: pointer;
+      color: rgb(183, 183, 183);
+
+      &:hover {
+        color: #fff !important;
+      }
+    }
+
+    .loading-upload-image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
-      background-color: #333436;
-      border-radius: 8px;
-      margin: auto;
-      padding: 16px;
-      position: relative;
       align-items: center;
-      position: relative;
-      img {
-        min-height: 200px;
-        max-width: 200px;
-        max-height: 200px;
-      }
-
-      .icon-clear-image {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        font-size: 30px;
-        cursor: pointer;
-        color: rgb(183, 183, 183);
-
-        &:hover {
-          color: #fff !important;
-        }
-      }
-
-      .loading-upload-image {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 32px;
-        background-color: #d8d8d89c;
-        border-radius: 8px;
-        color: black;
-      }
+      font-size: 32px;
+      background-color: #d8d8d89c;
+      border-radius: 8px;
+      color: black;
     }
   }
 `;
@@ -153,7 +153,7 @@ export const WrapDetailPost = styled.div`
   border-radius: 8px;
   gap: 8px;
   display: grid;
-  padding: 0 12px;
+  padding: ${(p) => (p.isMobile ? "0 12px" : "0")};
 
   .header {
     display: flex;
@@ -205,7 +205,7 @@ export const WrapDetailPost = styled.div`
     background-color: ${(p) =>
       p.type === TYPE_STYLE_APP.DARK ? "#333638" : "#e5e5e5"};
 
-    width: 1.5px;
+    width: 3px;
     height: 100%;
     margin-left: 16px;
     border-radius: 200px;
