@@ -247,3 +247,10 @@ export const StyledMenuDetailPost = styled.div`
     margin: 0;
   }
 `;
+
+export const WrapListPost = styled.div`
+  .list-post-container {
+    display: grid;
+    gap: 16px;
+  }
+`;

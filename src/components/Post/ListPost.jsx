@@ -11,6 +11,7 @@ import { useModal } from "../../utils/hooks/useModal";
 import { handleGetListPost } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
+import { WrapListPost } from "./StyledPost";
 
 function ListPost() {
   const { infoUser } = useAuthUser();
@@ -50,11 +51,10 @@ function ListPost() {
   };
 
   return (
-    <>
+    <WrapListPost>
       <div className="list-post-container">
-        <hr className="gray" />
         {listPost?.map((post = {}) => {
-          const { _id: postId, comments: countComment } = post;
+          const { _id: postId, comments } = post;
           const isAuthorOfPost = post.userId === infoUser._id;
 
           detailPostSubs.state = {
@@ -64,14 +64,15 @@ function ListPost() {
               ...post,
               comments: [],
               loading: false,
-              countComment,
+              countComment:
+                typeof comments === "number" ? comments : comments.length,
             },
           };
 
           return (
             <Fragment key={postId}>
-              <DetailPost postId={postId} isAuthorOfPost={isAuthorOfPost} />
               <hr className="gray" />
+              <DetailPost postId={postId} isAuthorOfPost={isAuthorOfPost} />
             </Fragment>
           );
         })}
@@ -86,7 +87,7 @@ function ListPost() {
       >
         Post will be permanently deleted. Do you agree?
       </BaseModal>
-    </>
+    </WrapListPost>
   );
 }
 

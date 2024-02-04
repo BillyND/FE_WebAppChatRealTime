@@ -6,14 +6,9 @@ export const WrapHomeScreen = styled.div`
   width: 100%;
   display: grid;
   padding-top: 70px;
-  padding-bottom: 70px;
-
-  .home-content {
-    gap: 24px;
-    padding: ${(props) =>
-      props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
-    background-color: #18191a;
-  }
+  gap: 24px;
+  padding: ${(props) =>
+    props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
 `;
 
 export const WrapNavMenu = styled.div`
