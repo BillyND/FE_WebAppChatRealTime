@@ -64,8 +64,7 @@ function ListPost() {
               ...post,
               comments: [],
               loading: false,
-              countComment:
-                typeof comments === "number" ? comments : comments.length,
+              countComment: Number(comments) || comments.length,
             },
           };
 
