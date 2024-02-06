@@ -12,21 +12,6 @@ export const WrapStyledApp = styled.div`
     box-shadow: rgba(198, 198, 198, 0.16) 0px 1px 4px;
   }
 
-  .ant-modal-close-x {
-    margin-top: -5px;
-  }
-
-  .ant-modal-header {
-    margin-bottom: 20px !important;
-  }
-
-  .ant-modal-title {
-    background-color: #181818;
-    text-align: center;
-    font-size: 20px;
-    color: #fff !important;
-  }
-
   .search-home-container {
     height: 50px;
     .search-input {

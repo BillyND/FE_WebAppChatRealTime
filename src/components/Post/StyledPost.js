@@ -9,10 +9,6 @@ export const WrapModalNewPost = styled.div`
     min-height: 500px;
     overflow-y: scroll;
 
-    .ant-modal-content {
-      max-height: calc(100vh - 32px);
-    }
-
     .loading-create-post {
       z-index: 10;
       background-color: #242526;
@@ -173,6 +169,7 @@ export const WrapDetailPost = styled.div`
 
   .image {
     img {
+      border: 0.5px solid #313131;
       width: 100%;
       border-radius: 8px;
     }
@@ -205,7 +202,7 @@ export const WrapDetailPost = styled.div`
     background-color: ${(p) =>
       p.type === TYPE_STYLE_APP.DARK ? "#333638" : "#e5e5e5"};
 
-    width: 3px;
+    width: 1.5px;
     height: 100%;
     margin-left: 16px;
     border-radius: 200px;

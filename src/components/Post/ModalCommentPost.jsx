@@ -53,9 +53,9 @@ function ModalCommentPost(props) {
   } = useStyleApp();
 
   useEffect(() => {
-    postId && countComment && fetchCommentsInPost();
+    openComment && fetchCommentsInPost();
     detailPostSubs.state.commentEdit = null;
-  }, []);
+  }, [openComment]);
 
   const fetchCommentsInPost = async () => {
     setState({

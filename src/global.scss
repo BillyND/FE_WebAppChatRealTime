@@ -52,16 +52,14 @@
 }
 
 .dark {
+  padding: 0 !important;
+  border-radius: 10px;
+  background-color: #181818 !important;
+
   .ant-modal-content,
   .ant-modal-title {
     color: #fff;
     background-color: #181818 !important;
-  }
-
-  .ant-modal {
-    padding: 0 !important;
-    border-radius: 10px;
-    border: 0.5px rgb(93, 93, 93) solid;
   }
 
   .anticon-close {
@@ -72,16 +70,14 @@
 }
 
 .light {
+  background-color: #fff !important;
+  padding: 0 !important;
+  border-radius: 10px;
+
   .ant-modal-content,
   .ant-modal-title {
     color: black !important;
     background-color: #fff !important;
-  }
-
-  .ant-modal {
-    padding: 0 !important;
-    border-radius: 10px;
-    border: 0.5px rgb(93, 93, 93) solid;
   }
 
   .anticon-close {
@@ -94,7 +90,7 @@
 .ant-modal {
   padding: 0 !important;
   border-radius: 10px;
-  border: 0.5px rgb(175, 175, 175) solid;
+  border: 0.3px rgb(93, 93, 93) solid;
 }
 
 .ant-modal-title {
@@ -151,7 +147,6 @@
 }
 
 // Custom scrollbar
-
 @media only screen and (min-width: 768px) {
   /* For WebKit browsers (Safari, Chrome, etc.) */
   ::-webkit-scrollbar {

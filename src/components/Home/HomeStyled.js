@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
 export const WrapHomeScreen = styled.div`
+  background-color: red;
   overflow-x: hidden;
   height: 100vh;
   width: 100%;
   display: grid;
-  padding-top: 70px;
+  padding-top: 70px !important;
   gap: 24px;
   padding: ${(props) =>
     props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};

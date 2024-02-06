@@ -21,10 +21,7 @@ function NewPost(props) {
   };
 
   return (
-    <WrapCreateNewPost
-      className="none-copy pb-3"
-      backgroundColor={backgroundColor}
-    >
+    <WrapCreateNewPost className="none-copy" backgroundColor={backgroundColor}>
       <Flex align="center" gap={16}>
         <UserThumbnail avaUrl={avaUrl} />
         <span
