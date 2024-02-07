@@ -78,12 +78,6 @@ export const WrapStyledApp = styled.div`
     }
   }
 
-  .avatar {
-    border-radius: 50%;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-
   * {
     hr {
       margin: 4px 0 4px 0;

@@ -19,7 +19,7 @@ export const SpinnerLoading = ({ style, className }) => {
     >
       <LoadingOutlined
         className="icon-loading"
-        style={{ position: "absolute", fill: "red" }}
+        style={{ position: "absolute" }}
       />
     </WrapSpinnerLoading>
   );

@@ -10,6 +10,7 @@ import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
 import { useStyleApp } from "../../utils/hooks/useStyleApp";
 import { SpinnerLoading } from "../../UI/SpinnerLoading";
+import { Flex } from "antd";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   const handleOnclick = (e) => {
@@ -102,7 +103,7 @@ function ModalCommentPost(props) {
         openedComment={false}
         hasDelete={false}
       />
-      <hr className="gray mb-2" />
+      <hr className="gray mt-3 mb-3" />
 
       <div className="list-comment mb-2">
         {comments?.map((comment, index) => {
@@ -125,6 +126,16 @@ function ModalCommentPost(props) {
             </Fragment>
           );
         })}
+
+        {!comments.length && !posting && (
+          <Flex
+            align="center"
+            justify="center"
+            className="box-no-comment pt-5 pb-5"
+          >
+            No comments yet.
+          </Flex>
+        )}
 
         {posting && (
           <DetailComment tempComment={tempComment} posting={posting} />

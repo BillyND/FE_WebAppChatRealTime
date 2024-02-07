@@ -51,7 +51,7 @@ function ModalNewPost({ placeHolderInputPost }) {
     (!valueInputPost?.trim() && !selectedImage) ||
     loadings.createPost ||
     (!compareChange([imageUrl, selectedImage]) &&
-      !compareChange([description, valueInputPost]));
+      !compareChange([description.trim(), valueInputPost.trim()]));
   const debounceDataUpdate = useDebounce(
     JSON.stringify(postHasUpdate),
     TIME_DELAY_SEARCH_INPUT
@@ -96,7 +96,7 @@ function ModalNewPost({ placeHolderInputPost }) {
     } catch (error) {
       showPopupError();
     } finally {
-      setLoadings({ ...loadings, createPost: false });
+      setLoadings({ parseFile: false, createPost: false });
     }
   };
 
@@ -138,7 +138,7 @@ function ModalNewPost({ placeHolderInputPost }) {
     } catch (error) {
       showPopupError();
     } finally {
-      setLoadings({ ...loadings, createPost: false });
+      setLoadings({ parseFile: false, createPost: false });
     }
   };
 
@@ -185,7 +185,7 @@ function ModalNewPost({ placeHolderInputPost }) {
       if (resizedFile.size > 500 * 1024) {
         message.error("Please select an image smaller than 500KB");
         setSelectedImage(null);
-        setLoadings({ ...loadings, parseFile: false });
+        setLoadings({ parseFile: false, createPost: false });
         return;
       }
 
@@ -195,80 +195,78 @@ function ModalNewPost({ placeHolderInputPost }) {
       console.error(error);
       message.error("Image is incorrect, please choose another image!");
     } finally {
-      setLoadings({ ...loadings, parseFile: false });
+      setLoadings({ parseFile: false, createPost: false });
     }
   };
 
   return (
-    <WrapModalNewPost>
-      <Modal
-        zIndex={2000}
-        style={{ top: isMobile ? 16 : 40 }}
-        width={isMobile ? 1000 : 500}
-        className={`modal-create-post ${type} none-copy`}
-        title={<span className="">{postId ? "Update" : "Create"} post</span>}
-        open={MODAL_NEW_POST}
-        onCancel={handleCancel}
-        footer={
-          <Flex justify="end">
-            <Button
-              disabled={disableBtnCreatePost}
-              className={`btn-create-post ${
-                !disableBtnCreatePost ? "enable" : ""
-              }`}
-              onClick={postId ? handleEditPost : handleUpPost}
-            >
-              {postId ? "Update" : "Post"}
-            </Button>
-          </Flex>
-        }
-      >
-        <div>
-          {loadings.createPost && (
-            <div className="loading-create-post">
+    <Modal
+      zIndex={2000}
+      style={{ top: isMobile ? 16 : 40 }}
+      width={isMobile ? 1000 : 500}
+      className={`modal-create-post ${type} none-copy`}
+      title={<span className="">{postId ? "Update" : "Create"} post</span>}
+      open={MODAL_NEW_POST}
+      onCancel={handleCancel}
+      footer={
+        <Flex justify="end">
+          <Button
+            disabled={disableBtnCreatePost}
+            className={`btn-create-post ${
+              !disableBtnCreatePost ? "enable" : ""
+            }`}
+            onClick={postId ? handleEditPost : handleUpPost}
+          >
+            {postId ? "Update" : "Post"}
+          </Button>
+        </Flex>
+      }
+    >
+      <WrapModalNewPost typeStyle={type}>
+        {loadings.createPost && (
+          <div className="loading-create-post">
+            <LoadingOutlined />
+          </div>
+        )}
+        <textarea
+          maxLength={8000}
+          ref={refInputPost}
+          value={valueInputPost}
+          onChange={(e) => setValueInputPost(e.target.value)}
+          className="input-content-post pt-3"
+          placeholder={placeHolderInputPost}
+        />
+
+        <div className="image-preview">
+          {selectedImage ? (
+            <>
+              <img src={selectedImage} loading="lazy" />
+              <CloseCircleOutlined
+                className="icon-clear-image"
+                onClick={handleClearImage}
+              />
+            </>
+          ) : (
+            <label htmlFor="fileInput" className="container-upload-image">
+              <div className="upload-image"></div>
+              <span>Add image</span>
+            </label>
+          )}
+          {loadings.parseFile && (
+            <div className="loading-upload-image">
               <LoadingOutlined />
             </div>
           )}
-          <textarea
-            maxLength={8000}
-            ref={refInputPost}
-            value={valueInputPost}
-            onChange={(e) => setValueInputPost(e.target.value)}
-            className="input-content-post pt-3"
-            placeholder={placeHolderInputPost}
-          />
-
-          <div className="image-preview mb-4 mt-4">
-            {selectedImage ? (
-              <>
-                <img src={selectedImage} loading="lazy" />
-                <CloseCircleOutlined
-                  className="icon-clear-image"
-                  onClick={handleClearImage}
-                />
-              </>
-            ) : (
-              <label htmlFor="fileInput" className="container-upload-image">
-                <div className="upload-image"></div>
-                <span>Add image</span>
-              </label>
-            )}
-            {loadings.parseFile && (
-              <div className="loading-upload-image">
-                <LoadingOutlined />
-              </div>
-            )}
-          </div>
-
-          <input
-            type="file"
-            id="fileInput"
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
         </div>
-      </Modal>
-    </WrapModalNewPost>
+
+        <input
+          type="file"
+          id="fileInput"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+      </WrapModalNewPost>
+    </Modal>
   );
 }
 

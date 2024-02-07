@@ -29,7 +29,7 @@ export const InputComment = (props) => {
   }, [focus]);
 
   return (
-    <>
+    <Flex style={{ width: "100%" }} align="start" gap={8}>
       <textarea
         maxLength={8000}
         onFocus={() => setFocus(true)}
@@ -44,14 +44,15 @@ export const InputComment = (props) => {
           minWidth: `${modalWidth - 120}px`,
         }}
       />
-      <Flex justify="end" align="center" gap={8}>
+      <Flex>
         <ButtonSend
           onClick={onUpdate}
           disabled={!value.trim() || loading || posting}
         />
+
         {subControl}
       </Flex>
-    </>
+    </Flex>
   );
 };
 
@@ -112,29 +113,19 @@ export const FooterComment = (props) => {
   };
 
   return (
-    <>
-      <div className={`box-comment-post real ${focusInput ? "full" : "mini"}`}>
-        <Flex gap={12}>
-          <UserThumbnail avaUrl={avaUrl} size={32} />
-          <InputComment
-            refInput={refInputComment}
-            value={localValueComment}
-            setFocus={setFocusInput}
-            setValue={setLocalValue}
-            loading={loading}
-            posting={posting}
-            onUpdate={handlePostComment}
-            focus={focusInput}
-            onBlur={() => setFocusInput(false)}
-          />
-        </Flex>
-      </div>
-      <div
-        className={`box-comment-post ${
-          focusInput || localValueComment.trim() ? "full" : "mini"
-        }`}
-        style={{ position: "static" }}
+    <Flex gap={12}>
+      <UserThumbnail avaUrl={avaUrl} size={32} />
+      <InputComment
+        refInput={refInputComment}
+        value={localValueComment}
+        setFocus={setFocusInput}
+        setValue={setLocalValue}
+        loading={loading}
+        posting={posting}
+        onUpdate={handlePostComment}
+        focus={focusInput}
+        onBlur={() => setFocusInput(false)}
       />
-    </>
+    </Flex>
   );
 };

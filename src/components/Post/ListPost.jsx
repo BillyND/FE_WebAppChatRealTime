@@ -78,6 +78,7 @@ function ListPost() {
       </div>
 
       <BaseModal
+        className="modal-delete-post"
         open={modalState["CONFIRM_DELETE_POST"]}
         onCancel={() => closeModal("CONFIRM_DELETE_POST")}
         onOk={handleConfirmDeletePost}

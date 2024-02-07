@@ -1,6 +1,9 @@
 import { Button, Flex, Modal } from "antd";
 import React, { useRef } from "react";
 import "./UI.scss";
+import { useStyleApp } from "../utils/hooks/useStyleApp";
+import { SpinnerLoading } from "./SpinnerLoading";
+import { LoadingOutlined } from "@ant-design/icons";
 
 function BaseModal(props) {
   const {
@@ -12,25 +15,42 @@ function BaseModal(props) {
     content,
     style,
     scrollId,
+    className,
   } = props;
+  const {
+    styleApp: { type },
+  } = useStyleApp();
 
   return (
     <Modal
-      zIndex={2000}
       {...props}
+      className={`${type} ${className}`}
+      zIndex={2000}
       footer={
         footer || (
-          <Flex justify="end">
-            <Button onClick={onCancel}>Cancel</Button>
-            <Button type="primary" loading={loadingFooter} onClick={onOk}>
+          <Flex justify="end" gap={8}>
+            <button2 className="btn-cancel" type="primary" onClick={onCancel}>
+              Cancel
+            </button2>
+            <button2
+              className="btn-ok"
+              onClick={onOk}
+              style={{
+                opacity: loadingFooter ? "0.7" : "1",
+              }}
+            >
+              {loadingFooter && <LoadingOutlined className="spinner-ok" />}
               Ok
-            </Button>
+            </button2>
           </Flex>
         )
       }
       style={style}
     >
-      <hr className="gray" />
+      <hr
+        className="gray"
+        style={{ marginLeft: "-16px", marginRight: "-16px" }}
+      />
       <div
         id={scrollId}
         style={{
