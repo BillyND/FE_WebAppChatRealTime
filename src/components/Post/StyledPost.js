@@ -153,8 +153,8 @@ export const WrapDetailPost = styled.div`
   .image {
     img {
       border: 0.5px solid #313131;
-      width: 100%;
       border-radius: 8px;
+      max-height: 430px;
     }
   }
 
