@@ -290,8 +290,49 @@
   hr {
     margin: 4px 0 4px 0;
     &.gray {
-      background-color: #7777774f;
+      background-color: #7777774f !important;
     }
     border-radius: 200px;
+    border: none;
+    height: 1px;
+  }
+
+  .light {
+    hr {
+      &.gray {
+        background-color: #e5e5e5 !important;
+      }
+    }
+  }
+
+  .dark {
+    hr {
+      &.gray {
+        background-color: #333638 !important;
+      }
+    }
+  }
+}
+
+.icon-more-detail {
+  cursor: pointer;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+
+  svg {
+    fill: gray;
+  }
+
+  &:hover {
+    background-color: rgba(128, 128, 128, 0.351);
+
+    svg {
+      fill: #fff;
+    }
   }
 }

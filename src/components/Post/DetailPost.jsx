@@ -1,14 +1,7 @@
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { io } from "socket.io-client";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import PopoverCustom from "../../UI/PopoverCustom";
 import { UserThumbnail } from "../../UI/UserThumbnail";
 import {
@@ -22,6 +15,7 @@ import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import {
   detailPostSubs,
   listPostSubs,
+  socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "../../utils/hooks/useModal";
@@ -61,32 +55,26 @@ const DetailPost = (props) => {
     createdAt,
   } = post;
   const [openComment, setOpenComment] = useState(false);
-  const socketRef = useRef();
   const {
     styleApp: { type },
   } = useStyleApp();
   const { isMobile } = useWindowSize();
+  const {
+    state: { socketIo },
+  } = useSubscription(socketIoSubs, ["socketIo"]);
 
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
-      transports: ["websocket"],
-    });
-
-    socketRef.current.on("getPost", (post) => {
+    socketIo.on("getPost", (post) => {
       handleUpdatePostSocket(
         {
           ...post,
-          currentSocketId: socketRef.current?.id,
+          currentSocketId: socketIo?.id,
         },
         postId,
         ["likerIds"]
       );
     });
-
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, []);
+  }, [socketIo]);
 
   const handleLike = async () => {
     // If the user ID is in likerIds, remove it; otherwise, add it
@@ -102,16 +90,17 @@ const DetailPost = (props) => {
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
     debounceUpdateLikes(postId, updatedLikerIds);
+
+    socketIo.emit("updatePost", {
+      ...post,
+      likerIds: updatedLikerIds,
+      userId,
+    });
   };
 
   const debounceUpdateLikes = useCallback(
-    debounce(async (postId, updatedLikerIds) => {
+    debounce(async (postId) => {
       await updateLikeOfPost(postId);
-
-      socketRef.current.emit("updatePost", {
-        ...post,
-        likerIds: updatedLikerIds,
-      });
     }, TIME_DELAY_FETCH_API),
     []
   );
@@ -199,7 +188,7 @@ const DetailPost = (props) => {
       </div>
 
       <Flex gap={24} className="none-copy">
-        {hasFooter && <div className="line-left-post" />}
+        <div className="line-left-post" />
 
         <Flex gap={8} vertical style={{ width: "100%" }}>
           <div
@@ -215,37 +204,37 @@ const DetailPost = (props) => {
             </div>
           )}
 
-          {hasFooter && (
-            <Flex gap={16} className="none-copy">
-              <Flex
-                gap={"8px"}
-                className={`btn-like-comment ${
-                  likerIds?.length > 0 && likerIds?.includes(userId)
-                    ? "liked"
-                    : ""
-                }`}
-                justify="center"
-                align="center"
-                onClick={handleLike}
-              >
-                {likerIds?.includes(userId) ? (
-                  <IconHeartActive size={1.5} />
-                ) : (
-                  <IconHeartDeActive size={1.5} />
-                )}
-              </Flex>
-
-              <Flex
-                gap={"8px"}
-                className="btn-like-comment"
-                justify="center"
-                align="center"
-                onClick={() => setOpenComment(true)}
-              >
-                <IconMessageActive size={1.5} />
-              </Flex>
+          {/* {hasFooter && ( */}
+          <Flex gap={16} className="none-copy">
+            <Flex
+              gap={"8px"}
+              className={`btn-like-comment ${
+                likerIds?.length > 0 && likerIds?.includes(userId)
+                  ? "liked"
+                  : ""
+              }`}
+              justify="center"
+              align="center"
+              onClick={handleLike}
+            >
+              {likerIds?.includes(userId) ? (
+                <IconHeartActive size={1.5} />
+              ) : (
+                <IconHeartDeActive size={1.5} />
+              )}
             </Flex>
-          )}
+
+            <Flex
+              gap={"8px"}
+              className="btn-like-comment"
+              justify="center"
+              align="center"
+              onClick={() => setOpenComment(true)}
+            >
+              <IconMessageActive size={1.5} />
+            </Flex>
+          </Flex>
+          {/* )} */}
 
           <Flex gap={8}>
             {countComment > 0 && (

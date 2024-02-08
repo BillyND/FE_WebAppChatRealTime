@@ -2,11 +2,13 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
 import { UserThumbnail } from "../../UI/UserThumbnail";
 import { updateCommentOfPost } from "../../services/api";
 import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
-import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
+import {
+  detailPostSubs,
+  socketIoSubs,
+} from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useDebounce } from "../../utils/hooks/useDebounce";
 import {
@@ -41,24 +43,17 @@ export const DetailComment = (props) => {
   const refInputComment = useRef(null);
   const debounceContent = useDebounce(content, TIME_DELAY_SEARCH_INPUT / 2);
   const [widthModal, setWithModal] = useState(0);
-
-  const socketRef = useRef();
+  const {
+    state: { socketIo },
+  } = useSubscription(socketIoSubs, ["socketIo"]);
 
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
-      transports: ["websocket"],
-    });
-
-    socketRef.current.on("getComment", (comment) => {
+    socketIo.on("getComment", (comment) => {
       handleUpdateCommentSocket(
-        { ...comment, currentSocketId: socketRef.current?.id },
+        { ...comment, currentSocketId: socketIo?.id },
         commentId
       );
     });
-
-    return () => {
-      socketRef.current.disconnect();
-    };
   }, []);
 
   useEffect(() => {
@@ -93,7 +88,7 @@ export const DetailComment = (props) => {
         content: localValueComment.trim(),
       });
 
-      socketRef.current.emit("updateComment", resUpdateComment.data);
+      socketIo.emit("updateComment", resUpdateComment.data);
     } catch (error) {
       showPopupError();
     }

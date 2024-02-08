@@ -55,29 +55,6 @@ export const WrapStyledApp = styled.div`
     }
   }
 
-  .icon-more-detail {
-    cursor: pointer;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.2s;
-
-    svg {
-      fill: gray;
-    }
-
-    &:hover {
-      background-color: rgba(128, 128, 128, 0.351);
-
-      svg {
-        fill: #fff;
-      }
-    }
-  }
-
   * {
     hr {
       margin: 4px 0 4px 0;

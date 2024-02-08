@@ -44,7 +44,8 @@ export const InputComment = (props) => {
           minWidth: `${modalWidth - 120}px`,
         }}
       />
-      <Flex>
+
+      <Flex style={{ width: "100%" }}>
         <ButtonSend
           onClick={onUpdate}
           disabled={!value.trim() || loading || posting}

@@ -11,16 +11,11 @@ export const SpinnerLoading = ({ style, className }) => {
     <WrapSpinnerLoading
       style={{
         ...style,
-        position: "relative",
-        height: "60px",
       }}
       className={`transition-02 ${className}`}
       fillIcon={FILL_COLOR_ICON}
     >
-      <LoadingOutlined
-        className="icon-loading"
-        style={{ position: "absolute" }}
-      />
+      <LoadingOutlined className="icon-loading" />
     </WrapSpinnerLoading>
   );
 };
@@ -28,10 +23,14 @@ export const SpinnerLoading = ({ style, className }) => {
 export const WrapSpinnerLoading = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 60px;
 
   .icon-loading {
-    width: fit-content;
     scale: 2;
+    height: fit-content !important;
+    border-radius: 50%;
+
     svg {
       fill: ${(props) => props.fillIcon} !important;
     }

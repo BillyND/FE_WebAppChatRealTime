@@ -155,6 +155,7 @@ export const WrapDetailPost = styled.div`
       border: 0.5px solid #313131;
       border-radius: 8px;
       max-height: 430px;
+      max-width: 100%;
     }
   }
 
@@ -165,7 +166,6 @@ export const WrapDetailPost = styled.div`
     border-radius: 50%;
     cursor: pointer;
     padding: 2px;
-    margin-left: -9px;
   }
 
   .btn-like-comment:hover {

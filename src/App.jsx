@@ -8,6 +8,11 @@ import { placeHolderInputPost } from "./components/Post/NewPost";
 import { WrapStyledApp } from "./StyledApp";
 import "./global.scss";
 import { useStyleApp } from "./utils/hooks/useStyleApp";
+import { useRef } from "react";
+import { io } from "socket.io-client";
+import { useAuthUser } from "./utils/hooks/useAuthUser";
+import { useSubscription } from "global-state-hook";
+import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -30,6 +35,26 @@ const TriggerNavigate = () => {
       navigate("/login");
     }
   }, [pathname]);
+
+  return <></>;
+};
+
+const TriggerConnectSocketIo = () => {
+  const { setState } = useSubscription(socketIoSubs, ["socketIo"]);
+  const {
+    infoUser: { _id: userId },
+  } = useAuthUser();
+
+  useEffect(() => {
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ["websocket"],
+    });
+
+    newSocket.emit("addUser", userId);
+    setState({ socketIo: newSocket });
+    return () => newSocket.close();
+  }, []);
+
   return <></>;
 };
 
@@ -42,6 +67,9 @@ function App() {
     <WrapStyledApp className="App" typeStyle={typeStyle}>
       {/* Component to trigger navigate */}
       <TriggerNavigate />
+
+      {/* Component to trigger socketIo */}
+      <TriggerConnectSocketIo />
 
       <Routes>
         <Route path="/" element={<HomeScreen path="/" />} />

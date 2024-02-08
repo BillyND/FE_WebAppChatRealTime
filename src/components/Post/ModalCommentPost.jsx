@@ -127,7 +127,7 @@ function ModalCommentPost(props) {
           );
         })}
 
-        {!comments.length && !posting && (
+        {!comments.length && !posting && !loading && (
           <Flex
             align="center"
             justify="center"
@@ -142,7 +142,7 @@ function ModalCommentPost(props) {
         )}
       </div>
 
-      {loading && <SpinnerLoading className={`mt-4`} />}
+      {loading && <SpinnerLoading className={`pb-3`} />}
     </BaseModal>
   );
 }
