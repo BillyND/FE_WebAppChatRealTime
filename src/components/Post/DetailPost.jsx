@@ -25,7 +25,7 @@ import {
   formatTimeAgo,
   handleHiddenPost,
   handleUpdatePostSocket,
-  mergeDataPostToListPost,
+  updateCurrentPost,
 } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
@@ -82,11 +82,11 @@ const DetailPost = (props) => {
       ? likerIds.filter((liker) => liker !== userId)
       : [...post.likerIds, userId];
 
-    setState({
-      [`post-${postId}`]: { ...post, likerIds: updatedLikerIds },
-    });
+    // detailPostSubs.setState({
+    //   [`post-${postId}`]: { ...post, likerIds: updatedLikerIds },
+    // });
 
-    mergeDataPostToListPost({ ...post, likerIds: updatedLikerIds });
+    updateCurrentPost({ ...post, likerIds: updatedLikerIds });
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
     debounceUpdateLikes(postId, updatedLikerIds);
@@ -167,10 +167,10 @@ const DetailPost = (props) => {
   return (
     <WrapDetailPost type={type} isMobile={isMobile}>
       <div className="header">
-        <div className="info-user">
+        <Flex justify="space-between" gap={8} align="center">
           <UserThumbnail avaUrl={avaUrl} />
           <div className="name">{username}</div>
-        </div>
+        </Flex>
 
         <Flex gap={10} justify="center" align="center">
           <div className="time-post">{formatTimeAgo(createdAt)}</div>

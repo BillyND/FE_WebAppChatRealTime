@@ -4,7 +4,7 @@ import BaseModal from "../../UI/BaseModal";
 import { getCommentsInPost } from "../../services/api";
 import { SOURCE_IMAGE_SEND } from "../../utils/constant";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
-import { mergeDataPostToListPost, showPopupError } from "../../utils/utilities";
+import { updateCurrentPost, showPopupError } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
@@ -46,7 +46,6 @@ function ModalCommentPost(props) {
   } = props;
   const {
     state: { [`post-${postId}`]: post },
-    setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments, loading, posting, tempComment = "", countComment } = post;
   const {
@@ -59,11 +58,9 @@ function ModalCommentPost(props) {
   }, [openComment]);
 
   const fetchCommentsInPost = async () => {
-    setState({
-      [`post-${postId}`]: {
-        ...post,
-        loading: true,
-      },
+    updateCurrentPost({
+      ...post,
+      loading: true,
     });
 
     try {
@@ -75,11 +72,7 @@ function ModalCommentPost(props) {
         comments: resComments,
       };
 
-      setState({
-        [`post-${postId}`]: dataPostUpdate,
-      });
-
-      mergeDataPostToListPost(dataPostUpdate);
+      updateCurrentPost(dataPostUpdate);
     } catch (err) {
       console.error("===> Error fetchCommentsInPost:", err);
       showPopupError();
@@ -87,63 +80,67 @@ function ModalCommentPost(props) {
   };
 
   return (
-    <BaseModal
-      width={700}
-      open={openComment}
-      onCancel={() => setOpenComment(false)}
-      title={`Post by ${username}`}
-      footer={<FooterComment postId={postId} />}
-      className={`modal-comment-post ${type}`}
-      style={{ top: 20, position: "relative" }}
-      scrollId={postId}
-    >
-      <DetailPost
-        {...props}
-        loop={true}
-        openedComment={false}
-        hasDelete={false}
-      />
-      <hr className="gray mt-3 mb-3" />
+    <>
+      {openComment && (
+        <BaseModal
+          width={700}
+          open={openComment}
+          onCancel={() => setOpenComment(false)}
+          title={`Post by ${username}`}
+          footer={<FooterComment postId={postId} openComment={openComment} />}
+          className={`modal-comment-post ${type}`}
+          style={{ top: 20, position: "relative" }}
+          scrollId={postId}
+        >
+          <DetailPost
+            {...props}
+            loop={true}
+            openedComment={false}
+            hasDelete={false}
+          />
+          <hr className="gray mt-3 mb-3" />
 
-      <div className="list-comment mb-2">
-        {comments?.map((comment, index) => {
-          const { _id } = comment || {};
+          <div className="list-comment mb-2">
+            {comments?.map((comment, index) => {
+              const { _id } = comment || {};
 
-          detailPostSubs.state = {
-            ...detailPostSubs.state,
-            [`comment-${_id}`]: {
-              ...comment,
-            },
-          };
+              detailPostSubs.state = {
+                ...detailPostSubs.state,
+                [`comment-${_id}`]: {
+                  ...comment,
+                },
+              };
 
-          return (
-            <Fragment key={`${_id}-${index}`}>
-              <DetailComment
-                comment={comment}
-                commentId={_id}
-                postId={postId}
-              />
-            </Fragment>
-          );
-        })}
+              return (
+                <Fragment key={`${_id}-${index}`}>
+                  <DetailComment
+                    comment={comment}
+                    commentId={_id}
+                    postId={postId}
+                  />
+                </Fragment>
+              );
+            })}
 
-        {!comments.length && !posting && !loading && (
-          <Flex
-            align="center"
-            justify="center"
-            className="box-no-comment pt-5 pb-5"
-          >
-            No comments yet.
-          </Flex>
-        )}
+            {!comments.length && !posting && !loading && (
+              <Flex
+                align="center"
+                justify="center"
+                className="box-no-comment pt-5 pb-5"
+              >
+                No comments yet.
+              </Flex>
+            )}
 
-        {posting && (
-          <DetailComment tempComment={tempComment} posting={posting} />
-        )}
-      </div>
+            {posting && (
+              <DetailComment tempComment={tempComment} posting={posting} />
+            )}
+          </div>
 
-      {loading && <SpinnerLoading className={`pb-3`} />}
-    </BaseModal>
+          {loading && <SpinnerLoading className={`pb-3`} />}
+        </BaseModal>
+      )}
+    </>
   );
 }
 

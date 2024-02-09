@@ -180,9 +180,26 @@ export const showPopupError = (error) => {
   message.error(error || "Server error!");
 };
 
-export const mergeDataPostToListPost = (postValue = {}) => {
+export const updateCurrentPost = (
+  postValue = {},
+  silent = false,
+  otherData
+) => {
   const { _id: postId } = postValue;
   const { listPost } = listPostSubs.state || {};
+
+  const updatedData = {
+    ...detailPostSubs.state,
+    ...otherData,
+    listPost,
+    [`post-${postId}`]: postValue,
+  };
+
+  if (!silent) {
+    detailPostSubs.updateState({ [`post-${postId}`]: postValue });
+  }
+
+  detailPostSubs.state = updatedData;
 
   const dataListPostUpdate = cloneDeep({
     ...listPostSubs.state,
@@ -238,11 +255,18 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
     }, {});
 
     // Update the state of the post in the state object
-    detailPostSubs.updateState({
-      [`post-${postId}`]: keys
+
+    // detailPostSubs.updateState({
+    //   [`post-${postId}`]: keys
+    //     ? { ...detailPostSubs.state[`post-${postId}`], ...updatedState }
+    //     : { ...detailPostSubs.state[`post-${postId}`], ...postSocket },
+    // });
+
+    updateCurrentPost(
+      keys
         ? { ...detailPostSubs.state[`post-${postId}`], ...updatedState }
-        : { ...detailPostSubs.state[`post-${postId}`], ...postSocket },
-    });
+        : { ...detailPostSubs.state[`post-${postId}`], ...postSocket }
+    );
   }
 };
 

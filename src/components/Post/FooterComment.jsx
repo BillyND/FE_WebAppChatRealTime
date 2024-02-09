@@ -5,7 +5,11 @@ import { UserThumbnail } from "../../UI/UserThumbnail";
 import { addCommentToPost } from "../../services/api";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { scrollToBottomOfElement, showPopupError } from "../../utils/utilities";
+import {
+  scrollToBottomOfElement,
+  showPopupError,
+  updateCurrentPost,
+} from "../../utils/utilities";
 import { ButtonSend } from "./ModalCommentPost";
 
 export const InputComment = (props) => {
@@ -13,7 +17,7 @@ export const InputComment = (props) => {
     refInput,
     value,
     setValue,
-    setFocus = () => {},
+    onFocus,
     onUpdate,
     loading,
     posting,
@@ -21,8 +25,6 @@ export const InputComment = (props) => {
     onBlur,
     subControl,
   } = props;
-  const modalElement = document.querySelector(".ant-modal-content");
-  const modalWidth = modalElement?.getBoundingClientRect()?.width;
 
   useEffect(() => {
     focus && refInput?.current?.focus();
@@ -32,7 +34,7 @@ export const InputComment = (props) => {
     <Flex style={{ width: "100%" }} align="start" gap={8}>
       <textarea
         maxLength={8000}
-        onFocus={() => setFocus(true)}
+        onFocus={onFocus}
         onBlur={onBlur}
         ref={refInput}
         value={value}
@@ -41,53 +43,45 @@ export const InputComment = (props) => {
         placeholder="Write your comment..."
         className={`input-comment ${focus || value.trim() ? "full" : "mini"}`}
         style={{
-          minWidth: `${modalWidth - 120}px`,
+          minWidth: `calc(100% - 50px)`,
         }}
       />
 
-      <Flex style={{ width: "100%" }}>
+      <div style={{ minWidth: "80px" }}>
         <ButtonSend
           onClick={onUpdate}
           disabled={!value.trim() || loading || posting}
         />
 
         {subControl}
-      </Flex>
+      </div>
     </Flex>
   );
 };
 
 export const FooterComment = (props) => {
-  const { postId } = props;
+  const { postId, openComment } = props;
   const {
     infoUser: { avaUrl, _id: userId },
   } = useAuthUser();
   const {
     state: { [`post-${postId}`]: post },
-    setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments, loading, posting, tempComment = "" } = post;
   const [localValueComment, setLocalValue] = useState(tempComment);
   const refInputComment = useRef(null);
-  const [focusInput, setFocusInput] = useState(false);
-
-  useEffect(() => {
-    if (focusInput) {
-      refInputComment.current?.focus();
-    }
-  }, [focusInput]);
+  const [focusInput, setFocusInput] = useState(true);
 
   const handlePostComment = async (e) => {
     e.stopPropagation();
     e.preventDefault();
     try {
-      setState({
-        [`post-${postId}`]: {
-          ...post,
-          posting: true,
-          tempComment: localValueComment,
-        },
+      updateCurrentPost({
+        ...post,
+        posting: true,
+        tempComment: localValueComment,
       });
+
       setLocalValue("");
       scrollToBottomOfElement(postId);
       focusInput && setFocusInput(true);
@@ -99,13 +93,11 @@ export const FooterComment = (props) => {
           content: localValueComment,
         })) || [];
 
-      setState({
-        [`post-${postId}`]: {
-          ...post,
-          posting: false,
-          comments: [...comments, resAddComment],
-          countComment: [...comments, resAddComment].length,
-        },
+      updateCurrentPost({
+        ...post,
+        posting: false,
+        comments: [...comments, resAddComment],
+        countComment: [...comments, resAddComment].length,
       });
     } catch (error) {
       console.error("===>Error handlePostComment", error);
@@ -119,12 +111,12 @@ export const FooterComment = (props) => {
       <InputComment
         refInput={refInputComment}
         value={localValueComment}
-        setFocus={setFocusInput}
         setValue={setLocalValue}
         loading={loading}
         posting={posting}
         onUpdate={handlePostComment}
         focus={focusInput}
+        onFocus={() => setFocusInput(true)}
         onBlur={() => setFocusInput(false)}
       />
     </Flex>

@@ -336,3 +336,18 @@
     }
   }
 }
+
+.modal-delete-post,
+.modal-delete-comment {
+  hr {
+    display: none;
+  }
+
+  .ant-modal-footer {
+    border: none !important;
+  }
+
+  .ant-modal-body {
+    padding: 0 16px !important;
+  }
+}

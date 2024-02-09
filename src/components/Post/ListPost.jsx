@@ -2,13 +2,10 @@ import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect } from "react";
 import BaseModal from "../../UI/BaseModal";
 import { deletePost } from "../../services/api";
-import {
-  detailPostSubs,
-  listPostSubs,
-} from "../../utils/globalStates/initGlobalState";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { useModal } from "../../utils/hooks/useModal";
-import { handleGetListPost } from "../../utils/utilities";
+import { handleGetListPost, updateCurrentPost } from "../../utils/utilities";
 import DetailPost from "./DetailPost";
 import "./Post.scss";
 import { WrapListPost } from "./StyledPost";
@@ -54,19 +51,19 @@ function ListPost() {
     <WrapListPost>
       <div className="list-post-container">
         {listPost?.map((post = {}) => {
-          const { _id: postId, comments } = post;
+          const { _id: postId, comments, countComment } = post;
           const isAuthorOfPost = post.userId === infoUser._id;
 
-          detailPostSubs.state = {
-            ...detailPostSubs.state,
-            listPost,
-            [`post-${postId}`]: {
+          updateCurrentPost(
+            {
               ...post,
               comments: [],
               loading: false,
-              countComment: Number(comments) || comments.length,
+              countComment:
+                Number(comments) || Number(countComment) || comments.length,
             },
-          };
+            true
+          );
 
           return (
             <Fragment key={postId}>

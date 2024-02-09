@@ -1,92 +1,3 @@
-.modal-comment-post {
-  .card-detail-post {
-    padding: 0 !important;
-  }
-}
-
-.info-user {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-
-.new-post-container {
-  display: grid;
-  border-radius: 8px;
-  width: 100%;
-  padding: 12px 16px 10px 16px;
-  -webkit-font-smoothing: antialiased;
-  color: #fff;
-
-  .input-post {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    .avatar-user {
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      border-radius: 50%;
-    }
-
-    .button-input {
-      cursor: pointer;
-      height: 40px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      border-radius: 30px;
-      background-color: #3a3b3c;
-      padding: 8px 12px;
-      font-size: 16px;
-      color: rgb(173, 173, 173);
-
-      &:hover {
-        background-color: #494a4b;
-      }
-    }
-  }
-
-  .option-post {
-    display: grid;
-
-    .option {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      align-items: center;
-      padding: 8px;
-      border-radius: 8px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: rgba(252, 252, 252, 0.18);
-      }
-
-      .icon-image {
-        width: 24px;
-        height: 24px;
-        background-size: contain;
-        background-image: url("https://cdn.pagefly.io/images/custom/74AGEvEtBm1699876288030.png");
-      }
-
-      .icon-feeling {
-        width: 24px;
-        height: 24px;
-        background-size: contain;
-        background-image: url("https://cdn.pagefly.io/images/custom/RWOIsUgWGL1699876287200.png");
-      }
-    }
-  }
-
-  hr {
-    border-color: rgb(98, 98, 98);
-  }
-}
-
 .light {
   .input-comment,
   .detail-comment {
@@ -96,20 +7,6 @@
 
   .button-send:hover {
     background-color: #3838381c;
-  }
-}
-
-.modal-delete-post {
-  hr {
-    display: none;
-  }
-
-  .ant-modal-footer {
-    border: none !important;
-  }
-
-  .ant-modal-body {
-    padding: 0 16px !important;
   }
 }
 
@@ -145,6 +42,7 @@
   height: fit-content;
   padding: 8px;
   border-radius: 50%;
+  width: fit-content;
 
   &.disabled {
     opacity: 0.2;
@@ -180,10 +78,12 @@
   .sub-content-comment {
     font-size: 12px;
     color: #b0b3b8;
+    min-width: fit-content;
   }
 }
 
 .control-comment {
+  min-width: 25px;
   margin-top: 4px;
   display: grid;
   gap: 12px;
@@ -211,9 +111,9 @@
 }
 
 .detail-comment {
+  width: 100%;
   background-color: #3a3b3c;
   padding: 8px;
-  // padding: 8px 12px;
   border-radius: 16px;
   color: #e4e6eb;
   overflow-wrap: break-word;

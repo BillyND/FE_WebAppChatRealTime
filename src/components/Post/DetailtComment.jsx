@@ -75,18 +75,15 @@ export const DetailComment = (props) => {
 
       const updateComment = {
         ...comment,
-        content: localValueComment,
+        commentId,
+        content: localValueComment.trim(),
       };
 
       setState({
         [`comment-${commentId}`]: updateComment,
       });
 
-      const resUpdateComment = await updateCommentOfPost({
-        commentId,
-        ownerId: userId,
-        content: localValueComment.trim(),
-      });
+      const resUpdateComment = await updateCommentOfPost(updateComment);
 
       socketIo.emit("updateComment", resUpdateComment.data);
     } catch (error) {
@@ -110,7 +107,10 @@ export const DetailComment = (props) => {
       />
       <Flex gap={12}>
         <UserThumbnail avaUrl={avaUrl} size={32} />
-        <div className="wrap-detail-comment">
+        <div
+          className="wrap-detail-comment"
+          style={{ width: isEdit ? "100%" : "fit-content" }}
+        >
           <Flex gap={6}>
             {isOwnerOfComment && !isEdit && (
               <div className="control-comment  none-copy">
@@ -133,46 +133,44 @@ export const DetailComment = (props) => {
                 />
               </div>
             )}
-            <div>
-              <div
-                className="detail-comment"
-                style={{
-                  maxWidth: `${widthModal - (isOwnerOfComment ? 102 : 80)}px`,
-                }}
-              >
-                {isEdit ? (
-                  <InputComment
-                    refInput={refInputComment}
-                    value={localValueComment}
-                    setValue={setLocalValue}
-                    onUpdate={handleUpdateComment}
-                    focus={true}
-                    subControl={
-                      localValueComment.trim() && (
-                        <a
-                          className="cancel-edit-comment"
-                          onClick={handleCancelEdit}
-                        >
-                          Cancel
-                        </a>
-                      )
-                    }
+            <div
+              className="detail-comment"
+              style={{
+                maxWidth: `${widthModal - (isOwnerOfComment ? 102 : 80)}px`,
+              }}
+            >
+              {isEdit ? (
+                <InputComment
+                  refInput={refInputComment}
+                  value={localValueComment}
+                  setValue={setLocalValue}
+                  onUpdate={handleUpdateComment}
+                  focus={true}
+                  subControl={
+                    localValueComment.trim() && (
+                      <a
+                        className="cancel-edit-comment"
+                        onClick={handleCancelEdit}
+                      >
+                        Cancel
+                      </a>
+                    )
+                  }
+                />
+              ) : (
+                <>
+                  <span className="owner-name">{username}</span>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: content.replace(/\n/g, "<br/>"),
+                    }}
                   />
-                ) : (
-                  <>
-                    <span className="owner-name">{username}</span>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: content.replace(/\n/g, "<br/>"),
-                      }}
-                    />
-                  </>
-                )}
-              </div>
-              <span className="sub-content-comment px-2">
-                {posting ? "Writing ..." : formatTimeAgo(createdAt)}
-              </span>
+                </>
+              )}
             </div>
+            <span className="sub-content-comment px-2">
+              {posting ? "Writing ..." : formatTimeAgo(createdAt)}
+            </span>
           </Flex>
         </div>
       </Flex>

@@ -4,7 +4,7 @@ import BaseModal from "../../UI/BaseModal";
 import { deleteCommentOfPost } from "../../services/api";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { showPopupError } from "../../utils/utilities";
+import { updateCurrentPost, showPopupError } from "../../utils/utilities";
 
 function ModalDeleteComment(props) {
   const { openDelete, setOpenDelete, commentId, postId } = props;
@@ -13,7 +13,6 @@ function ModalDeleteComment(props) {
   } = useAuthUser();
   const {
     state: { [`post-${postId}`]: post },
-    setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const { comments = [] } = post || {};
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -31,13 +30,13 @@ function ModalDeleteComment(props) {
         (comment) => comment._id !== commentId
       );
 
-      setState({
-        [`post-${postId}`]: {
-          ...post,
-          comments: newListComment,
-          countComment: newListComment.length,
-        },
-      });
+      const updatedPost = {
+        ...post,
+        comments: newListComment,
+        countComment: newListComment.length,
+      };
+
+      updateCurrentPost(updatedPost);
 
       setLoadingDelete(false);
       setOpenDelete(false);
@@ -49,6 +48,7 @@ function ModalDeleteComment(props) {
 
   return (
     <BaseModal
+      className="modal-delete-comment"
       title="Delete comments?"
       open={openDelete}
       onCancel={() => setOpenDelete(false)}

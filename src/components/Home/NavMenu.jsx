@@ -238,7 +238,7 @@ function NavMenu() {
           <Flex align="center" justify="center" className="group-nav">
             <div
               className="icon-logo cursor-pointer transition-03"
-              onClick={() => scrollToTopOfElement("home-container")}
+              onClick={() => handleNavigation("/")}
             >
               <IconLogo />
             </div>
