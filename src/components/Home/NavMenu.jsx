@@ -18,8 +18,8 @@ import {
   IconSunlight,
   IconUserActive,
   IconUserDeActive,
-} from "../../assets/icons/icon";
-import { postLogout } from "../../services/api";
+} from "@assets/icons/icon";
+import { postLogout } from "@services/api";
 import { TYPE_STYLE_APP } from "@utils/constant";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "@utils/hooks/useModal";

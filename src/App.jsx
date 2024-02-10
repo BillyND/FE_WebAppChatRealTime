@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { getInfoUserLocal } from "./services/customAxios";
+import { getInfoUserLocal } from "@services/customAxios";
 import AuthScreen from "./components/Auth/AuthScreen";
 import HomeScreen from "./components/Home/HomeScreen";
 import ModalNewPost from "./components/Post/ModalNewPost";

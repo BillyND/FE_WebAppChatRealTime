@@ -1,6 +1,6 @@
 import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect } from "react";
-import { deletePost } from "../../services/api";
+import { deletePost } from "@services/api";
 import { listPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useModal } from "@utils/hooks/useModal";

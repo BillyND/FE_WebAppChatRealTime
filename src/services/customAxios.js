@@ -1,8 +1,8 @@
 import axios from "axios";
-import asyncWait from "../utils/asysnWait";
-import { KEY_INFO_USER } from "../utils/constant";
-import { infoUserSubscription } from "../utils/globalStates/initGlobalState";
-import { passLocalStorage } from "../utils/passLocalStorage";
+import asyncWait from "@utils/asysnWait";
+import { KEY_INFO_USER } from "@utils/constant";
+import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
+import { passLocalStorage } from "@utils/passLocalStorage";
 
 export const baseURL = import.meta.env.VITE_BACKEND_URL;
 const NO_RETRY_HEADER = "x-no-retry";

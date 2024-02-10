@@ -1,6 +1,6 @@
-import { KEY_INFO_USER, initInfoUser } from "../utils/constant";
-import { infoUserSubscription } from "../utils/globalStates/initGlobalState";
-import { passLocalStorage } from "../utils/passLocalStorage";
+import { KEY_INFO_USER, initInfoUser } from "@utils/constant";
+import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
+import { passLocalStorage } from "@utils/passLocalStorage";
 import axios, { getInfoUserLocal } from "./customAxios";
 
 // <=====Trigger header token=====> //

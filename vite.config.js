@@ -12,6 +12,8 @@ export default defineConfig({
     alias: {
       "@utils": `/src/utils`,
       "@UI": `/src/UI`,
+      "@assets": `/src/assets`,
+      "@services": `/src/services`,
     },
   },
 });

@@ -1,6 +1,6 @@
 import { message } from "antd";
 import { cloneDeep, debounce, unionBy } from "lodash";
-import { getPost } from "../services/api";
+import { getPost } from "@services/api";
 import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
 
 /**

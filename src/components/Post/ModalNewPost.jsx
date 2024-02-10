@@ -2,7 +2,7 @@ import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Flex, Modal, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { createPost, updatePost } from "../../services/api";
+import { createPost, updatePost } from "@services/api";
 import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
 import { readFileAsDataURL, resizeImage } from "@utils/handleImages";

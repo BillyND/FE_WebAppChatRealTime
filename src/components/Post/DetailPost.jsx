@@ -8,8 +8,8 @@ import {
   IconHeartActive,
   IconHeartDeActive,
   IconMessageActive,
-} from "../../assets/icons/icon";
-import { updateLikeOfPost } from "../../services/api";
+} from "@assets/icons/icon";
+import { updateLikeOfPost } from "@services/api";
 import { TIME_DELAY_FETCH_API } from "@utils/constant";
 import {
   detailPostSubs,

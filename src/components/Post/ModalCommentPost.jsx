@@ -1,6 +1,6 @@
 import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect } from "react";
-import { getCommentsInPost } from "../../services/api";
+import { getCommentsInPost } from "@services/api";
 import { SOURCE_IMAGE_SEND } from "@utils/constant";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
 import { updateCurrentPost, showPopupError } from "@utils/utilities";

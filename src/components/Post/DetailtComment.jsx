@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { updateCommentOfPost } from "../../services/api";
+import { updateCommentOfPost } from "@services/api";
 import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import {
   detailPostSubs,

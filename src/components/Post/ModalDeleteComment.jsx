@@ -1,7 +1,7 @@
 import { useSubscription } from "global-state-hook";
 import React, { useState } from "react";
 import BaseModal from "@UI//BaseModal";
-import { deleteCommentOfPost } from "../../services/api";
+import { deleteCommentOfPost } from "@services/api";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { updateCurrentPost, showPopupError } from "@utils/utilities";

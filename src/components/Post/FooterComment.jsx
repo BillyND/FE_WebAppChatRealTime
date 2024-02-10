@@ -1,7 +1,7 @@
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { addCommentToPost } from "../../services/api";
+import { addCommentToPost } from "@services/api";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import {
