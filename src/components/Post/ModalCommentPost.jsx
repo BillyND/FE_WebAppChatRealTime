@@ -1,16 +1,16 @@
 import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect } from "react";
 import { getCommentsInPost } from "../../services/api";
-import { SOURCE_IMAGE_SEND } from "../../utils/constant";
-import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
-import { updateCurrentPost, showPopupError } from "../../utils/utilities";
+import { SOURCE_IMAGE_SEND } from "@utils/constant";
+import { detailPostSubs } from "@utils/globalStates/initGlobalState";
+import { updateCurrentPost, showPopupError } from "@utils/utilities";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { Flex } from "antd";
-import BaseModal from "../UI/BaseModal";
-import { SpinnerLoading } from "../UI/SpinnerLoading";
+import BaseModal from "@UI//BaseModal";
+import { SpinnerLoading } from "@UI//SpinnerLoading";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   const handleOnclick = (e) => {

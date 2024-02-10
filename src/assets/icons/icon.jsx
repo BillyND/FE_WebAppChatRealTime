@@ -1,5 +1,5 @@
-import { TYPE_STYLE_APP } from "../../utils/constant";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { TYPE_STYLE_APP } from "@utils/constant";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 export const IconMoreDetail = (props) => (
   <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">

@@ -3,21 +3,21 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { updateCommentOfPost } from "../../services/api";
-import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
+import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import {
   detailPostSubs,
   socketIoSubs,
-} from "../../utils/globalStates/initGlobalState";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { useDebounce } from "../../utils/hooks/useDebounce";
+} from "@utils/globalStates/initGlobalState";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useDebounce } from "@utils/hooks/useDebounce";
 import {
   formatTimeAgo,
   handleUpdateCommentSocket,
   showPopupError,
-} from "../../utils/utilities";
+} from "@utils/utilities";
 import { InputComment } from "./FooterComment";
 import ModalDeleteComment from "./ModalDeleteComment";
-import { UserThumbnail } from "../UI/UserThumbnail";
+import { UserThumbnail } from "@UI//UserThumbnail";
 
 let timerQueryWithModal;
 

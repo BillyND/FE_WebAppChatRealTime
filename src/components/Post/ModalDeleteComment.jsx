@@ -1,10 +1,10 @@
 import { useSubscription } from "global-state-hook";
 import React, { useState } from "react";
-import BaseModal from "../UI/BaseModal";
+import BaseModal from "@UI//BaseModal";
 import { deleteCommentOfPost } from "../../services/api";
-import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { updateCurrentPost, showPopupError } from "../../utils/utilities";
+import { detailPostSubs } from "@utils/globalStates/initGlobalState";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { updateCurrentPost, showPopupError } from "@utils/utilities";
 
 function ModalDeleteComment(props) {
   const { openDelete, setOpenDelete, commentId, postId } = props;

@@ -8,4 +8,10 @@ export default defineConfig({
     "process.env": {}, // to workaround the process.env error but not a
     //permanent fix
   },
+  resolve: {
+    alias: {
+      "@utils": `/src/utils`,
+      "@UI": `/src/UI`,
+    },
+  },
 });

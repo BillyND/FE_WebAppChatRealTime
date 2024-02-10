@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-import PopoverCustom from "../UI/PopoverCustom";
+import PopoverCustom from "@UI//PopoverCustom";
 import {
   IconDash,
   IconHeartActive,
@@ -10,27 +10,27 @@ import {
   IconMessageActive,
 } from "../../assets/icons/icon";
 import { updateLikeOfPost } from "../../services/api";
-import { TIME_DELAY_FETCH_API } from "../../utils/constant";
+import { TIME_DELAY_FETCH_API } from "@utils/constant";
 import {
   detailPostSubs,
   listPostSubs,
   previewImageFullScreenSubs,
   socketIoSubs,
-} from "../../utils/globalStates/initGlobalState";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { openModalWithOutRender } from "../../utils/hooks/useModal";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
-import { useWindowSize } from "../../utils/hooks/useWindowSize";
+} from "@utils/globalStates/initGlobalState";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { openModalWithOutRender } from "@utils/hooks/useModal";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import {
   formatTimeAgo,
   handleHiddenPost,
   handleUpdatePostSocket,
   updateCurrentPost,
-} from "../../utils/utilities";
+} from "@utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
-import PreviewImageFullScreen from "../UI/PreviewImageFullScreen";
-import { UserThumbnail } from "../UI/UserThumbnail";
+import PreviewImageFullScreen from "@UI//PreviewImageFullScreen";
+import { UserThumbnail } from "@UI//UserThumbnail";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;

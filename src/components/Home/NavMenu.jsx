@@ -2,8 +2,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Popover } from "antd";
 import React, { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PopoverCustom from "../UI/PopoverCustom";
-import ToggleSwitch from "../UI/ToggleSwitch";
+import PopoverCustom from "@UI//PopoverCustom";
+import ToggleSwitch from "@UI//ToggleSwitch";
 import {
   IconHomeActive,
   IconHomeDeActive,
@@ -20,18 +20,18 @@ import {
   IconUserDeActive,
 } from "../../assets/icons/icon";
 import { postLogout } from "../../services/api";
-import { TYPE_STYLE_APP } from "../../utils/constant";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { openModalWithOutRender } from "../../utils/hooks/useModal";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
-import { useWindowSize } from "../../utils/hooks/useWindowSize";
+import { TYPE_STYLE_APP } from "@utils/constant";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { openModalWithOutRender } from "@utils/hooks/useModal";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import {
   WrapButtonSettings,
   WrapContentPopoverSettings,
   WrapControlNav,
   WrapNavMenu,
 } from "./HomeStyled";
-import { scrollToTopOfElement } from "../../utils/utilities";
+import { scrollToTopOfElement } from "@utils/utilities";
 
 const ButtonSettings = (props) => {
   const { handleNavigation } = props;

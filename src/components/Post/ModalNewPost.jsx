@@ -3,20 +3,20 @@ import { Button, Flex, Modal, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { createPost, updatePost } from "../../services/api";
-import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
-import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
-import { readFileAsDataURL, resizeImage } from "../../utils/handleImages";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { useDebounce } from "../../utils/hooks/useDebounce";
-import { useModal } from "../../utils/hooks/useModal";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
-import { useWindowSize } from "../../utils/hooks/useWindowSize";
+import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
+import { detailPostSubs } from "@utils/globalStates/initGlobalState";
+import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useDebounce } from "@utils/hooks/useDebounce";
+import { useModal } from "@utils/hooks/useModal";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import {
   compareChange,
   handleGetListPost,
   showPopupError,
   updateCurrentPost,
-} from "../../utils/utilities";
+} from "@utils/utilities";
 import { WrapModalNewPost } from "./StyledPost";
 
 function ModalNewPost({ placeHolderInputPost }) {

@@ -1,7 +1,7 @@
 import { Popover } from "antd";
 import React from "react";
 import styled from "styled-components";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 function PopoverCustom(props) {
   const { children, content } = props;

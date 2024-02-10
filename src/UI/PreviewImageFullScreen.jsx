@@ -2,7 +2,7 @@ import { useSubscription } from "global-state-hook";
 import React from "react";
 import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
-import { previewImageFullScreenSubs } from "../../utils/globalStates/initGlobalState";
+import { previewImageFullScreenSubs } from "@utils/globalStates/initGlobalState";
 
 function PreviewImageFullScreen() {
   const {

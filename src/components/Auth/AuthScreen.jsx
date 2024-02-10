@@ -4,7 +4,7 @@ import Link from "antd/es/typography/Link";
 import { debounce } from "lodash";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "../../utils/constant";
+import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "@utils/constant";
 import { WrapAuthScreen } from "./AuthScreenStyled";
 import { ButtonAuth } from "./ButtonAuth";
 import ForgotPass from "./ForgotPass";

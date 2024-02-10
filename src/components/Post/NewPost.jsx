@@ -1,10 +1,10 @@
 import { Flex } from "antd";
 import React from "react";
-import { UserThumbnail } from "../UI/UserThumbnail";
-import { useAuthUser } from "../../utils/hooks/useAuthUser";
-import { openModalWithOutRender } from "../../utils/hooks/useModal";
+import { UserThumbnail } from "@UI//UserThumbnail";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { openModalWithOutRender } from "@utils/hooks/useModal";
 import { WrapCreateNewPost } from "./StyledPost";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 export const placeHolderInputPost = `What are you thinking?`;
 

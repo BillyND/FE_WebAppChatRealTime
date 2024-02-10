@@ -1,7 +1,7 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Modal } from "antd";
 import React from "react";
-import { useStyleApp } from "../../utils/hooks/useStyleApp";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 function BaseModal(props) {
   const {
