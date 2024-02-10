@@ -27,6 +27,10 @@ export const styleDark = {
     backgroundColor: "#181818",
     color: "#f3f5f7",
   },
+  inputSearch: {
+    backgroundColor: "#0A0A0A",
+    color: "#EBEEF0",
+  },
 };
 
 export const styleLight = {
@@ -50,6 +54,10 @@ export const styleLight = {
   popoverSettings: {
     backgroundColor: "#fff",
     color: "black",
+  },
+  inputSearch: {
+    backgroundColor: "#FAFAFA",
+    color: "#000000",
   },
 };
 

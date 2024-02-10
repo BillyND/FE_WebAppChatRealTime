@@ -99,7 +99,10 @@ export const scrollToBottomOfElement = (elementId) => {
   } catch (error) {
     /*** If an error occurs, fall back to a basic scroll to the bottom ***/
     console.error("===> Error scrollToBottomOfElement:", error);
-    elementHasScrollBottom.scrollTop = scrollHeight;
+
+    if (elementHasScrollBottom.scrollTop) {
+      elementHasScrollBottom.scrollTop = scrollHeight;
+    }
   }
 };
 
@@ -145,7 +148,10 @@ export const scrollToTopOfElement = (elementId) => {
   } catch (error) {
     /*** If an error occurs, fall back to a basic scroll to the top ***/
     console.error("===> Error scrollToTopOfElement:", error);
-    elementHasScrollTop.scrollTop = 0;
+
+    if (elementHasScrollTop?.scrollTop) {
+      elementHasScrollTop.scrollTop = 0;
+    }
   }
 };
 

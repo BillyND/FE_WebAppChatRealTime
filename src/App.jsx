@@ -1,18 +1,22 @@
+import { getInfoUserLocal } from "@services/customAxios";
+import { useSubscription } from "global-state-hook";
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { getInfoUserLocal } from "@services/customAxios";
+import { io } from "socket.io-client";
+import { WrapStyledApp } from "./StyledApp";
 import AuthScreen from "./components/Auth/AuthScreen";
 import HomeScreen from "./components/Home/HomeScreen";
 import ModalNewPost from "./components/Post/ModalNewPost";
 import { placeHolderInputPost } from "./components/Post/NewPost";
-import { WrapStyledApp } from "./StyledApp";
 import "./global.scss";
-import { useStyleApp } from "./utils/hooks/useStyleApp";
-import { useRef } from "react";
-import { io } from "socket.io-client";
-import { useAuthUser } from "./utils/hooks/useAuthUser";
-import { useSubscription } from "global-state-hook";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
+import SearchScreen from "./components/Search/SearchScreen";
+import { BrowserRouter } from "react-router-dom";
+import Layout from "./Layout";
+import MessageScreen from "./components/Message/MessageScreen";
+import UseScreen from "./components/User/UseScreen";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -60,33 +64,35 @@ const TriggerConnectSocketIo = () => {
 
 function App() {
   const {
+    styleApp,
     styleApp: { type: typeStyle },
   } = useStyleApp();
 
   return (
-    <WrapStyledApp className="App" typeStyle={typeStyle}>
-      {/* Component to trigger navigate */}
-      <TriggerNavigate />
+    <WrapStyledApp style={styleApp} className="App" typeStyle={typeStyle}>
+      <BrowserRouter>
+        {/* Component to trigger navigate */}
+        <TriggerNavigate />
 
-      {/* Component to trigger socketIo */}
-      <TriggerConnectSocketIo />
+        {/* Component to trigger socketIo */}
+        <TriggerConnectSocketIo />
 
-      <Routes>
-        <Route path="/" element={<HomeScreen path="/" />} />
-        <Route
-          path="/profile/:userId"
-          element={<HomeScreen path={"/profile"} />}
-        />
-        <Route path="/inbox" element={<HomeScreen path={"/inbox"} />} />
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomeScreen />} />
+            <Route path="search" element={<SearchScreen />} />
+            <Route path="message" element={<MessageScreen />} />
+            <Route path="user/:userId" element={<UseScreen />} />
 
-        {/* <=== Auth screen ===> */}
-        <Route path="/logout" element={<AuthScreen />} />
-        <Route path="/login" element={<AuthScreen />} />
-        <Route path="/register" element={<AuthScreen />} />
-        <Route path="/forgot-password" element={<AuthScreen />} />
-
-        <Route path="*" element={<HomeScreen />} />
-      </Routes>
+            {/* <=== Auth screen ===> */}
+            <Route path="logout" element={<AuthScreen />} />
+            <Route path="login" element={<AuthScreen />} />
+            <Route path="register" element={<AuthScreen />} />
+            <Route path="forgot-password" element={<AuthScreen />} />
+            <Route path="*" element={<HomeScreen />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
       <ModalNewPost placeHolderInputPost={placeHolderInputPost} />
     </WrapStyledApp>
   );
