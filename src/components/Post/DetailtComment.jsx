@@ -2,7 +2,6 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { UserThumbnail } from "../../UI/UserThumbnail";
 import { updateCommentOfPost } from "../../services/api";
 import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import {
@@ -18,6 +17,7 @@ import {
 } from "../../utils/utilities";
 import { InputComment } from "./FooterComment";
 import ModalDeleteComment from "./ModalDeleteComment";
+import { UserThumbnail } from "../UI/UserThumbnail";
 
 let timerQueryWithModal;
 

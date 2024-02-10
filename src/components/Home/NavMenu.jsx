@@ -2,8 +2,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Popover } from "antd";
 import React, { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PopoverCustom from "../../UI/PopoverCustom";
-import ToggleSwitch from "../../UI/ToggleSwitch";
+import PopoverCustom from "../UI/PopoverCustom";
+import ToggleSwitch from "../UI/ToggleSwitch";
 import {
   IconHomeActive,
   IconHomeDeActive,

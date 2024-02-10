@@ -1,6 +1,6 @@
 import { Flex } from "antd";
 import React from "react";
-import { UserThumbnail } from "../../UI/UserThumbnail";
+import { UserThumbnail } from "../UI/UserThumbnail";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "../../utils/hooks/useModal";
 import { WrapCreateNewPost } from "./StyledPost";

@@ -2,9 +2,7 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-import PopoverCustom from "../../UI/PopoverCustom";
-import PreviewImageFullScreen from "../../UI/PreviewImageFullScreen";
-import { UserThumbnail } from "../../UI/UserThumbnail";
+import PopoverCustom from "../UI/PopoverCustom";
 import {
   IconDash,
   IconHeartActive,
@@ -31,6 +29,8 @@ import {
 } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
+import PreviewImageFullScreen from "../UI/PreviewImageFullScreen";
+import { UserThumbnail } from "../UI/UserThumbnail";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;

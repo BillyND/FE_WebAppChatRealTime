@@ -2,7 +2,6 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useEffect, useRef } from "react";
-import { SpinnerLoading } from "../../UI/SpinnerLoading";
 import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useScrollToBottom } from "../../utils/hooks/useScrollBottom";
@@ -13,6 +12,7 @@ import ListPost from "../Post/ListPost";
 import NewPost from "../Post/NewPost";
 import { WrapHomeScreen } from "./HomeStyled";
 import NavMenu from "./NavMenu";
+import { SpinnerLoading } from "../UI/SpinnerLoading";
 
 export default function HomeScreen({ path }) {
   const { isMobile, isTablet } = useWindowSize();

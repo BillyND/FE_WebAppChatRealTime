@@ -5,7 +5,7 @@ import { debounce } from "lodash";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "../../utils/constant";
-import "./AuthScreen.scss";
+import { WrapAuthScreen } from "./AuthScreenStyled";
 import { ButtonAuth } from "./ButtonAuth";
 import ForgotPass from "./ForgotPass";
 
@@ -27,7 +27,7 @@ export default function AuthScreen() {
   const isForgotPasswordPage = pathname?.includes("forgot-password");
 
   return (
-    <div className="auth-screen">
+    <WrapAuthScreen>
       {isForgotPasswordPage ? (
         <ForgotPass />
       ) : (
@@ -93,6 +93,6 @@ export default function AuthScreen() {
           </div>
         </div>
       )}
-    </div>
+    </WrapAuthScreen>
   );
 }

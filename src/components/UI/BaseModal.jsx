@@ -1,9 +1,7 @@
-import { Button, Flex, Modal } from "antd";
-import React, { useRef } from "react";
-import "./UI.scss";
-import { useStyleApp } from "../utils/hooks/useStyleApp";
-import { SpinnerLoading } from "./SpinnerLoading";
 import { LoadingOutlined } from "@ant-design/icons";
+import { Flex, Modal } from "antd";
+import React from "react";
+import { useStyleApp } from "../../utils/hooks/useStyleApp";
 
 function BaseModal(props) {
   const {

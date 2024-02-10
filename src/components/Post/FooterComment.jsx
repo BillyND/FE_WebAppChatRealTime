@@ -1,7 +1,6 @@
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
-import { UserThumbnail } from "../../UI/UserThumbnail";
 import { addCommentToPost } from "../../services/api";
 import { detailPostSubs } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
@@ -11,6 +10,7 @@ import {
   updateCurrentPost,
 } from "../../utils/utilities";
 import { ButtonSend } from "./ModalCommentPost";
+import { UserThumbnail } from "../UI/UserThumbnail";
 
 export const InputComment = (props) => {
   const {

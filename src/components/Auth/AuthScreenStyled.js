@@ -1,4 +1,6 @@
-.auth-screen {
+import styled from "styled-components";
+
+export const WrapAuthScreen = styled.div`
   min-height: 100vh;
   background-image: url("https://cdn.shopify.com/s/files/1/0673/7366/2426/files/mountainspinkskytwilightsunsetdusksnowcovered2560x1440826321699778651102-min.jpg?v=1707402349");
   background-repeat: no-repeat;
@@ -107,4 +109,4 @@
       }
     }
   }
-}
+`;
