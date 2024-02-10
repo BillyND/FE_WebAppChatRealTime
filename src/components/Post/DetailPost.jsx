@@ -3,6 +3,7 @@ import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { Fragment, useCallback, useEffect, useState } from "react";
 import PopoverCustom from "../../UI/PopoverCustom";
+import PreviewImageFullScreen from "../../UI/PreviewImageFullScreen";
 import { UserThumbnail } from "../../UI/UserThumbnail";
 import {
   IconDash,
@@ -15,6 +16,7 @@ import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import {
   detailPostSubs,
   listPostSubs,
+  previewImageFullScreenSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { useAuthUser } from "../../utils/hooks/useAuthUser";
@@ -31,13 +33,7 @@ import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
 
 const DetailPost = (props) => {
-  const {
-    postId,
-    hasDelete = true,
-    hasFooter = true,
-    loop,
-    isAuthorOfPost,
-  } = props;
+  const { postId, loop, isAuthorOfPost } = props;
   const {
     state: { [`post-${postId}`]: post },
     setState,
@@ -116,7 +112,7 @@ const DetailPost = (props) => {
     {
       id: "edit",
       label: "Edit",
-      hidden: !(isAuthorOfPost && hasDelete),
+      hidden: !isAuthorOfPost,
       onclick: () => {
         openModalWithOutRender("MODAL_NEW_POST");
 
@@ -129,7 +125,7 @@ const DetailPost = (props) => {
     {
       id: "delete",
       label: "Delete",
-      hidden: !(isAuthorOfPost && hasDelete),
+      hidden: !isAuthorOfPost,
       critical: true,
       onclick: () => {
         openModalWithOutRender("CONFIRM_DELETE_POST");
@@ -200,7 +196,14 @@ const DetailPost = (props) => {
 
           {imageUrl && (
             <div className="image">
-              <img src={imageUrl} />
+              <PreviewImageFullScreen />
+              <img
+                className="img-post cursor-pointer transition-02"
+                src={imageUrl}
+                onClick={() =>
+                  previewImageFullScreenSubs.updateState({ imgSrc: imageUrl })
+                }
+              />
             </div>
           )}
 
