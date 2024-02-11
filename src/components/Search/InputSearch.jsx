@@ -3,10 +3,10 @@ import { IconSearchDeActive } from "@assets/icons/icon";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback, useRef, useState } from "react";
-import { TIME_DELAY_SEARCH_INPUT } from "../../utils/constant";
-import { useSubscription } from "global-state-hook";
+import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 import PreviewSearch from "./PreviewSearch";
 
@@ -22,6 +22,8 @@ function InputSearch() {
   const [inputSearch, setInputSearch] = useState("");
   const refInput = useRef(null);
   const [focusInput, setFocusInput] = useState(false);
+  const [dataPreview, setDataPreview] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   document.onclick = () => {
     setFocusInput(false);
@@ -32,13 +34,16 @@ function InputSearch() {
       setKeySearchUser({
         keySearchUser: value.trim(),
       });
-    }, TIME_DELAY_SEARCH_INPUT)
+    }, TIME_DELAY_FETCH_API),
+    []
   );
 
-  const handleChangeInput = useCallback((value) => {
+  const handleChangeInput = (value) => {
+    setLoadingSearch(true);
+    setDataPreview([]);
     setInputSearch(value);
     handleDebounceSearch(value);
-  }, []);
+  };
 
   const handleClearInputSearch = (e) => {
     handleChangeInput("");
@@ -101,7 +106,14 @@ function InputSearch() {
         )}
       </Flex>
 
-      <PreviewSearch focusInput={focusInput} />
+      <PreviewSearch
+        focusInput={focusInput}
+        dataPreview={dataPreview}
+        setDataPreview={setDataPreview}
+        loadingSearch={loadingSearch}
+        setLoadingSearch={setLoadingSearch}
+        inputSearch={inputSearch}
+      />
     </Flex>
   );
 }
