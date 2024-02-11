@@ -13,3 +13,7 @@ export const styleAppSubscription = createSubscription(styleDark);
 export const socketIoSubs = createSubscription({});
 
 export const previewImageFullScreenSubs = createSubscription({ imgSrc: "" });
+
+export const searchInputSubs = createSubscription({
+  keySearchUser: "",
+});

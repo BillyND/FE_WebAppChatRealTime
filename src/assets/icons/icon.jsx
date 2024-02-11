@@ -1,5 +1,6 @@
 import { TYPE_STYLE_APP } from "@utils/constant";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
+import styled from "styled-components";
 
 export const IconMoreDetail = (props) => (
   <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
@@ -404,4 +405,17 @@ export const IconDash = (props) => {
       />
     </svg>
   );
+};
+
+export const WrapIconAntdDeActive = ({ children, style }) => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON } = styleApp || {};
+
+  const StyledWrapIcon = styled.div`
+    svg {
+      fill: ${STROKE_COLOR_ICON.DE_ACTIVE} !important;
+    }
+  `;
+
+  return <StyledWrapIcon style={style}>{children}</StyledWrapIcon>;
 };

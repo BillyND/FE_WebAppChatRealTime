@@ -6,20 +6,35 @@ export const WrapSearchScreen = styled.div`
   height: 100vh;
   padding-top: 80px !important;
   font-weight: 400 !important;
+  max-width: 600px;
+  margin: auto;
+
+  * {
+    transition: 0.2s;
+  }
+
+  .button-cancel-search {
+    &:active {
+      scale: 0.9;
+    }
+  }
 
   .label-search {
-    padding: 12px 16px !important;
+    padding: 8px 12px !important;
     width: 100%;
     width: 100%;
-    max-width: 550px;
-    border: 0.5px solid
+    border: 1px solid
       ${(p) => (p.typeStyle === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9")};
     display: flex;
     align-items: center;
     border-radius: 16px;
+    font-size: 14px;
+    margin: 0;
 
     .prefix-input-search {
-      padding: ${(p) => (p.isMobile ? "0" : "8px")};
+      height: fit-content;
+      width: fit-content;
+      padding: ${(p) => (p.isMobile ? "0px" : "8px")};
     }
 
     .suffix-input-search {
@@ -40,6 +55,22 @@ export const WrapSearchScreen = styled.div`
       height: ${(p) => (p.isMobile ? "20px" : "36px")};
       border: none;
       outline: none;
+    }
+  }
+
+  .wrap-preview-search {
+    box-shadow: ${(p) =>
+      p.isMobile
+        ? "0"
+        : "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px"};
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 60px;
+    word-break: break-all;
+
+    * {
+      overflow-x: hidden;
     }
   }
 `;
