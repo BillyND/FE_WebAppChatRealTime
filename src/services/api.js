@@ -97,6 +97,10 @@ export const updateCommentOfPost = (payload) => {
 };
 
 // <===API USER===>
+export const getUser = (page = 1, limit = 10) => {
+  return axios.get(`users?page=${page}&limit=${limit}`, tokenHeaders());
+};
+
 export const searchUserByName = (payload) => {
   return axios.post(`users/search`, payload, tokenHeaders());
 };

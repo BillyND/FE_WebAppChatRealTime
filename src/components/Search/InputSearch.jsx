@@ -10,7 +10,8 @@ import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 import PreviewSearch from "./PreviewSearch";
 
-function InputSearch() {
+function InputSearch(props) {
+  const { dataAllUser, setDataAllUser } = props;
   const {
     styleApp: { inputSearch: inputSearchStyle },
   } = useStyleApp();
@@ -22,7 +23,7 @@ function InputSearch() {
   const [inputSearch, setInputSearch] = useState("");
   const refInput = useRef(null);
   const [focusInput, setFocusInput] = useState(false);
-  const [dataPreview, setDataPreview] = useState([]);
+
   const [loadingSearch, setLoadingSearch] = useState(false);
 
   document.onclick = () => {
@@ -40,7 +41,10 @@ function InputSearch() {
 
   const handleChangeInput = (value) => {
     setLoadingSearch(true);
-    setDataPreview([]);
+    setDataAllUser({
+      ...dataAllUser,
+      resultsPreview: [],
+    });
     setInputSearch(value);
     handleDebounceSearch(value);
   };
@@ -108,8 +112,8 @@ function InputSearch() {
 
       <PreviewSearch
         focusInput={focusInput}
-        dataPreview={dataPreview}
-        setDataPreview={setDataPreview}
+        dataAllUser={dataAllUser}
+        setDataAllUser={setDataAllUser}
         loadingSearch={loadingSearch}
         setLoadingSearch={setLoadingSearch}
         inputSearch={inputSearch}

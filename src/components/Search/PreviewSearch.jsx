@@ -1,5 +1,4 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
-import { UserThumbnail } from "@UI//UserThumbnail";
 import { RightOutlined } from "@ant-design/icons";
 import { IconSearchDeActive, WrapIconAntdDeActive } from "@assets/icons/icon";
 import { searchUserByName } from "@services/api";
@@ -9,17 +8,17 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { showPopupError } from "@utils/utilities";
-import { Flex, message } from "antd";
+import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { Fragment, useEffect, useState } from "react";
-import { followersUser } from "../../services/api";
+import React, { Fragment, useEffect } from "react";
+import ItemPreviewUser from "./ItemPreviewUser";
 
 function PreviewSearch(props) {
   const {
     focusInput,
-    setDataPreview,
+    setDataAllUser,
     setLoadingSearch,
-    dataPreview,
+    dataAllUser,
     loadingSearch,
     inputSearch,
   } = props;
@@ -31,10 +30,7 @@ function PreviewSearch(props) {
     state: { keySearchUser },
   } = useSubscription(searchInputSubs, ["keySearchUser"]);
   const { isMobile } = useWindowSize();
-  const { infoUser, login } = useAuthUser();
-  const [localFollowers, setLocalFollowers] = useState(
-    infoUser.followers || []
-  );
+  const { infoUser } = useAuthUser();
 
   const borderStyle = `1px solid ${
     type === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9"
@@ -46,7 +42,10 @@ function PreviewSearch(props) {
 
       const resSearch = await searchUserByName({ username: keySearchUser });
 
-      setDataPreview(resSearch.filter((item) => item?._id !== infoUser._id));
+      setDataAllUser({
+        ...dataAllUser,
+        resultsPreview: resSearch.filter((item) => item?._id !== infoUser._id),
+      });
     } catch (error) {
       showPopupError(error);
       console.error("===>Error handleSearchUser:", error);
@@ -59,28 +58,6 @@ function PreviewSearch(props) {
     handleSearchUser();
   }, [keySearchUser]);
 
-  const handleFollow = async (userId) => {
-    try {
-      const updatedFollowers = localFollowers.includes(userId)
-        ? localFollowers.filter((item) => item !== userId)
-        : [...localFollowers, userId];
-
-      setLocalFollowers(updatedFollowers);
-
-      login({ infoUser: { ...infoUser, followers: updatedFollowers } });
-
-      if (localFollowers.includes(userId)) {
-        message.success("Unfollowed");
-      } else {
-        message.success("Followed");
-      }
-
-      await followersUser({ userId });
-    } catch (error) {
-      showPopupError(error);
-    }
-  };
-
   return (
     <div
       onClick={(e) => {
@@ -90,8 +67,8 @@ function PreviewSearch(props) {
       style={{
         ...(isMobile ? styleApp : inputSearchStyle),
         height:
-          inputSearch && focusInput
-            ? !dataPreview.length
+          inputSearch.trim() && focusInput
+            ? !dataAllUser?.resultsPreview?.length
               ? "fit-content"
               : `calc(100vh - 200px)`
             : "0px",
@@ -140,38 +117,15 @@ function PreviewSearch(props) {
         {loadingSearch && <SpinnerLoading />}
 
         <Flex vertical gap={16} className="mt-2">
-          {dataPreview.map((user) => {
-            const { _id: userId, username, avaUrl } = user;
-
-            const isFollowed = localFollowers.includes(userId);
-
+          {dataAllUser.resultsPreview.map((user) => {
             return (
-              <Flex vertical gap={16} key={userId} className="cursor-pointer">
-                <hr className="gray" />
-
-                <Flex justify="space-between" align="center">
-                  <Flex align="center" gap={12}>
-                    <UserThumbnail avaUrl={avaUrl} />
-                    <span> {username}</span>
-                  </Flex>
-
-                  <Flex
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFollow(userId);
-                    }}
-                    style={{
-                      border: borderStyle,
-                      color: isFollowed ? "#9E9E9E" : undefined,
-                    }}
-                    align="center"
-                    justify="center"
-                    className=" button-follow cursor-pointer"
-                  >
-                    {isFollowed ? "Followed" : "Follow"}
-                  </Flex>
-                </Flex>
-              </Flex>
+              <Fragment key={user?._id}>
+                <ItemPreviewUser
+                  user={user}
+                  dataAllUser={dataAllUser}
+                  setDataAllUser={setDataAllUser}
+                />
+              </Fragment>
             );
           })}
         </Flex>

@@ -9,10 +9,6 @@ export const WrapSearchScreen = styled.div`
   max-width: 600px;
   margin: auto;
 
-  * {
-    transition: 0.2s;
-  }
-
   .button-cancel-search {
     &:active {
       scale: 0.9;
@@ -72,10 +68,26 @@ export const WrapSearchScreen = styled.div`
     * {
       overflow-x: hidden;
     }
+  }
 
-    .button-follow {
-      padding: 4px 18px;
-      border-radius: 10px;
+  .button-follow {
+    padding: 4px 18px;
+    border-radius: 10px;
+
+    &:active {
+      scale: 0.95;
     }
+  }
+
+  .wrap-list-all-user {
+    height: calc(100vh - 200px);
+  }
+
+  .count-follower {
+    font-size: 13px;
+  }
+
+  .user-namer {
+    font-weight: 500;
   }
 `;
