@@ -12,11 +12,13 @@ import "./global.scss";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import SearchScreen from "./components/Search/SearchScreen";
 import { BrowserRouter } from "react-router-dom";
 import Layout from "./Layout";
 import MessageScreen from "./components/Message/MessageScreen";
 import UseScreen from "./components/User/UseScreen";
+import { message } from "antd";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -67,6 +69,11 @@ function App() {
     styleApp,
     styleApp: { type: typeStyle },
   } = useStyleApp();
+  const { isMobile } = useWindowSize();
+
+  message.config({
+    maxCount: isMobile ? 1 : 3,
+  });
 
   return (
     <WrapStyledApp style={styleApp} className="App" typeStyle={typeStyle}>

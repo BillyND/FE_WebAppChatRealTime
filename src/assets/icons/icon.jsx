@@ -411,11 +411,15 @@ export const WrapIconAntdDeActive = ({ children, style }) => {
   const { styleApp } = useStyleApp();
   const { STROKE_COLOR_ICON } = styleApp || {};
 
-  const StyledWrapIcon = styled.div`
-    svg {
-      fill: ${STROKE_COLOR_ICON.DE_ACTIVE} !important;
-    }
-  `;
-
-  return <StyledWrapIcon style={style}>{children}</StyledWrapIcon>;
+  return (
+    <StyledWrapIcon STROKE_COLOR_ICON={STROKE_COLOR_ICON} style={style}>
+      {children}
+    </StyledWrapIcon>
+  );
 };
+
+const StyledWrapIcon = styled.div`
+  svg {
+    fill: ${(p) => p.STROKE_COLOR_ICON.DE_ACTIVE} !important;
+  }
+`;

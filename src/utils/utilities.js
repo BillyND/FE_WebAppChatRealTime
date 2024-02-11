@@ -183,7 +183,11 @@ export const formatTimeAgo = (timeInMilliseconds) => {
 };
 
 export const showPopupError = (error) => {
-  message.error(error || "Server error!");
+  try {
+    message.error(typeof error === "string" ? error : "Server error!");
+  } catch (error) {
+    message.error("Server error!");
+  }
 };
 
 export const updateCurrentPost = (

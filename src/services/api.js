@@ -95,3 +95,13 @@ export const updateCommentOfPost = (payload) => {
     tokenHeaders()
   );
 };
+
+// <===API USER===>
+export const searchUserByName = (payload) => {
+  return axios.post(`users/search`, payload, tokenHeaders());
+};
+
+export const followersUser = (payload) => {
+  const currentUserId = infoUserSubscription.state?.infoUser?._id;
+  return axios.put(`users/${currentUserId}/follow`, payload, tokenHeaders());
+};

@@ -72,5 +72,10 @@ export const WrapSearchScreen = styled.div`
     * {
       overflow-x: hidden;
     }
+
+    .button-follow {
+      padding: 4px 18px;
+      border-radius: 10px;
+    }
   }
 `;

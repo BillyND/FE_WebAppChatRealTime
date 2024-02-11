@@ -14,6 +14,8 @@ export const initInfoUser = {
     createdAt: "",
     updatedAt: "",
     username: "",
+    followers: [],
+    followings: [],
   },
   accessToken: "",
   refreshToken: "",

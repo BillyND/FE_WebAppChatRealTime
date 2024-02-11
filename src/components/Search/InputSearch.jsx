@@ -23,6 +23,10 @@ function InputSearch() {
   const refInput = useRef(null);
   const [focusInput, setFocusInput] = useState(false);
 
+  document.onclick = () => {
+    setFocusInput(false);
+  };
+
   const handleDebounceSearch = useCallback(
     debounce((value) => {
       setKeySearchUser({
@@ -42,7 +46,13 @@ function InputSearch() {
   };
 
   return (
-    <Flex vertical style={{ position: "relative" }}>
+    <Flex
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      vertical
+      style={{ position: "relative" }}
+    >
       <Flex justify="center" align="center" gap={8} className=" none-copy">
         <label
           className="label-search transition-02"
@@ -51,10 +61,11 @@ function InputSearch() {
           tabIndex="0"
           style={{
             ...inputSearchStyle,
-            ...(!isMobile && {
-              borderBottomLeftRadius: keySearchUser ? "0px" : "16px",
-              borderBottomRightRadius: keySearchUser ? "0px" : "16px",
-            }),
+            ...(!isMobile &&
+              focusInput && {
+                borderBottomLeftRadius: keySearchUser ? "0px" : "16px",
+                borderBottomRightRadius: keySearchUser ? "0px" : "16px",
+              }),
           }}
         >
           <div className="prefix-input-search">
@@ -62,7 +73,6 @@ function InputSearch() {
           </div>
           <input
             onFocus={() => setFocusInput(true)}
-            onBlur={() => setFocusInput(false)}
             ref={refInput}
             value={inputSearch}
             onChange={(e) => handleChangeInput(e.target.value)}
@@ -91,7 +101,7 @@ function InputSearch() {
         )}
       </Flex>
 
-      <PreviewSearch />
+      <PreviewSearch focusInput={focusInput} />
     </Flex>
   );
 }
