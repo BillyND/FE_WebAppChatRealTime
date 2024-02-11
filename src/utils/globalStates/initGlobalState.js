@@ -15,5 +15,8 @@ export const socketIoSubs = createSubscription({});
 export const previewImageFullScreenSubs = createSubscription({ imgSrc: "" });
 
 export const searchInputSubs = createSubscription({
+  next: { page: 1, limit: 10 },
   keySearchUser: "",
+  results: [],
+  resultsPreview: [],
 });

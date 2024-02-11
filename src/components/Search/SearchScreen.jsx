@@ -12,11 +12,6 @@ function SearchScreen() {
     styleApp: { type },
   } = useStyleApp();
   const { isMobile } = useWindowSize();
-  const [dataAllUser, setDataAllUser] = useState({
-    next: { page: 1, limit: 10 },
-    results: [],
-    resultsPreview: [],
-  });
 
   useEffect(() => {
     searchInputSubs.updateState({
@@ -27,14 +22,8 @@ function SearchScreen() {
   return (
     <WrapSearchScreen id="search-screen" isMobile={isMobile} typeStyle={type}>
       <Flex vertical gap={16}>
-        <InputSearch
-          dataAllUser={dataAllUser}
-          setDataAllUser={setDataAllUser}
-        />
-        <ListAllUsers
-          dataAllUser={dataAllUser}
-          setDataAllUser={setDataAllUser}
-        />
+        <InputSearch />
+        <ListAllUsers />
       </Flex>
     </WrapSearchScreen>
   );

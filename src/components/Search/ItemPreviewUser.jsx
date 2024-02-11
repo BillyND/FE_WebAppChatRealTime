@@ -9,9 +9,11 @@ import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { useCallback } from "react";
 import { debounce } from "lodash";
 import { followersUser } from "../../services/api";
+import { useSubscription } from "global-state-hook";
+import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 
 function ItemPreviewUser(props) {
-  const { user, dataAllUser, setDataAllUser } = props;
+  const { user } = props;
   const { _id: userId, username, avaUrl, followings } = user;
   const {
     infoUser,
@@ -21,6 +23,10 @@ function ItemPreviewUser(props) {
   const {
     styleApp: { type },
   } = useStyleApp();
+  const {
+    state: { keySearchUser, resultsPreview, results },
+    setState: setDataSearchUser,
+  } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
   const isFollowed = followers.includes(userId);
 
   const borderStyle = `1px solid ${
@@ -34,8 +40,6 @@ function ItemPreviewUser(props) {
         : [...followers, userId];
 
       let targetUserFollow = null;
-
-      const { results, resultsPreview } = dataAllUser || {};
 
       targetUserFollow = results.find((item) => item._id === userId);
       targetUserFollow.followings = targetUserFollow.followings.includes(
@@ -58,8 +62,7 @@ function ItemPreviewUser(props) {
         return user;
       });
 
-      setDataAllUser({
-        ...dataAllUser,
+      setDataSearchUser({
         results: updatedResults,
         resultsPreview: updatedResultsPreview,
       });

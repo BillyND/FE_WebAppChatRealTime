@@ -11,14 +11,13 @@ import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 import PreviewSearch from "./PreviewSearch";
 
 function InputSearch(props) {
-  const { dataAllUser, setDataAllUser } = props;
   const {
     styleApp: { inputSearch: inputSearchStyle },
   } = useStyleApp();
   const {
     state: { keySearchUser },
-    setState: setKeySearchUser,
-  } = useSubscription(searchInputSubs, ["keySearchUser"]);
+    setState: setDataSearchUser,
+  } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
   const { isMobile } = useWindowSize();
   const [inputSearch, setInputSearch] = useState("");
   const refInput = useRef(null);
@@ -32,7 +31,7 @@ function InputSearch(props) {
 
   const handleDebounceSearch = useCallback(
     debounce((value) => {
-      setKeySearchUser({
+      setDataSearchUser({
         keySearchUser: value.trim(),
       });
     }, TIME_DELAY_FETCH_API),
@@ -41,8 +40,7 @@ function InputSearch(props) {
 
   const handleChangeInput = (value) => {
     setLoadingSearch(true);
-    setDataAllUser({
-      ...dataAllUser,
+    setDataSearchUser({
       resultsPreview: [],
     });
     setInputSearch(value);
@@ -112,8 +110,6 @@ function InputSearch(props) {
 
       <PreviewSearch
         focusInput={focusInput}
-        dataAllUser={dataAllUser}
-        setDataAllUser={setDataAllUser}
         loadingSearch={loadingSearch}
         setLoadingSearch={setLoadingSearch}
         inputSearch={inputSearch}

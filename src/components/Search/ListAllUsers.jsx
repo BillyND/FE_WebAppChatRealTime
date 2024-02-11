@@ -6,9 +6,14 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { getUser } from "../../services/api";
 import { showPopupError } from "../../utils/utilities";
 import ItemPreviewUser from "./ItemPreviewUser";
+import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
+import { useSubscription } from "global-state-hook";
 
 export default function ListAllUsers(props) {
-  const { dataAllUser, setDataAllUser } = props;
+  const {
+    state: { keySearchUser, resultsPreview, results, next },
+    setState: setDataSearchUser,
+  } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
   const [loadingFetch, setLoadingFetch] = useState(false);
   const { infoUser } = useAuthUser();
   const scrollContainerRef = useRef();
@@ -16,12 +21,12 @@ export default function ListAllUsers(props) {
 
   useEffect(() => {
     if (isBottom) {
-      handleGetUser(dataAllUser.next);
+      handleGetUser(next);
     }
   }, [isBottom]);
 
   useEffect(() => {
-    handleGetUser(dataAllUser.next);
+    handleGetUser(next);
   }, []);
 
   const handleGetUser = async (next) => {
@@ -34,15 +39,14 @@ export default function ListAllUsers(props) {
     setLoadingFetch(true);
     try {
       const resGetUser = await getUser(page, limit);
-      const { next, results } = resGetUser;
+      const { next, results: resResult } = resGetUser;
 
-      setDataAllUser((prevData) => ({
-        ...prevData,
+      setDataSearchUser({
         next,
-        results: [...prevData.results, ...results].filter(
+        results: [...results, ...resResult].filter(
           (user) => user?._id !== infoUser?._id
         ),
-      }));
+      });
     } catch (error) {
       showPopupError(error);
     } finally {
@@ -57,21 +61,15 @@ export default function ListAllUsers(props) {
       gap={16}
       className="wrap-list-all-user enable-scroll pb-3"
     >
-      {dataAllUser.results.map((user) => (
+      {results.map((user) => (
         <Fragment key={user?._id}>
-          <ItemPreviewUser
-            user={user}
-            setDataAllUser={setDataAllUser}
-            dataAllUser={dataAllUser}
-          />
+          <ItemPreviewUser user={user} />
         </Fragment>
       ))}
       <span>
         <hr className="gray ml-5" />
       </span>
-      {dataAllUser.next && (
-        <SpinnerLoading style={{ opacity: loadingFetch ? "1" : "0" }} />
-      )}
+      {next && <SpinnerLoading style={{ opacity: loadingFetch ? "1" : "0" }} />}
     </Flex>
   );
 }

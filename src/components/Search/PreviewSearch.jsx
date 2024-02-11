@@ -14,21 +14,15 @@ import React, { Fragment, useEffect } from "react";
 import ItemPreviewUser from "./ItemPreviewUser";
 
 function PreviewSearch(props) {
-  const {
-    focusInput,
-    setDataAllUser,
-    setLoadingSearch,
-    dataAllUser,
-    loadingSearch,
-    inputSearch,
-  } = props;
+  const { focusInput, setLoadingSearch, loadingSearch, inputSearch } = props;
   const {
     styleApp,
     styleApp: { type, inputSearch: inputSearchStyle },
   } = useStyleApp();
   const {
-    state: { keySearchUser },
-  } = useSubscription(searchInputSubs, ["keySearchUser"]);
+    state: { keySearchUser, resultsPreview },
+    setState: setDataSearchUser,
+  } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
   const { isMobile } = useWindowSize();
   const { infoUser } = useAuthUser();
 
@@ -42,8 +36,7 @@ function PreviewSearch(props) {
 
       const resSearch = await searchUserByName({ username: keySearchUser });
 
-      setDataAllUser({
-        ...dataAllUser,
+      setDataSearchUser({
         resultsPreview: resSearch.filter((item) => item?._id !== infoUser._id),
       });
     } catch (error) {
@@ -68,7 +61,7 @@ function PreviewSearch(props) {
         ...(isMobile ? styleApp : inputSearchStyle),
         height:
           inputSearch.trim() && focusInput
-            ? !dataAllUser?.resultsPreview?.length
+            ? !resultsPreview?.length
               ? "fit-content"
               : `calc(100vh - 200px)`
             : "0px",
@@ -117,14 +110,10 @@ function PreviewSearch(props) {
         {loadingSearch && <SpinnerLoading />}
 
         <Flex vertical gap={16} className="mt-2">
-          {dataAllUser.resultsPreview.map((user) => {
+          {resultsPreview.map((user) => {
             return (
               <Fragment key={user?._id}>
-                <ItemPreviewUser
-                  user={user}
-                  dataAllUser={dataAllUser}
-                  setDataAllUser={setDataAllUser}
-                />
+                <ItemPreviewUser user={user} />
               </Fragment>
             );
           })}
