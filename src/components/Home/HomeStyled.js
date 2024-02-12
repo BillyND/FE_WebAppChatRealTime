@@ -6,7 +6,7 @@ export const WrapHomeScreen = styled.div`
   padding-top: 70px !important;
   width: 100%;
   display: grid;
-  gap: 24px;
+  gap: 16px;
   padding: ${(props) =>
     props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
 `;

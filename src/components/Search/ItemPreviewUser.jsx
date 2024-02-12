@@ -116,7 +116,7 @@ function ItemPreviewUser(props) {
             }}
             style={{
               border: borderStyle,
-              color: isFollowed ? "#9E9E9E" : undefined,
+              color: isFollowed ? "#797979a6" : undefined,
             }}
             align="center"
             justify="center"

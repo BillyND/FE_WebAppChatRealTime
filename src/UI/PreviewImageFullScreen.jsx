@@ -21,6 +21,7 @@ function PreviewImageFullScreen() {
     >
       <div>
         <img
+          draggable={false}
           onClick={(e) => e.stopPropagation()}
           className="img-preview-full-screen"
           src={imgSrc}

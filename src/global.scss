@@ -163,7 +163,8 @@
   text-align: center !important;
 }
 
-.none-copy * {
+.none-copy,
+img {
   -webkit-user-select: none !important;
   -khtml-user-select: none !important;
   -moz-user-select: none !important;

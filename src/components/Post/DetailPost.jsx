@@ -198,8 +198,10 @@ const DetailPost = (props) => {
             <div className="image">
               <PreviewImageFullScreen />
               <img
-                className="img-post cursor-pointer transition-02"
+                draggable={false}
                 src={imageUrl}
+                className="img-post cursor-pointer transition-02"
+                style={{ backgroundImage: `url(${imageUrl})` }}
                 onClick={() =>
                   previewImageFullScreenSubs.updateState({ imgSrc: imageUrl })
                 }

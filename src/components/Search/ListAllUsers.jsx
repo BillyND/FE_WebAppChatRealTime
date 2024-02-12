@@ -59,7 +59,7 @@ export default function ListAllUsers(props) {
       ref={scrollContainerRef}
       vertical
       gap={16}
-      className="wrap-list-all-user enable-scroll pb-3"
+      className={`wrap-list-all-user enable-scroll px-2 ${next && "pb-3"}`}
     >
       {results.map((user) => (
         <Fragment key={user?._id}>
