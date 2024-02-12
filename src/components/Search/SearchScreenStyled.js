@@ -89,5 +89,9 @@ export const WrapSearchScreen = styled.div`
 
   .user-namer {
     font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;

@@ -1,16 +1,14 @@
-import { Flex } from "antd";
-import React from "react";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
-import { message } from "antd";
-import { showPopupError } from "../../utils/utilities";
-import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
-import { useCallback } from "react";
-import { debounce } from "lodash";
-import { followersUser } from "../../services/api";
+import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
+import { debounce } from "lodash";
+import React, { useCallback } from "react";
+import { followersUser } from "../../services/api";
+import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
+import { showPopupError } from "../../utils/utilities";
 
 function ItemPreviewUser(props) {
   const { user } = props;
