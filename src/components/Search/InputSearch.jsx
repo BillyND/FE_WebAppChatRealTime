@@ -76,7 +76,7 @@ function InputSearch(props) {
     >
       <Flex justify="center" align="center" gap={8} className="none-copy">
         <label
-          className="label-search"
+          className="label-search transition-02"
           tabIndex="0"
           style={{
             ...inputSearchStyle,
@@ -96,7 +96,7 @@ function InputSearch(props) {
             value={inputSearch}
             onChange={(e) => handleChangeInput(e.target.value)}
             style={inputSearchStyle}
-            className="input-search"
+            className="input-search transition-02"
             placeholder="Search"
           />
 

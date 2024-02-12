@@ -34,14 +34,10 @@ import {
 import { scrollToTopOfElement } from "@utils/utilities";
 
 const ButtonSettings = (props) => {
-  const { handleNavigation } = props;
+  const { logout } = useAuthUser();
   const [isHover, setIsHover] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    styleApp,
-    styleApp: { popoverSettings },
-    updateStyleApp,
-  } = useStyleApp();
+  const { styleApp, updateStyleApp } = useStyleApp();
   const { isMobile } = useWindowSize();
   const [loadingLogout, setLoadingLogout] = useState(false);
 
@@ -53,7 +49,7 @@ const ButtonSettings = (props) => {
     setLoadingLogout(true);
     await postLogout();
     setLoadingLogout(false);
-    handleNavigation("/login");
+    logout();
   };
 
   const data = [

@@ -67,7 +67,7 @@ function PreviewSearch(props) {
       onClick={(e) => {
         e.stopPropagation();
       }}
-      className="wrap-preview-search transition-02 enable-scroll  none-copy"
+      className="wrap-preview-search transition-02 enable-scroll none-copy"
       style={{
         ...(isMobile ? styleApp : inputSearchStyle),
         height:

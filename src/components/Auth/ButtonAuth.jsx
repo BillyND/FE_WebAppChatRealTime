@@ -95,8 +95,10 @@ export const ButtonAuth = ({
         message.success(resRegister?.message);
         navigate("/login");
       } else {
-        message.error(resRegister?.message);
+        message.error(resRegister?.data?.message);
       }
+
+      console.log("===>here", resRegister);
 
       setLoadingAuth(false);
     } catch (error) {

@@ -90,14 +90,14 @@ function App() {
             <Route path="search" element={<SearchScreen />} />
             <Route path="message" element={<MessageScreen />} />
             <Route path="user/:userId" element={<UseScreen />} />
-
-            {/* <=== Auth screen ===> */}
-            <Route path="logout" element={<AuthScreen />} />
-            <Route path="login" element={<AuthScreen />} />
-            <Route path="register" element={<AuthScreen />} />
-            <Route path="forgot-password" element={<AuthScreen />} />
             <Route path="*" element={<HomeScreen />} />
           </Route>
+
+          {/* <=== Auth screen ===> */}
+          <Route path="logout" element={<AuthScreen />} />
+          <Route path="login" element={<AuthScreen />} />
+          <Route path="register" element={<AuthScreen />} />
+          <Route path="forgot-password" element={<AuthScreen />} />
         </Routes>
       </BrowserRouter>
       <ModalNewPost placeHolderInputPost={placeHolderInputPost} />
