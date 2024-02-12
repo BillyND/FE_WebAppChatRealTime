@@ -41,7 +41,10 @@ function ItemPreviewUser(props) {
 
       let targetUserFollow = null;
 
-      targetUserFollow = results.find((item) => item._id === userId);
+      targetUserFollow = [...results, ...resultsPreview].find(
+        (item) => item._id === userId
+      );
+
       targetUserFollow.followings = targetUserFollow.followings.includes(
         currentUserId
       )
