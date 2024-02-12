@@ -24,7 +24,7 @@ function ItemPreviewUser(props) {
     styleApp: { type },
   } = useStyleApp();
   const {
-    state: { keySearchUser, resultsPreview, results },
+    state: { resultsPreview, results },
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
   const isFollowed = followers.includes(userId);
@@ -33,53 +33,53 @@ function ItemPreviewUser(props) {
     type === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9"
   }`;
 
+  /**
+   * Function to handle follow/unfollow action for a user.
+   * @param {string} userId - The ID of the user to follow/unfollow.
+   */
   const handleFollow = async (userId) => {
     try {
+      // Update followers list based on whether the user is already followed or not
       const updatedFollowers = followers.includes(userId)
         ? followers.filter((item) => item !== userId)
         : [...followers, userId];
 
-      let targetUserFollow = null;
-
-      targetUserFollow = [...results, ...resultsPreview].find(
+      // Find the target user in search results or preview results
+      const targetUser = [...results, ...resultsPreview].find(
         (item) => item._id === userId
       );
 
-      targetUserFollow.followings = targetUserFollow.followings.includes(
-        currentUserId
-      )
-        ? targetUserFollow.followings.filter((item) => item !== currentUserId)
-        : [...targetUserFollow.followings, currentUserId];
+      // Update the followings list of the target user
+      targetUser.followings = targetUser.followings.includes(currentUserId)
+        ? targetUser.followings.filter((item) => item !== currentUserId)
+        : [...targetUser.followings, currentUserId];
 
-      const updatedResults = results.map((user) => {
-        if (user._id === targetUserFollow._id) {
-          return targetUserFollow;
-        }
-        return user;
-      });
+      // Update the search results with the modified target user
+      const updatedResults = results.map((user) =>
+        user._id === targetUser._id ? targetUser : user
+      );
 
-      const updatedResultsPreview = resultsPreview.map((user) => {
-        if (user._id === targetUserFollow._id) {
-          return targetUserFollow;
-        }
-        return user;
-      });
+      // Update the preview results with the modified target user
+      const updatedResultsPreview = resultsPreview.map((user) =>
+        user._id === targetUser._id ? targetUser : user
+      );
 
+      // Update the data for search user with updated results
       setDataSearchUser({
         results: updatedResults,
         resultsPreview: updatedResultsPreview,
       });
 
+      // Update user info with updated followers list
       login({ infoUser: { ...infoUser, followers: updatedFollowers } });
 
-      if (followers.includes(userId)) {
-        message.success("Unfollowed");
-      } else {
-        message.success("Followed");
-      }
+      // Show success message based on follow/unfollow action
+      message.success(followers.includes(userId) ? "Unfollowed" : "Followed");
 
+      // Debounce and update the followers list for the user
       debounceUpdateFollowers(userId);
     } catch (error) {
+      // Show error popup and log the error
       showPopupError(error);
       console.error("===>Error handleFollow", error);
     }

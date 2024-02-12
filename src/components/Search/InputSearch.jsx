@@ -9,25 +9,39 @@ import React, { useCallback, useRef, useState } from "react";
 import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 import PreviewSearch from "./PreviewSearch";
+import { useEffect } from "react";
 
+/**
+ * Functional component for search input.
+ * @param {object} props - Props for the InputSearch component.
+ */
 function InputSearch(props) {
   const {
     styleApp: { inputSearch: inputSearchStyle },
   } = useStyleApp();
+
   const {
     state: { keySearchUser },
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
+
   const { isMobile } = useWindowSize();
   const [inputSearch, setInputSearch] = useState("");
   const refInput = useRef(null);
   const [focusInput, setFocusInput] = useState(false);
-
   const [loadingSearch, setLoadingSearch] = useState(false);
 
-  document.onclick = () => {
-    setFocusInput(false);
-  };
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setFocusInput(false);
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const handleDebounceSearch = useCallback(
     debounce((value) => {
@@ -47,7 +61,7 @@ function InputSearch(props) {
     handleDebounceSearch(value);
   };
 
-  const handleClearInputSearch = (e) => {
+  const handleClearInputSearch = () => {
     handleChangeInput("");
     refInput.current?.focus();
   };
@@ -60,18 +74,16 @@ function InputSearch(props) {
       vertical
       style={{ position: "relative" }}
     >
-      <Flex justify="center" align="center" gap={8} className=" none-copy">
+      <Flex justify="center" align="center" gap={8} className="none-copy">
         <label
-          className="label-search transition-02"
-          type="search"
-          value=""
+          className="label-search"
           tabIndex="0"
           style={{
             ...inputSearchStyle,
             ...(!isMobile &&
               focusInput && {
-                borderBottomLeftRadius: keySearchUser ? "0px" : "16px",
-                borderBottomRightRadius: keySearchUser ? "0px" : "16px",
+                borderBottomLeftRadius: inputSearch ? "0px" : "16px",
+                borderBottomRightRadius: inputSearch ? "0px" : "16px",
               }),
           }}
         >

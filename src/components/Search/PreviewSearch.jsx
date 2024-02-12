@@ -30,14 +30,25 @@ function PreviewSearch(props) {
     type === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9"
   }`;
 
+  /**
+   * Function to handle searching for users based on a provided username.
+   */
   const handleSearchUser = async () => {
     try {
+      // Check if keySearchUser exists
       if (!keySearchUser) return;
 
+      // Search for users based on the username
       const resSearch = await searchUserByName({ username: keySearchUser });
 
+      // Filter search results to exclude the current user
+      const filteredResults = resSearch.filter(
+        (item) => item?._id !== infoUser._id
+      );
+
+      // Update the search results data
       setDataSearchUser({
-        resultsPreview: resSearch.filter((item) => item?._id !== infoUser._id),
+        resultsPreview: filteredResults,
       });
     } catch (error) {
       showPopupError(error);

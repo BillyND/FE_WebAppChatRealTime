@@ -9,11 +9,16 @@ import ItemPreviewUser from "./ItemPreviewUser";
 import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 import { useSubscription } from "global-state-hook";
 
+/**
+ * Functional component to display a list of all users.
+ * @param {object} props - Props for the ListAllUsers component.
+ */
 export default function ListAllUsers(props) {
   const {
-    state: { keySearchUser, resultsPreview, results, next },
+    state: { results, next },
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
+
   const [loadingFetch, setLoadingFetch] = useState(false);
   const { infoUser } = useAuthUser();
   const scrollContainerRef = useRef();
@@ -29,6 +34,10 @@ export default function ListAllUsers(props) {
     handleGetUser(next);
   }, []);
 
+  /**
+   * Function to fetch more users when scrolling to bottom.
+   * @param {object} next - Next page details for user retrieval.
+   */
   const handleGetUser = async (next) => {
     const { page, limit } = next || {};
 
