@@ -17,21 +17,27 @@ export default function HomeScreen() {
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
   const {
-    state: { loading },
-    setState,
-  } = useSubscription(listPostSubs, ["loading"]);
+    state: { listPost, postIdDelete, loading, next },
+    setState: setStateListPost,
+  } = useSubscription(listPostSubs, ["listPost", "loading"]);
+
+  console.log("===>next:", next);
 
   useEffect(() => {
-    isBottom && handleFetchNewPost();
+    next && isBottom && handleFetchNewPost();
   }, [isBottom]);
 
+  useEffect(() => {
+    next && listPost.length < 1 && handleGetListPost({ page: 1, limit: 5 });
+  }, []);
+
   const handleFetchNewPost = debounce(async () => {
-    setState({
+    setStateListPost({
       loading: true,
     });
-    const { next } = listPostSubs.state;
-    next && (await handleGetListPost(next));
-    setState({
+    await handleGetListPost(next);
+
+    setStateListPost({
       loading: false,
     });
   }, TIME_DELAY_SEARCH_INPUT);
@@ -45,7 +51,14 @@ export default function HomeScreen() {
     >
       {!isMobile && <NewPost />}
       <Flex vertical gap={20} className={`${isMobile ? "pb-5" : undefined}`}>
-        <ListPost />
+        <ListPost
+          loading={loading}
+          listPost={listPost}
+          setStateListPost={setStateListPost}
+          postIdDelete={postIdDelete}
+          handleGetListPost={handleGetListPost}
+          keyListPost="listPost"
+        />
         <SpinnerLoading style={{ opacity: loading ? "1" : "0" }} />
       </Flex>
     </WrapHomeScreen>

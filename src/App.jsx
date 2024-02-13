@@ -17,7 +17,7 @@ import SearchScreen from "./components/Search/SearchScreen";
 import { BrowserRouter } from "react-router-dom";
 import Layout from "./Layout";
 import MessageScreen from "./components/Message/MessageScreen";
-import UseScreen from "./components/User/UseScreen";
+import UserScreen from "./components/User/UserScreen";
 import { message } from "antd";
 
 const TriggerNavigate = () => {
@@ -89,7 +89,7 @@ function App() {
             <Route index element={<HomeScreen />} />
             <Route path="search" element={<SearchScreen />} />
             <Route path="message" element={<MessageScreen />} />
-            <Route path="user/:userId" element={<UseScreen />} />
+            <Route path="user/:userId" element={<UserScreen />} />
             <Route path="*" element={<HomeScreen />} />
           </Route>
 

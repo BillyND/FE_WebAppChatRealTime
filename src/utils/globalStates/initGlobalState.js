@@ -4,7 +4,13 @@ import { styleDark } from "../hooks/useStyleApp";
 
 export const infoUserSubscription = createSubscription(initInfoUser);
 
-export const listPostSubs = createSubscription({ listPost: [], loading: true });
+export const listPostSubs = createSubscription({
+  listPost: [],
+  next: { page: 1, limit: 5 },
+  listPostByUser: [],
+  nextByUser: { page: 1, limit: 5 },
+  loading: true,
+});
 
 export const detailPostSubs = createSubscription({});
 

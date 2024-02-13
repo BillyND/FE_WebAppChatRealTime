@@ -1,48 +1,46 @@
-import { useSubscription } from "global-state-hook";
-import React, { Fragment, useEffect } from "react";
+import BaseModal from "@UI//BaseModal";
 import { deletePost } from "@services/api";
-import { listPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useModal } from "@utils/hooks/useModal";
-import { handleGetListPost, updateCurrentPost } from "@utils/utilities";
+import { updateCurrentPost } from "@utils/utilities";
+import React, { Fragment, useEffect } from "react";
 import DetailPost from "./DetailPost";
 import { WrapListPost } from "./StyledPost";
-import BaseModal from "@UI//BaseModal";
 
-function ListPost() {
-  const { infoUser } = useAuthUser();
+function ListPost(props) {
   const {
-    state,
-    state: { listPost, postIdDelete, loading },
-    setState,
-  } = useSubscription(listPostSubs, ["listPost", "loading"]);
+    loading,
+    listPost,
+    setStateListPost,
+    postIdDelete,
+    handleGetListPost,
+    keyListPost,
+  } = props;
+  const { infoUser } = useAuthUser();
   const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
 
-  useEffect(() => {
-    handleGetListPost({ page: 1, limit: 5 });
-  }, []);
-
   const handleConfirmDeletePost = async () => {
-    setState({
+    setStateListPost({
       loading: true,
     });
 
     const filterDeleted =
       listPost.filter((item) => item._id !== postIdDelete) || [];
 
-    await deletePost(listPostSubs.state["postIdDelete"])
+    await deletePost(postIdDelete)
       .then(() => {
-        setState({
-          ...state,
-          listPost: filterDeleted,
+        setStateListPost({
+          [keyListPost]: filterDeleted,
         });
       })
       .finally(() => {
-        setState({
+        setStateListPost({
           loading: false,
         });
         closeModal("CONFIRM_DELETE_POST");
-        filterDeleted.length < 5 && handleGetListPost({ page: 1, limit: 5 });
+        filterDeleted.length < 5 &&
+          typeof handleGetListPost === "function" &&
+          handleGetListPost({ page: 1, limit: 5 });
       });
   };
 
@@ -79,7 +77,7 @@ function ListPost() {
         onCancel={() => closeModal("CONFIRM_DELETE_POST")}
         onOk={handleConfirmDeletePost}
         title="Delete post?"
-        loadingFooter={state?.loading}
+        loadingFooter={loading}
       >
         Post will be permanently deleted. Do you agree?
       </BaseModal>

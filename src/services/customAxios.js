@@ -16,12 +16,12 @@ const instance = axios.create({ baseURL: baseURL + "v1/api/" });
 
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
-    await asyncWait(400);
+    // await asyncWait(400);
   }
 };
 
 // Function to get user info from local storage
-const getInfoUserLocal = () => {
+export const getInfoUserLocal = () => {
   const infoUser = passLocalStorage.getItem(KEY_INFO_USER) || {};
   infoUserSubscription.state = infoUser;
   return infoUser;
