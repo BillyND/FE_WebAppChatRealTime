@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TYPE_STYLE_APP } from "../../utils/constant";
+import { TYPE_STYLE_APP } from "@utils/constant";
 
 export const WrapSearchScreen = styled.div`
   padding: 0 16px;

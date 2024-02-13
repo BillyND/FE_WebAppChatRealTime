@@ -2,7 +2,7 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import React, { useEffect, useState } from "react";
-import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import InputSearch from "./InputSearch";
 import ListAllUsers from "./ListAllUsers";
 import { WrapSearchScreen } from "./SearchScreenStyled";

@@ -2,12 +2,13 @@ import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useScrollToBottom } from "@utils/hooks/useScrollBottom";
 import { Flex } from "antd";
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { getUser } from "../../services/api";
-import { showPopupError } from "../../utils/utilities";
-import ItemPreviewUser from "./ItemPreviewUser";
-import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
 import { useSubscription } from "global-state-hook";
+import React, { Fragment, useEffect, useRef, useState } from "react";
+import { getUser } from "@services/api";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
+import { showPopupError } from "@utils/utilities";
+import ItemPreviewUser from "./ItemPreviewUser";
+import { unionBy } from "lodash";
 
 /**
  * Functional component to display a list of all users.
@@ -25,7 +26,7 @@ export default function ListAllUsers(props) {
   const { isBottom } = useScrollToBottom(scrollContainerRef);
 
   useEffect(() => {
-    if (isBottom) {
+    if (isBottom && next) {
       handleGetUser(next);
     }
   }, [isBottom]);
@@ -38,23 +39,27 @@ export default function ListAllUsers(props) {
    * Function to fetch more users when scrolling to bottom.
    * @param {object} next - Next page details for user retrieval.
    */
-  const handleGetUser = async (next) => {
-    const { page, limit } = next || {};
+  const handleGetUser = async (currentNext) => {
+    const { page, limit } = currentNext || {};
 
-    if (!next) {
-      return;
-    }
+    console.log("===>finalResultUser", unionBy([...results], "_id"));
+
+    if (!currentNext) return;
 
     setLoadingFetch(true);
     try {
       const resGetUser = await getUser(page, limit);
       const { next, results: resResult } = resGetUser;
 
+      const finalResultUser = currentNext
+        ? [...results, ...resResult]
+        : [...resResult, ...results].filter(
+            (user) => user?._id !== infoUser?._id
+          );
+
       setDataSearchUser({
-        next,
-        results: [...results, ...resResult].filter(
-          (user) => user?._id !== infoUser?._id
-        ),
+        next: currentNext ? next : currentNext,
+        results: finalResultUser,
       });
     } catch (error) {
       showPopupError(error);

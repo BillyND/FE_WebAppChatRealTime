@@ -42,7 +42,7 @@ const WrapPreviewImage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
 
   .img-preview-full-screen {
     max-height: 100vh;

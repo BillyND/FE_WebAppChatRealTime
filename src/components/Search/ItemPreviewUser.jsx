@@ -5,10 +5,10 @@ import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback } from "react";
-import { followersUser } from "../../services/api";
-import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
-import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
-import { showPopupError } from "../../utils/utilities";
+import { followersUser } from "@services/api";
+import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "@utils/constant";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
+import { showPopupError } from "@utils/utilities";
 
 function ItemPreviewUser(props) {
   const { user } = props;

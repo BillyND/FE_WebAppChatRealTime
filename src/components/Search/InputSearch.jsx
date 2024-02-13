@@ -6,8 +6,8 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback, useRef, useState } from "react";
-import { TIME_DELAY_FETCH_API } from "../../utils/constant";
-import { searchInputSubs } from "../../utils/globalStates/initGlobalState";
+import { TIME_DELAY_FETCH_API } from "@utils/constant";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import PreviewSearch from "./PreviewSearch";
 import { useEffect } from "react";
 
