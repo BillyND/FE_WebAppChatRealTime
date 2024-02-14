@@ -5,11 +5,8 @@ import { Flex } from "antd";
 
 function DetailUser(props) {
   const {
-    infoUser,
     infoUser: { followings },
   } = useAuthUser();
-
-  console.log("===><infoUser", infoUser);
 
   return (
     <Flex vertical gap={20} className={`wrap-detail-user none-copy`}>

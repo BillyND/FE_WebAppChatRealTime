@@ -1,7 +1,4 @@
 import { CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Button, Flex, Modal, message } from "antd";
-import { useSubscription } from "global-state-hook";
-import React, { useEffect, useRef, useState } from "react";
 import { createPost, updatePost } from "@services/api";
 import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
@@ -17,6 +14,10 @@ import {
   showPopupError,
   updateCurrentPost,
 } from "@utils/utilities";
+import { Button, Flex, Modal, message } from "antd";
+import { useSubscription } from "global-state-hook";
+import React, { useEffect, useRef, useState } from "react";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { WrapModalNewPost } from "./StyledPost";
 
 function ModalNewPost({ placeHolderInputPost }) {
@@ -29,9 +30,7 @@ function ModalNewPost({ placeHolderInputPost }) {
     infoUser: { _id: userId },
   } = useAuthUser();
   const {
-    state,
     state: { postHasUpdate = {} },
-    setState,
   } = useSubscription(detailPostSubs, ["postHasUpdate"]);
   const { styleApp } = useStyleApp();
   const { type } = styleApp || {};
@@ -82,7 +81,11 @@ function ModalNewPost({ placeHolderInputPost }) {
 
       const [resPost] = await Promise.all([
         await createPost(dataPost),
-        handleGetListPost({ page: 1, limit: 5 }),
+        handleGetListPost({
+          page: 1,
+          limit: 5,
+          userId: listPostSubs.state.userIdParamState,
+        }),
       ]);
 
       const isSuccess = resPost?.EC === 0;

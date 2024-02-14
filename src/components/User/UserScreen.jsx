@@ -1,9 +1,10 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import { listPostSubs } from "@utils/globalStates/initGlobalState";
+import { openModalWithOutRender } from "@utils/hooks/useModal";
 import { useScrollToBottom } from "@utils/hooks/useScrollBottom";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { handleGetListPostByUser } from "@utils/utilities";
+import { handleGetListPost } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
@@ -12,15 +13,14 @@ import { useParams } from "react-router-dom";
 import ListPost from "../Post/ListPost";
 import DetailUser from "./DetailUser";
 import { WrapUserScreen } from "./UserScreenStyled";
-import { openModalWithOutRender } from "@utils/hooks/useModal";
 
 function UserScreen(props) {
   const { isMobile, isTablet } = useWindowSize();
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
-  const { userId } = useParams();
+  const { userId: userIdParam } = useParams();
   const {
-    state: { listPostByUser, postIdDelete, loading, nextByUser },
+    state: { listPostByUser, loading, nextByUser, userIdParamState },
     setState: setStateListPost,
   } = useSubscription(listPostSubs, ["listPostByUser", "loading"]);
 
@@ -29,16 +29,35 @@ function UserScreen(props) {
   }, [isBottom]);
 
   useEffect(() => {
-    nextByUser &&
-      listPostByUser.length < 1 &&
-      handleGetListPostByUser({ page: 1, limit: 5, userId });
-  }, []);
+    if (
+      userIdParamState !== userIdParam ||
+      (nextByUser && listPostByUser.length < 1)
+    ) {
+      if (userIdParamState !== userIdParam) {
+        setStateListPost({
+          listPostByUser: [],
+        });
+      }
+
+      handleGetListPost({ page: 1, limit: 5, userId: userIdParam });
+
+      console.log("===>nextByUser:", nextByUser);
+      console.log("===>userIdParamState:", userIdParamState);
+      console.log("===>userIdParam:", userIdParam);
+    }
+
+    listPostSubs.state.userIdParamState = userIdParam;
+
+    return () => {
+      listPostSubs.state.userIdParamState = null;
+    };
+  }, [userIdParam]);
 
   const handleFetchNewPost = debounce(async () => {
     setStateListPost({
       loading: true,
     });
-    await handleGetListPostByUser({ ...nextByUser, userId });
+    await handleGetListPost({ ...nextByUser, userId: userIdParam });
 
     setStateListPost({
       loading: false,
@@ -56,11 +75,11 @@ function UserScreen(props) {
 
         {listPostByUser.length > 0 ? (
           <ListPost
+            userId={userIdParam}
             loading={loading}
             listPost={listPostByUser}
             setStateListPost={setStateListPost}
-            postIdDelete={postIdDelete}
-            handleGetListPost={handleGetListPostByUser}
+            handleGetListPost={handleGetListPost}
             keyListPost="listPostByUser"
           />
         ) : (

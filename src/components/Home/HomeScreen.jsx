@@ -17,11 +17,9 @@ export default function HomeScreen() {
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
   const {
-    state: { listPost, postIdDelete, loading, next },
+    state: { listPost, loading, next },
     setState: setStateListPost,
   } = useSubscription(listPostSubs, ["listPost", "loading"]);
-
-  console.log("===>next:", next);
 
   useEffect(() => {
     next && isBottom && handleFetchNewPost();
@@ -55,7 +53,6 @@ export default function HomeScreen() {
           loading={loading}
           listPost={listPost}
           setStateListPost={setStateListPost}
-          postIdDelete={postIdDelete}
           handleGetListPost={handleGetListPost}
           keyListPost="listPost"
         />

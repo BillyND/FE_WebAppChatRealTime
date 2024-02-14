@@ -8,43 +8,8 @@ import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
  *
  * @param {object} params - The parameters for the post fetching (page and limit).
  */
-export const handleGetListPost = async ({ page, limit }) => {
-  try {
-    listPostSubs.updateState({
-      loading: true,
-    });
-
-    // Fetch posts from the API
-    const resListPost = await getPost(page, limit);
-
-    const { results = [] } = resListPost;
-
-    // Combine the existing list of posts with the newly fetched posts, removing duplicates, and sort by createdAt
-    const newListPost = unionBy(
-      [...listPostSubs.state.listPost, ...results],
-      "_id"
-    ).sort((item1, item2) => {
-      const createdAt1 = new Date(item1.createdAt).getTime();
-      const createdAt2 = new Date(item2.createdAt).getTime();
-      return createdAt2 - createdAt1;
-    });
-
-    // Update the application state with the new list of posts
-    listPostSubs.updateState({
-      ...resListPost,
-      next: resListPost.next,
-      listPost: newListPost,
-      loading: false,
-    });
-  } catch (error) {
-    listPostSubs.updateState({
-      loading: false,
-    });
-    console.error("===> Error handleGetListPost:", error);
-  }
-};
-
-export const handleGetListPostByUser = async ({ page, limit, userId }) => {
+export const handleGetListPost = async ({ page, limit, userId }) => {
+  const { listPost, listPostByUser } = listPostSubs.state || {};
   try {
     listPostSubs.updateState({
       loading: true,
@@ -55,11 +20,9 @@ export const handleGetListPostByUser = async ({ page, limit, userId }) => {
 
     const { results = [] } = resListPost;
 
-    console.log("===>resListPost:", resListPost);
-
     // Combine the existing list of posts with the newly fetched posts, removing duplicates, and sort by createdAt
     const newListPost = unionBy(
-      [...listPostSubs.state.listPostByUser, ...results],
+      [...(userId ? listPostByUser : listPost), ...results],
       "_id"
     ).sort((item1, item2) => {
       const createdAt1 = new Date(item1.createdAt).getTime();
@@ -69,9 +32,10 @@ export const handleGetListPostByUser = async ({ page, limit, userId }) => {
 
     // Update the application state with the new list of posts
     listPostSubs.updateState({
-      nextByUser: resListPost.next,
-      listPostByUser: newListPost,
       loading: false,
+      ...(userId
+        ? { nextByUser: resListPost.next, listPostByUser: newListPost }
+        : { next: resListPost.next, listPost: newListPost }),
     });
   } catch (error) {
     listPostSubs.updateState({
@@ -302,13 +266,6 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
     }, {});
 
     // Update the state of the post in the state object
-
-    // detailPostSubs.updateState({
-    //   [`post-${postId}`]: keys
-    //     ? { ...detailPostSubs.state[`post-${postId}`], ...updatedState }
-    //     : { ...detailPostSubs.state[`post-${postId}`], ...postSocket },
-    // });
-
     updateCurrentPost(
       keys
         ? { ...detailPostSubs.state[`post-${postId}`], ...updatedState }
