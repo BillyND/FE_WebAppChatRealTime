@@ -98,6 +98,8 @@ function InputSearch(props) {
             style={inputSearchStyle}
             className="input-search transition-02"
             placeholder="Search"
+            type="text"
+            autoComplete="off"
           />
 
           {!isMobile && inputSearch && (
@@ -113,7 +115,7 @@ function InputSearch(props) {
         {isMobile && inputSearch && (
           <span
             onClick={handleClearInputSearch}
-            className="cursor-pointer button-cancel-search transition-02"
+            className="cursor-pointer press-active"
           >
             Cancel
           </span>

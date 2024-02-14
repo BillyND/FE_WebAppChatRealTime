@@ -54,9 +54,9 @@ export const updatePost = (dataPost) => {
   return axios.put(`post/${postId}/${userId}`, dataPost, tokenHeaders());
 };
 
-export const getPost = (page = 1, limit = 5, userId) => {
+export const getPost = (page = 1, limit = 5, email) => {
   return axios.get(
-    `post?page=${page}&limit=${limit}&userId=${userId}`,
+    `post?page=${page}&limit=${limit}&email=${email}`,
     tokenHeaders()
   );
 };

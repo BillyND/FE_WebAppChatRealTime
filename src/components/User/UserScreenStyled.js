@@ -11,16 +11,15 @@ export const WrapUserScreen = styled.div`
     props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
 
   .btn-create-new-post {
-    height: 34px;
+    height: 30px;
     border-radius: 8px;
     border: 0.5px solid #64646473;
     width: fit-content;
     margin: auto;
+    padding: 0 16px !important;
   }
 
   .wrap-detail-user {
-    padding: ${(p) => (p.isMobile ? "12px" : "0px")};
-
     .btn-edit-profile {
       height: 34px;
       border-radius: 8px;

@@ -9,7 +9,7 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "../../utils/hooks/useSearchParams";
 import ListPost from "../Post/ListPost";
 import DetailUser from "./DetailUser";
 import { WrapUserScreen } from "./UserScreenStyled";
@@ -18,9 +18,9 @@ function UserScreen(props) {
   const { isMobile, isTablet } = useWindowSize();
   const scrollContainerRef = useRef();
   const { isBottom } = useScrollToBottom(scrollContainerRef);
-  const { userId: userIdParam } = useParams();
+  const [emailParam] = useSearchParams(["email"]);
   const {
-    state: { listPostByUser, loading, nextByUser, userIdParamState },
+    state: { listPostByUser, loading, nextByUser, emailParamState },
     setState: setStateListPost,
   } = useSubscription(listPostSubs, ["listPostByUser", "loading"]);
 
@@ -29,71 +29,65 @@ function UserScreen(props) {
   }, [isBottom]);
 
   useEffect(() => {
-    if (
-      userIdParamState !== userIdParam ||
-      (nextByUser && listPostByUser.length < 1)
-    ) {
-      if (userIdParamState !== userIdParam) {
-        setStateListPost({
-          listPostByUser: [],
-        });
-      }
+    const shouldFetchListPost =
+      emailParamState !== emailParam ||
+      (nextByUser && listPostByUser.length < 1);
 
-      handleGetListPost({ page: 1, limit: 5, userId: userIdParam });
-
-      console.log("===>nextByUser:", nextByUser);
-      console.log("===>userIdParamState:", userIdParamState);
-      console.log("===>userIdParam:", userIdParam);
+    if (shouldFetchListPost) {
+      setStateListPost({ listPostByUser: [] });
+      emailParam && handleGetListPost({ page: 1, limit: 5, email: emailParam });
     }
 
-    listPostSubs.state.userIdParamState = userIdParam;
+    listPostSubs.state.emailParamState = emailParam;
 
     return () => {
       listPostSubs.state.userIdParamState = null;
+      listPostSubs.state.currentUser = null;
     };
-  }, [userIdParam]);
+  }, [emailParam]);
 
   const handleFetchNewPost = debounce(async () => {
     setStateListPost({
       loading: true,
     });
-    await handleGetListPost({ ...nextByUser, userId: userIdParam });
+    await handleGetListPost({ ...nextByUser, email: emailParam });
 
     setStateListPost({
       loading: false,
     });
   }, TIME_DELAY_SEARCH_INPUT);
+
   return (
     <WrapUserScreen
-      id="home-container"
+      id="user-screen"
       ref={scrollContainerRef}
       isMobile={isMobile}
       isTablet={isTablet}
     >
-      <Flex vertical gap={20} className={`${isMobile ? "pb-5" : undefined}`}>
+      <Flex vertical gap={16} className={`${isMobile ? "pb-5" : undefined}`}>
         <DetailUser />
 
-        {listPostByUser.length > 0 ? (
-          <ListPost
-            userId={userIdParam}
-            loading={loading}
-            listPost={listPostByUser}
-            setStateListPost={setStateListPost}
-            handleGetListPost={handleGetListPost}
-            keyListPost="listPostByUser"
-          />
-        ) : (
+        {listPostByUser.length === 0 && !loading ? (
           <>
             <hr className="gray" />
 
             <Flex
               onClick={() => openModalWithOutRender("MODAL_NEW_POST")}
               align="center"
-              className="btn-create-new-post px-3 none-copy press-active transition-02 cursor-pointer"
+              className="btn-create-new-post none-copy press-active cursor-pointer"
             >
               Start creating your first post
             </Flex>
           </>
+        ) : (
+          <ListPost
+            email={emailParam}
+            loading={loading}
+            listPost={listPostByUser}
+            setStateListPost={setStateListPost}
+            handleGetListPost={handleGetListPost}
+            keyListPost="listPostByUser"
+          />
         )}
 
         <SpinnerLoading style={{ opacity: loading ? "1" : "0" }} />

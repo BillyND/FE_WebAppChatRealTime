@@ -16,7 +16,6 @@ function PreviewImageFullScreen() {
     <WrapPreviewImage
       onClick={() => {
         setImgPreview({ imgSrc: "" });
-        console.log("===>here");
       }}
     >
       <div>

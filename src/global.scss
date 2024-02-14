@@ -39,6 +39,7 @@
 
 .enable-scroll {
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .disable-scroll {
@@ -529,7 +530,14 @@ img {
 }
 
 .press-active {
+  transition: 0.1s !important;
+
   &:active {
-    scale: 0.9 !important;
+    scale: 0.95 !important;
   }
+}
+
+.count-follower {
+  font-size: 13px;
+  color: #777777;
 }

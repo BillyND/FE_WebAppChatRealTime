@@ -1,23 +1,125 @@
-import React from "react";
+import { UserThumbnail } from "@UI//UserThumbnail";
+import { followersUser } from "@services/api";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { Flex } from "antd";
+import { Flex, message } from "antd";
+import { useSubscription } from "global-state-hook";
+import React from "react";
+import { TYPE_STYLE_APP } from "../../utils/constant";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
+import { showPopupError } from "../../utils/utilities";
 
-function DetailUser(props) {
+function DetailUser() {
+  const { isMobile } = useWindowSize();
   const {
-    infoUser: { followings },
+    styleApp: { type },
+  } = useStyleApp();
+  const {
+    infoUser,
+    login,
+    infoUser: { _id: currentUserId, followers },
   } = useAuthUser();
+  const {
+    state: { currentUser },
+  } = useSubscription(listPostSubs, ["nextByUser", "currentUser"]);
+  const {
+    _id: userId,
+    followings,
+    avaUrl,
+    username,
+    email,
+    about,
+  } = currentUser || {};
+
+  const isAuthor = currentUserId === userId;
+  const isFollowed = followers.includes(userId);
+
+  /**
+   * Function to handle follow/unfollow action for a user.
+   */
+  const handleFollow = async () => {
+    try {
+      // Update followers list based on whether the user is already followed or not
+      const updatedFollowers = followers.includes(userId)
+        ? followers.filter((item) => item !== userId)
+        : [...followers, userId];
+
+      const updatedFollowing = followings.includes(currentUserId)
+        ? followings.filter((item) => item !== currentUserId)
+        : [...followings, currentUserId];
+
+      // Update user info with updated followers list
+      login({ infoUser: { ...infoUser, followers: updatedFollowers } });
+
+      console.log("===>updatedFollowers:", updatedFollowers);
+
+      listPostSubs.updateState({
+        currentUser: {
+          ...currentUser,
+          followings: updatedFollowing,
+        },
+      });
+
+      // Show success message based on follow/unfollow action
+      message.success(followers.includes(userId) ? "Unfollowed" : "Followed");
+
+      // Update the followers list for the user
+      followersUser({ userId });
+    } catch (error) {
+      // Show error popup and log the error
+      showPopupError(error);
+      console.error("===>Error handleFollow", error);
+    }
+  };
+
+  if (!currentUser) return;
 
   return (
-    <Flex vertical gap={20} className={`wrap-detail-user none-copy`}>
-      <Flex> {followings.length}</Flex>
-      <Flex
-        justify="center"
-        align="center"
-        className="btn-edit-profile cursor-pointer press-active transition-02"
-      >
-        Edit profile
+    <Flex vertical gap={16} className={`wrap-detail-user none-copy px-3 pt-3`}>
+      <Flex justify="space-between" align="center" gap={24}>
+        <Flex vertical>
+          <h2 style={{ fontSize: "24px" }}>{username}</h2>
+          <span style={{ fontSize: "14px" }}>{email}</span>
+        </Flex>
+        <UserThumbnail avaUrl={avaUrl} size={isMobile ? 64 : 84} />
       </Flex>
+      <span style={{ fontSize: "14px" }}>{about}</span>
+      <span className="count-follower">{followings?.length} followers</span>
+      {isAuthor ? (
+        <Flex
+          justify="center"
+          align="center"
+          className="btn-edit-profile cursor-pointer press-active"
+        >
+          Edit profile
+        </Flex>
+      ) : (
+        <Flex style={{ width: "100%" }} gap={16}>
+          <Flex
+            style={{
+              width: "100%",
+              background: type === TYPE_STYLE_APP.DARK ? "#fff" : "#000000",
+              color: type === TYPE_STYLE_APP.DARK ? "#000000" : "#fff",
+            }}
+            justify="center"
+            align="center"
+            className="btn-edit-profile cursor-pointer press-active"
+            onClick={handleFollow}
+          >
+            {isFollowed ? "Following" : "Follow"}
+          </Flex>
+
+          <Flex
+            style={{ width: "100%" }}
+            justify="center"
+            align="center"
+            className="btn-edit-profile cursor-pointer press-active"
+          >
+            Message
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   );
 }

@@ -157,10 +157,6 @@ export const WrapDetailPost = styled.div`
       max-height: 430px;
       max-width: 100%;
       min-height: 270px;
-
-      &:active {
-        scale: 0.9;
-      }
     }
   }
 

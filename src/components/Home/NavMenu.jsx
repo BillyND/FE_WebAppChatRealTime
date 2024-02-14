@@ -1,9 +1,6 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Flex, Popover } from "antd";
-import React, { Fragment, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import PopoverCustom from "@UI//PopoverCustom";
 import ToggleSwitch from "@UI//ToggleSwitch";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   IconHomeActive,
   IconHomeDeActive,
@@ -25,13 +22,16 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "@utils/hooks/useModal";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { scrollToTopOfElement } from "@utils/utilities";
+import { Flex } from "antd";
+import React, { Fragment, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   WrapButtonSettings,
   WrapContentPopoverSettings,
   WrapControlNav,
   WrapNavMenu,
 } from "./HomeStyled";
-import { scrollToTopOfElement } from "@utils/utilities";
 
 const ButtonSettings = (props) => {
   const { logout } = useAuthUser();
@@ -129,13 +129,14 @@ const ButtonSettings = (props) => {
 const ControlMenu = (props) => {
   const { handleNavigation } = props;
   const {
-    infoUser: { _id: userId },
+    infoUser: { email },
   } = useAuthUser();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const pathname2 = useLocation();
   const {
-    styleApp: { navMenuStyle },
+    styleApp: { navMenuStyle, type },
   } = useStyleApp();
-  const { isMobile } = useWindowSize();
+  const { isMobile, isTablet } = useWindowSize();
 
   const optionIcon = [
     {
@@ -164,7 +165,7 @@ const ControlMenu = (props) => {
     },
     {
       key: "user",
-      path: `/user/${userId}`,
+      path: `/user?email=${email}`,
       iconActive: <IconUserActive />,
       iconDeActive: <IconUserDeActive />,
     },
@@ -172,19 +173,21 @@ const ControlMenu = (props) => {
 
   return (
     <WrapControlNav
-      isMobile={isMobile}
+      isDark={type === TYPE_STYLE_APP.DARK}
+      isTablet={isTablet}
       style={isMobile ? navMenuStyle : undefined}
       className="group-nav"
     >
       <Flex align="center" justify="center" gap={1}>
         {optionIcon.map((item, index) => {
           const { key, path, iconActive, iconDeActive } = item || {};
-          const isActive = pathname === path;
+          const isActive =
+            (search ? `${pathname}${search}` : pathname) === path;
 
           return (
             <div
               key={`${key}-${index}`}
-              className="icon-nav cursor-pointer transition-02"
+              className="icon-nav cursor-pointer press-active"
               onClick={() => handleNavigation(path)}
             >
               {isActive ? iconActive : iconDeActive}
@@ -205,18 +208,32 @@ function NavMenu() {
   const { pathname } = useLocation();
 
   const handleNavigation = (path) => {
-    if (path === "/post") {
-      openModalWithOutRender("MODAL_NEW_POST");
-      return;
-    }
-
-    if (path === "/") scrollToTopOfElement("home-container");
-
-    if (pathname === path || !path) {
-      return;
-    }
-
     navigate(path);
+    path = path.replace(/\?.*$/, "");
+
+    switch (path) {
+      case "/": {
+        scrollToTopOfElement("home-screen");
+        break;
+      }
+
+      case "/post": {
+        openModalWithOutRender("MODAL_NEW_POST");
+        break;
+      }
+
+      case "/user": {
+        scrollToTopOfElement("user-screen");
+        break;
+      }
+      case "/search": {
+        scrollToTopOfElement("list-all-user");
+        break;
+      }
+
+      default:
+        break;
+    }
   };
 
   return (

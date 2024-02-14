@@ -115,11 +115,7 @@ const DetailPost = (props) => {
       hidden: !isAuthorOfPost,
       onclick: () => {
         openModalWithOutRender("MODAL_NEW_POST");
-
-        detailPostSubs.state = {
-          ...detailPostSubs.state,
-          postHasUpdate: post,
-        };
+        detailPostSubs.state.postHasUpdate = post;
       },
     },
     {
@@ -129,11 +125,7 @@ const DetailPost = (props) => {
       critical: true,
       onclick: () => {
         openModalWithOutRender("CONFIRM_DELETE_POST");
-
-        listPostSubs.state = {
-          ...listPostSubs.state,
-          postIdDelete: postId,
-        };
+        listPostSubs.state.postIdDelete = postId;
       },
     },
   ];
@@ -149,7 +141,9 @@ const DetailPost = (props) => {
             {index > 0 && <hr className="boundary-line-item" />}
 
             <div
-              className={`item-menu ${critical && "critical"}`}
+              className={`item-menu transition-01 press-active none-copy ${
+                critical && "critical"
+              }`}
               onClick={() => onclick && onclick()}
             >
               {label}
@@ -176,7 +170,7 @@ const DetailPost = (props) => {
             content={wrapMenuDetailPost}
             trigger="click"
           >
-            <div className="icon-more-detail">
+            <div className="icon-more-detail press-active">
               <IconDash />
             </div>
           </PopoverCustom>
@@ -200,7 +194,7 @@ const DetailPost = (props) => {
               <img
                 draggable={false}
                 src={imageUrl}
-                className="img-post cursor-pointer transition-02"
+                className="img-post cursor-pointer transition-02 press-active"
                 style={{ backgroundImage: `url(${imageUrl})` }}
                 onClick={() =>
                   previewImageFullScreenSubs.updateState({ imgSrc: imageUrl })
@@ -209,11 +203,10 @@ const DetailPost = (props) => {
             </div>
           )}
 
-          {/* {hasFooter && ( */}
           <Flex gap={16} className="none-copy">
             <Flex
               gap={"8px"}
-              className={`btn-like-comment ${
+              className={`btn-like-comment press-active ${
                 likerIds?.length > 0 && likerIds?.includes(userId)
                   ? "liked"
                   : ""
@@ -231,7 +224,7 @@ const DetailPost = (props) => {
 
             <Flex
               gap={"8px"}
-              className="btn-like-comment"
+              className="btn-like-comment press-active"
               justify="center"
               align="center"
               onClick={() => setOpenComment(true)}
@@ -239,12 +232,11 @@ const DetailPost = (props) => {
               <IconMessageActive size={1.5} />
             </Flex>
           </Flex>
-          {/* )} */}
 
           <Flex gap={8}>
             {countComment > 0 && (
               <a
-                className="count-reaction"
+                className="count-reaction press-active transition-01"
                 onClick={() => setOpenComment(true)}
               >
                 {`${countComment} ${countComment > 1 ? "comments" : "comment"}`}

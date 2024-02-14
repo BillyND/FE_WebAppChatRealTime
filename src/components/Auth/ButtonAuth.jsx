@@ -98,8 +98,6 @@ export const ButtonAuth = ({
         message.error(resRegister?.data?.message);
       }
 
-      console.log("===>here", resRegister);
-
       setLoadingAuth(false);
     } catch (error) {
       setLoadingAuth(false);

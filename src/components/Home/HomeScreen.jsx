@@ -42,7 +42,7 @@ export default function HomeScreen() {
 
   return (
     <WrapHomeScreen
-      id="home-container"
+      id="home-screen"
       ref={scrollContainerRef}
       isMobile={isMobile}
       isTablet={isTablet}

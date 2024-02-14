@@ -1,18 +1,19 @@
 import { UserThumbnail } from "@UI//UserThumbnail";
+import { followersUser } from "@services/api";
+import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "@utils/constant";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { showPopupError } from "@utils/utilities";
 import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
 import React, { useCallback } from "react";
-import { followersUser } from "@services/api";
-import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "@utils/constant";
-import { searchInputSubs } from "@utils/globalStates/initGlobalState";
-import { showPopupError } from "@utils/utilities";
+import { useNavigate } from "react-router-dom";
 
 function ItemPreviewUser(props) {
   const { user } = props;
-  const { _id: userId, username, avaUrl, followings } = user;
+  const { _id: userId, username, avaUrl, followings, email } = user;
   const {
     infoUser,
     infoUser: { _id: currentUserId, followers },
@@ -25,6 +26,7 @@ function ItemPreviewUser(props) {
     state: { resultsPreview, results },
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
+  const navigate = useNavigate();
   const isFollowed = followers.includes(userId);
 
   const borderStyle = `1px solid ${
@@ -74,8 +76,8 @@ function ItemPreviewUser(props) {
       // Show success message based on follow/unfollow action
       message.success(followers.includes(userId) ? "Unfollowed" : "Followed");
 
-      // Debounce and update the followers list for the user
-      debounceUpdateFollowers(userId);
+      // Update the followers list for the user
+      followersUser({ userId });
     } catch (error) {
       // Show error popup and log the error
       showPopupError(error);
@@ -83,23 +85,21 @@ function ItemPreviewUser(props) {
     }
   };
 
-  const debounceUpdateFollowers = useCallback(
-    debounce((userId) => {
-      followersUser({ userId });
-    }, TIME_DELAY_FETCH_API),
-    []
-  );
-
   return (
     <Flex vertical gap={12} key={userId} className="cursor-pointer none-copy">
       <hr className="gray ml-5" />
       <Flex vertical>
-        <Flex justify="space-between" align="center">
+        <Flex
+          justify="space-between"
+          align="center"
+          onClick={() => navigate(`/user?email=${email}`)}
+        >
           <Flex align="center" gap={12}>
             <UserThumbnail avaUrl={avaUrl} />
 
             <Flex vertical gap={8}>
               <span className="user-namer"> {username}</span>
+              <span style={{ fontSize: "13px" }}> {email}</span>
               {followings && (
                 <span className="count-follower">
                   {` ${followings?.length} follower${
@@ -121,7 +121,7 @@ function ItemPreviewUser(props) {
             }}
             align="center"
             justify="center"
-            className="button-follow cursor-pointer transition-02"
+            className="button-follow cursor-pointer press-active"
           >
             {isFollowed ? "Following" : "Follow"}
           </Flex>

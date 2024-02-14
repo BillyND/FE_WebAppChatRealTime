@@ -59,28 +59,6 @@ export const WrapNavMenu = styled.div`
       }
   `}
   }
-
-  .icon-nav {
-    padding: ${(props) => (props.isTablet ? "20px 20px" : "20px 40px")};
-    border-radius: 8px;
-
-    ${(props) =>
-      props.isMobile
-        ? `
-   &:active {
-      transform: scale(0.9);
-    }`
-        : ` 
-       &:hover {
-         background-color: #31313187;
-      }
-      
-      &:active {
-        transform: scale(0.9);
-      }
-       
-       `}
-  }
 `;
 
 export const WrapControlNav = styled.div`
@@ -89,28 +67,15 @@ export const WrapControlNav = styled.div`
   height: 66px;
   width: 100%;
   text-align: center;
-  backdrop-filter: blur(${(p) => (p.isMobile ? "28.5px" : "0")});
+  backdrop-filter: blur(${(p) => (p.isTablet ? "28.5px" : "0")});
 
   .icon-nav {
-    padding: ${(props) => (props.isMobile ? "20px 20px" : "20px 40px")};
+    padding: ${(props) => (props.isTablet ? "20px 20px" : "20px 40px")};
     border-radius: 8px;
 
-    ${(props) =>
-      props.isMobile
-        ? `
-   &:active {
-      transform: scale(0.9);
-    }`
-        : ` 
-       &:hover {
-         background-color: #31313187;
-      }
-      
-      &:active {
-        transform: scale(0.9);
-      }
-       
-       `}
+    &:hover {
+      background-color: ${(p) => (p.isDark ? "#9a9a9a14" : "#9a9a9a2b")};
+    }
   }
 `;
 

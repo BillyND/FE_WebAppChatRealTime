@@ -14,7 +14,7 @@ import {
   showPopupError,
   updateCurrentPost,
 } from "@utils/utilities";
-import { Button, Flex, Modal, message } from "antd";
+import { Flex, Modal, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
@@ -84,7 +84,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         handleGetListPost({
           page: 1,
           limit: 5,
-          userId: listPostSubs.state.userIdParamState,
+          email: listPostSubs.state.emailParamState,
         }),
       ]);
 
@@ -144,10 +144,7 @@ function ModalNewPost({ placeHolderInputPost }) {
     handleClearAllDataPost();
     closeModal("MODAL_NEW_POST");
 
-    detailPostSubs.state = {
-      ...detailPostSubs.state,
-      postHasUpdate: {},
-    };
+    detailPostSubs.state.postHasUpdate = {};
   };
 
   const handleClearImage = () => {
@@ -206,15 +203,20 @@ function ModalNewPost({ placeHolderInputPost }) {
       onCancel={handleCancel}
       footer={
         <Flex justify="end">
-          <Button
-            disabled={disableBtnCreatePost}
-            className={`btn-create-post ${
-              !disableBtnCreatePost ? "enable" : ""
+          <span
+            className={`btn-create-post px-3 ${
+              !disableBtnCreatePost ? "enable press-active" : " "
             }`}
-            onClick={postId ? handleEditPost : handleUpPost}
+            onClick={
+              !disableBtnCreatePost
+                ? postId
+                  ? handleEditPost
+                  : handleUpPost
+                : undefined
+            }
           >
             {postId ? "Update" : "Post"}
-          </Button>
+          </span>
         </Flex>
       }
     >

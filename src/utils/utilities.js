@@ -8,7 +8,7 @@ import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
  *
  * @param {object} params - The parameters for the post fetching (page and limit).
  */
-export const handleGetListPost = async ({ page, limit, userId }) => {
+export const handleGetListPost = async ({ page, limit, email }) => {
   const { listPost, listPostByUser } = listPostSubs.state || {};
   try {
     listPostSubs.updateState({
@@ -16,13 +16,13 @@ export const handleGetListPost = async ({ page, limit, userId }) => {
     });
 
     // Fetch posts from the API
-    const resListPost = await getPost(page, limit, userId);
+    const resListPost = await getPost(page, limit, email);
 
     const { results = [] } = resListPost;
 
     // Combine the existing list of posts with the newly fetched posts, removing duplicates, and sort by createdAt
     const newListPost = unionBy(
-      [...(userId ? listPostByUser : listPost), ...results],
+      [...(email ? listPostByUser : listPost), ...results],
       "_id"
     ).sort((item1, item2) => {
       const createdAt1 = new Date(item1.createdAt).getTime();
@@ -33,7 +33,8 @@ export const handleGetListPost = async ({ page, limit, userId }) => {
     // Update the application state with the new list of posts
     listPostSubs.updateState({
       loading: false,
-      ...(userId
+      ...(email && { currentUser: resListPost.currentUser }),
+      ...(email
         ? { nextByUser: resListPost.next, listPostByUser: newListPost }
         : { next: resListPost.next, listPost: newListPost }),
     });
@@ -117,43 +118,36 @@ export const scrollToTopOfElement = (elementId) => {
   /*** Get the element with the provided ID ***/
   const elementHasScrollTop = document?.getElementById(elementId);
 
-  try {
-    /*** Get the current scroll position ***/
-    const currentScrollTop = elementHasScrollTop.scrollTop;
+  if (!elementHasScrollTop?.scrollTop) return;
 
-    /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
-    const numSteps = 20;
+  /*** Get the current scroll position ***/
+  const currentScrollTop = elementHasScrollTop.scrollTop;
 
-    /*** Calculate the distance to move in each step ***/
-    const scrollStep = currentScrollTop / numSteps;
+  /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
+  const numSteps = 20;
 
-    /*** Initiate the smooth scroll process using requestAnimationFrame ***/
-    const smoothScroll = (currentStep) => {
-      if (currentStep <= numSteps) {
-        /*** Calculate the new scroll position based on the current position ***/
-        const newScrollTop = currentScrollTop - currentStep * scrollStep;
+  /*** Calculate the distance to move in each step ***/
+  const scrollStep = currentScrollTop / numSteps;
 
-        /*** Set the new scroll position ***/
-        elementHasScrollTop.scrollTop = newScrollTop;
+  /*** Initiate the smooth scroll process using requestAnimationFrame ***/
+  const smoothScroll = (currentStep) => {
+    if (currentStep <= numSteps) {
+      /*** Calculate the new scroll position based on the current position ***/
+      const newScrollTop = currentScrollTop - currentStep * scrollStep;
 
-        /*** Recall the smoothScroll function with the next step ***/
-        requestAnimationFrame(() => smoothScroll(currentStep + 1));
-      } else {
-        /*** Ensure scrolling to the very top after completing all steps ***/
-        elementHasScrollTop.scrollTop = 0;
-      }
-    };
+      /*** Set the new scroll position ***/
+      elementHasScrollTop.scrollTop = newScrollTop;
 
-    /*** Start the smooth scroll from step 0 ***/
-    smoothScroll(0);
-  } catch (error) {
-    /*** If an error occurs, fall back to a basic scroll to the top ***/
-    console.error("===> Error scrollToTopOfElement:", error);
-
-    if (elementHasScrollTop?.scrollTop) {
+      /*** Recall the smoothScroll function with the next step ***/
+      requestAnimationFrame(() => smoothScroll(currentStep + 1));
+    } else {
+      /*** Ensure scrolling to the very top after completing all steps ***/
       elementHasScrollTop.scrollTop = 0;
     }
-  }
+  };
+
+  /*** Start the smooth scroll from step 0 ***/
+  smoothScroll(0);
 };
 
 export const formatTimeAgo = (timeInMilliseconds) => {
@@ -327,5 +321,17 @@ export const handleHiddenPost = (postId) => {
 
   if (newListPost.length < 5 && next) {
     handleGetListPost(next);
+  }
+};
+
+export const bypassDot = (text) => {
+  try {
+    if (text.includes(".")) {
+      return text.replace(/\./g, "-dot-");
+    } else if (text.includes("-dot-")) {
+      return text.replace(/-dot-/g, ".");
+    }
+  } catch (error) {
+    return text;
   }
 };

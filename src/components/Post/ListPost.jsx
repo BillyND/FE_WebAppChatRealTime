@@ -3,22 +3,21 @@ import { deletePost } from "@services/api";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useModal } from "@utils/hooks/useModal";
 import { updateCurrentPost } from "@utils/utilities";
-import React, { Fragment, useEffect } from "react";
+import { useSubscription } from "global-state-hook";
+import React, { Fragment } from "react";
+import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import DetailPost from "./DetailPost";
 import { WrapListPost } from "./StyledPost";
-import { listPostSubs } from "../../utils/globalStates/initGlobalState";
-import { useSubscription } from "global-state-hook";
 
-function ListPost(props) {
+const ModalDeletePost = (props) => {
   const {
-    userId,
+    email,
     loading,
     listPost,
     setStateListPost,
     handleGetListPost,
     keyListPost,
   } = props;
-  const { infoUser } = useAuthUser();
   const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
   const {
     state: { postIdDelete },
@@ -45,9 +44,26 @@ function ListPost(props) {
         closeModal("CONFIRM_DELETE_POST");
         filterDeleted.length < 5 &&
           typeof handleGetListPost === "function" &&
-          handleGetListPost({ page: 1, limit: 5, userId });
+          handleGetListPost({ page: 1, limit: 5, email });
       });
   };
+  return (
+    <BaseModal
+      className="modal-delete-post"
+      open={modalState["CONFIRM_DELETE_POST"]}
+      onCancel={() => closeModal("CONFIRM_DELETE_POST")}
+      onOk={handleConfirmDeletePost}
+      title="Delete post?"
+      loadingFooter={loading}
+    >
+      Post will be permanently deleted. Do you agree?
+    </BaseModal>
+  );
+};
+
+function ListPost(props) {
+  const { listPost } = props;
+  const { infoUser } = useAuthUser();
 
   return (
     <WrapListPost>
@@ -76,16 +92,7 @@ function ListPost(props) {
         })}
       </div>
 
-      <BaseModal
-        className="modal-delete-post"
-        open={modalState["CONFIRM_DELETE_POST"]}
-        onCancel={() => closeModal("CONFIRM_DELETE_POST")}
-        onOk={handleConfirmDeletePost}
-        title="Delete post?"
-        loadingFooter={loading}
-      >
-        Post will be permanently deleted. Do you agree?
-      </BaseModal>
+      <ModalDeletePost {...props} />
     </WrapListPost>
   );
 }

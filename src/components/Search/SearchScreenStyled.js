@@ -9,12 +9,6 @@ export const WrapSearchScreen = styled.div`
   max-width: 600px;
   margin: auto;
 
-  .button-cancel-search {
-    &:active {
-      scale: 0.9;
-    }
-  }
-
   .label-search {
     padding: 8px 12px !important;
     width: 100%;
@@ -73,18 +67,11 @@ export const WrapSearchScreen = styled.div`
   .button-follow {
     padding: 4px 18px;
     border-radius: 10px;
-
-    &:active {
-      scale: 0.95;
-    }
   }
 
   .wrap-list-all-user {
-    height: calc(100vh - 200px);
-  }
-
-  .count-follower {
-    font-size: 13px;
+    height: ${(p) =>
+      p.isMobile ? "calc(100vh - 200px)" : "calc(100vh - 160px)"};
   }
 
   .user-namer {

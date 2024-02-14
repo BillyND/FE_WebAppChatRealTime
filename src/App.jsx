@@ -89,7 +89,7 @@ function App() {
             <Route index element={<HomeScreen />} />
             <Route path="search" element={<SearchScreen />} />
             <Route path="message" element={<MessageScreen />} />
-            <Route path="user/:userId" element={<UserScreen />} />
+            <Route path="user" element={<UserScreen />} />
             <Route path="*" element={<HomeScreen />} />
           </Route>
 
