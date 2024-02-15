@@ -32,11 +32,14 @@ export const handleGetListPost = async ({ page, limit, email }) => {
 
     // Update the application state with the new list of posts
     listPostSubs.updateState({
-      loading: false,
-      ...(email && { currentUser: resListPost.currentUser }),
       ...(email
-        ? { nextByUser: resListPost.next, listPostByUser: newListPost }
+        ? {
+            nextByUser: resListPost.next,
+            listPostByUser: newListPost,
+            currentUser: resListPost.currentUser,
+          }
         : { next: resListPost.next, listPost: newListPost }),
+      loading: false,
     });
   } catch (error) {
     listPostSubs.updateState({

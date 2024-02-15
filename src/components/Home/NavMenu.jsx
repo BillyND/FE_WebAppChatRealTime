@@ -205,10 +205,9 @@ function NavMenu() {
   } = useStyleApp();
   const { isMobile, isTablet } = useWindowSize();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
   const handleNavigation = (path) => {
-    navigate(path);
+    path !== "/post" && navigate(path);
     path = path.replace(/\?.*$/, "");
 
     switch (path) {

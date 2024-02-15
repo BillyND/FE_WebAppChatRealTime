@@ -530,6 +530,7 @@ img {
 }
 
 .press-active {
+  cursor: pointer;
   transition: 0.1s !important;
 
   &:active {
@@ -538,6 +539,15 @@ img {
 }
 
 .count-follower {
-  font-size: 13px;
+  font-size: 14px;
   color: #777777;
+  width: fit-content;
+
+  &:hover {
+    color: #777777;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
 }

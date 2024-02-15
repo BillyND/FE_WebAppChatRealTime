@@ -70,7 +70,7 @@ export const WrapControlNav = styled.div`
   backdrop-filter: blur(${(p) => (p.isTablet ? "28.5px" : "0")});
 
   .icon-nav {
-    padding: ${(props) => (props.isTablet ? "20px 20px" : "20px 40px")};
+    padding: ${(props) => (props.isTablet ? "20px 20px" : "20px 35px")};
     border-radius: 8px;
 
     &:hover {

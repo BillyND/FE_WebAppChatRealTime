@@ -1,12 +1,12 @@
+import { CloseOutlined } from "@ant-design/icons";
+import { previewImageFullScreenSubs } from "@utils/globalStates/initGlobalState";
 import { useSubscription } from "global-state-hook";
 import React from "react";
 import styled from "styled-components";
-import { CloseOutlined } from "@ant-design/icons";
-import { previewImageFullScreenSubs } from "@utils/globalStates/initGlobalState";
 
 function PreviewImageFullScreen() {
   const {
-    state: { imgSrc },
+    state: { imgSrc, isCircle },
     setState: setImgPreview,
   } = useSubscription(previewImageFullScreenSubs, ["imgSrc"]);
 
@@ -15,7 +15,7 @@ function PreviewImageFullScreen() {
   return (
     <WrapPreviewImage
       onClick={() => {
-        setImgPreview({ imgSrc: "" });
+        setImgPreview({ imgSrc: "", isCircle: false });
       }}
     >
       <div>
@@ -24,6 +24,7 @@ function PreviewImageFullScreen() {
           onClick={(e) => e.stopPropagation()}
           className="img-preview-full-screen"
           src={imgSrc}
+          style={{ borderRadius: isCircle ? "50%" : "" }}
         />
       </div>
       <CloseOutlined className="icon-close-preview-image cursor-pointer transition-02" />
@@ -50,7 +51,7 @@ const WrapPreviewImage = styled.div`
     width: 100%;
     object-fit: contain;
     min-width: 375px;
-    border: 0.1px solid #232323;
+    border: 0.5px solid #313131;
   }
 
   .icon-close-preview-image {

@@ -21,6 +21,8 @@ export default function HomeScreen() {
     setState: setStateListPost,
   } = useSubscription(listPostSubs, ["listPost", "loading"]);
 
+  console.log("===>newListPost:", listPostSubs.state);
+
   useEffect(() => {
     next && isBottom && handleFetchNewPost();
   }, [isBottom]);

@@ -41,7 +41,7 @@ function UserScreen(props) {
     listPostSubs.state.emailParamState = emailParam;
 
     return () => {
-      listPostSubs.state.userIdParamState = null;
+      listPostSubs.state.emailParamState = null;
       listPostSubs.state.currentUser = null;
     };
   }, [emailParam]);

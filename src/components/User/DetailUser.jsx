@@ -7,7 +7,10 @@ import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import React from "react";
 import { TYPE_STYLE_APP } from "../../utils/constant";
-import { listPostSubs } from "../../utils/globalStates/initGlobalState";
+import {
+  listPostSubs,
+  previewImageFullScreenSubs,
+} from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
 
 function DetailUser() {
@@ -76,21 +79,35 @@ function DetailUser() {
   if (!currentUser) return;
 
   return (
-    <Flex vertical gap={16} className={`wrap-detail-user none-copy px-3 pt-3`}>
+    <Flex vertical gap={16} className={`wrap-detail-user px-3 pt-3`}>
       <Flex justify="space-between" align="center" gap={24}>
         <Flex vertical>
-          <h2 style={{ fontSize: "24px" }}>{username}</h2>
+          <h2 className="cursor-pointer" style={{ fontSize: "24px" }}>
+            {username}
+          </h2>
           <span style={{ fontSize: "14px" }}>{email}</span>
         </Flex>
-        <UserThumbnail avaUrl={avaUrl} size={isMobile ? 64 : 84} />
+        <div
+          className="press-active"
+          onClick={() =>
+            previewImageFullScreenSubs.updateState({
+              imgSrc: avaUrl,
+              isCircle: true,
+            })
+          }
+        >
+          <UserThumbnail avaUrl={avaUrl} size={isMobile ? 64 : 84} />
+        </div>
       </Flex>
       <span style={{ fontSize: "14px" }}>{about}</span>
-      <span className="count-follower">{followings?.length} followers</span>
+      <a className="count-follower none-copy transition-01">
+        {followings?.length} followers
+      </a>
       {isAuthor ? (
         <Flex
           justify="center"
           align="center"
-          className="btn-edit-profile cursor-pointer press-active"
+          className="btn-edit-profile cursor-pointer press-active none-copy"
         >
           Edit profile
         </Flex>
