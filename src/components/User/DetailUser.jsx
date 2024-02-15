@@ -10,6 +10,7 @@ import { TYPE_STYLE_APP } from "../../utils/constant";
 import {
   listPostSubs,
   previewImageFullScreenSubs,
+  searchInputSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
 
@@ -55,13 +56,22 @@ function DetailUser() {
       // Update user info with updated followers list
       login({ infoUser: { ...infoUser, followers: updatedFollowers } });
 
-      console.log("===>updatedFollowers:", updatedFollowers);
-
       listPostSubs.updateState({
         currentUser: {
           ...currentUser,
           followings: updatedFollowing,
         },
+      });
+
+      searchInputSubs.updateState({
+        results: searchInputSubs.state.results.map((user) =>
+          user._id === userId
+            ? {
+                ...user,
+                followings: updatedFollowing,
+              }
+            : user
+        ),
       });
 
       // Show success message based on follow/unfollow action
@@ -101,7 +111,7 @@ function DetailUser() {
       </Flex>
       <span style={{ fontSize: "14px" }}>{about}</span>
       <a className="count-follower none-copy transition-01">
-        {followings?.length} followers
+        {` ${followings?.length} follower${followings?.length > 1 ? "s" : ""}`}
       </a>
       {isAuthor ? (
         <Flex

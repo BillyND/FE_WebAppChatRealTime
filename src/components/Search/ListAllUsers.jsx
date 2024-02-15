@@ -18,7 +18,9 @@ export default function ListAllUsers(props) {
   const {
     state: { results, next },
     setState: setDataSearchUser,
-  } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
+  } = useSubscription(searchInputSubs, ["keySearchUser", "results"]);
+
+  console.log("===>results:", results);
 
   const [loadingFetch, setLoadingFetch] = useState(false);
   const { infoUser } = useAuthUser();

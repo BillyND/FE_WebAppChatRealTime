@@ -103,7 +103,7 @@ function ItemPreviewUser(props) {
               {followings && (
                 <span className="count-follower">
                   {` ${followings?.length} follower${
-                    followings?.length > 0 ? "s" : ""
+                    followings?.length > 1 ? "s" : ""
                   }`}
                 </span>
               )}
