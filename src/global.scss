@@ -3,6 +3,10 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -53,6 +57,7 @@
     svg {
       fill: gray !important;
     }
+    color: gray !important;
   }
 }
 
@@ -532,9 +537,15 @@ img {
 .press-active {
   cursor: pointer;
   transition: 0.1s !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -o-user-select: none !important;
+  user-select: none !important;
 
   &:active {
-    scale: 0.95 !important;
+    scale: 0.95;
   }
 }
 
@@ -550,4 +561,22 @@ img {
   &:active {
     opacity: 0.8;
   }
+}
+
+.ant-modal-wrap {
+  background-color: #0000004f !important;
+}
+
+.hidden-lose {
+  .ant-modal-close-x {
+    display: none;
+  }
+
+  .ant-modal-footer {
+    padding: 0 !important;
+  }
+}
+
+.width-100-per {
+  width: 100% !important;
 }

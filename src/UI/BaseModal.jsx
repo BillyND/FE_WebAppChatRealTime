@@ -14,6 +14,7 @@ function BaseModal(props) {
     style,
     scrollId,
     className,
+    hiddenClose,
   } = props;
   const {
     styleApp: { type },
@@ -22,7 +23,7 @@ function BaseModal(props) {
   return (
     <Modal
       {...props}
-      className={`${type} ${className}`}
+      className={`${type} ${className} ${hiddenClose ? "hidden-lose" : ""}`}
       zIndex={2000}
       footer={
         footer || (

@@ -13,6 +13,8 @@ import {
   searchInputSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
+import InfoUserModal from "./InfoUserModal";
+import EditProfileModal from "./EditProfileModal";
 
 function DetailUser() {
   const { isMobile } = useWindowSize();
@@ -26,7 +28,7 @@ function DetailUser() {
   } = useAuthUser();
   const {
     state: { currentUser },
-  } = useSubscription(listPostSubs, ["nextByUser", "currentUser"]);
+  } = useSubscription(listPostSubs, ["currentUser"]);
   const {
     _id: userId,
     followings,
@@ -86,13 +88,35 @@ function DetailUser() {
     }
   };
 
+  const handleShowPreviewUser = () => {
+    listPostSubs.updateState({
+      currentUser: {
+        ...currentUser,
+        showPreview: true,
+      },
+    });
+  };
+
+  const handleShowEditUser = () => {
+    listPostSubs.updateState({
+      currentUser: {
+        ...currentUser,
+        showEditProfile: true,
+      },
+    });
+  };
+
   if (!currentUser) return;
 
   return (
     <Flex vertical gap={16} className={`wrap-detail-user px-3 pt-3`}>
       <Flex justify="space-between" align="center" gap={24}>
         <Flex vertical>
-          <h2 className="cursor-pointer" style={{ fontSize: "24px" }}>
+          <h2
+            className="cursor-pointer"
+            style={{ fontSize: "24px" }}
+            onClick={handleShowPreviewUser}
+          >
             {username}
           </h2>
           <span style={{ fontSize: "14px" }}>{email}</span>
@@ -115,6 +139,7 @@ function DetailUser() {
       </a>
       {isAuthor ? (
         <Flex
+          onClick={handleShowEditUser}
           justify="center"
           align="center"
           className="btn-edit-profile cursor-pointer press-active none-copy"
@@ -122,7 +147,7 @@ function DetailUser() {
           Edit profile
         </Flex>
       ) : (
-        <Flex style={{ width: "100%" }} gap={16}>
+        <Flex style={{ width: "100%" }} gap={16} className="none-copy">
           <Flex
             style={{
               width: "100%",
@@ -147,6 +172,9 @@ function DetailUser() {
           </Flex>
         </Flex>
       )}
+
+      <InfoUserModal />
+      <EditProfileModal />
     </Flex>
   );
 }

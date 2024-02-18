@@ -338,3 +338,29 @@ export const bypassDot = (text) => {
     return text;
   }
 };
+
+export function formatDateToMonthYear(dateString) {
+  try {
+    const parts = dateString.split("T")[0].split("-");
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const monthName = monthNames[parseInt(parts[1]) - 1];
+    const year = parts[0];
+    return `${monthName} ${year}`;
+  } catch (error) {
+    console.error("===> Error at formatDateToMonthYear:", error);
+    return null;
+  }
+}

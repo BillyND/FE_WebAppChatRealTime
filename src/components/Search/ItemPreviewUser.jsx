@@ -90,6 +90,7 @@ function ItemPreviewUser(props) {
       <hr className="gray ml-5" />
       <Flex vertical>
         <Flex
+          className="none-copy"
           justify="space-between"
           align="center"
           onClick={() => navigate(`/user?email=${email}`)}

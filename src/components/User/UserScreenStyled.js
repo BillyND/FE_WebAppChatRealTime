@@ -27,3 +27,33 @@ export const WrapUserScreen = styled.div`
     }
   }
 `;
+
+export const WrapEditProfile = styled.div`
+  .btn-done-edit {
+    width: 100%;
+    background-color: ${(p) => (p.isDark ? "#fff" : "#000000")};
+    color: ${(p) => (p.isDark ? "#000000" : "#fff")};
+    border-radius: 8px;
+    height: 50px;
+    overflow: hidden;
+
+    &.loading {
+      opacity: 0.5;
+      cursor: no-drop;
+    }
+
+    .spinner-update-info {
+      position: absolute;
+      scale: 0.7;
+      width: 40px;
+      margin-left: 70px;
+    }
+  }
+
+  .input-about-of-user {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: ${(p) => (p.isDark ? "#fff" : "#000000")};
+  }
+`;

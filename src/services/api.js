@@ -112,3 +112,8 @@ export const followersUser = (payload) => {
   const currentUserId = infoUserSubscription.state?.infoUser?._id;
   return axios.put(`users/${currentUserId}/follow`, payload, tokenHeaders());
 };
+
+export const saveProfileUser = (payload) => {
+  const currentUserId = infoUserSubscription.state?.infoUser?._id;
+  return axios.post(`users/${currentUserId}/profile`, payload, tokenHeaders());
+};
