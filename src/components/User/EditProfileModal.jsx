@@ -89,11 +89,19 @@ function EditProfileModal() {
       listPostSubs.updateState({
         currentUser: { ...resSaveProfile, showEditProfile: false },
         listPostByUser: listPostSubs.state.listPostByUser.map((post) => {
-          return { ...post, avaUrl: resSaveProfile.avaUrl };
+          return {
+            ...post,
+            avaUrl: resSaveProfile.avaUrl,
+            username: resSaveProfile.username,
+          };
         }),
         listPost: listPostSubs.state.listPost.map((post) => {
           if (post.userId === currentUser._id) {
-            return { ...post, avaUrl: resSaveProfile.avaUrl };
+            return {
+              ...post,
+              avaUrl: resSaveProfile.avaUrl,
+              username: resSaveProfile.username,
+            };
           }
           return post;
         }),
