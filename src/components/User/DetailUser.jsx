@@ -39,7 +39,7 @@ function DetailUser() {
   } = currentUser || {};
 
   const isAuthor = currentUserId === userId;
-  const isFollowed = followers.includes(userId);
+  const isFollowed = followers?.includes(userId);
 
   /**
    * Function to handle follow/unfollow action for a user.

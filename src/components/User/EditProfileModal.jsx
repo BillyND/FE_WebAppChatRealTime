@@ -71,27 +71,48 @@ function EditProfileModal() {
 
   const handleSaveProfile = async () => {
     try {
-      setInfoUser({
-        ...infoUser,
+      // Start updating loading state
+      setInfoUser((prevInfoUser) => ({
+        ...prevInfoUser,
         loadingUpdate: true,
-      });
+      }));
+
+      // Save the new user profile information
       const resSaveProfile = await saveProfileUser({
         ...infoUser,
         avaUrl: newAvaUrl,
       });
+
+      // Update the logged-in user information and update display state
       login({ infoUser: { ...infoUser, ...resSaveProfile } });
-      listPostSubs.updateState({
+
+      // Update post states
+      listPostSubs.updateState((prevState) => ({
+        ...prevState,
         currentUser: resSaveProfile,
         showEditProfile: false,
-      });
+        listPostByUser: prevState.listPostByUser.map((post) => {
+          return { ...post, avaUrl: resSaveProfile.avaUrl };
+        }),
+        listPost: prevState.listPost.map((post) => {
+          if (post.userId === currentUser._id) {
+            return { ...post, avaUrl: resSaveProfile.avaUrl };
+          }
+          return post;
+        }),
+      }));
+
+      // Update the new avatar URL
+      setNewAvaUrl(resSaveProfile?.avaUrl || avaUrl);
     } catch (error) {
       showPopupError(error);
       console.error("===> Error handleSaveProfile:", error);
     } finally {
-      setInfoUser({
-        ...infoUser,
+      // Finish updating loading state
+      setInfoUser((prevInfoUser) => ({
+        ...prevInfoUser,
         loadingUpdate: false,
-      });
+      }));
     }
   };
 

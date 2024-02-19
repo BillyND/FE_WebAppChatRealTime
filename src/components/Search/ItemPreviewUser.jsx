@@ -27,7 +27,7 @@ function ItemPreviewUser(props) {
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
   const navigate = useNavigate();
-  const isFollowed = followers.includes(userId);
+  const isFollowed = followers?.includes(userId);
 
   const borderStyle = `1px solid ${
     type === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9"
