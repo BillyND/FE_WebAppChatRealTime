@@ -29,6 +29,11 @@ export const WrapUserScreen = styled.div`
 `;
 
 export const WrapEditProfile = styled.div`
+  .label-input-avatar {
+    border-radius: 50%;
+    width: 70px;
+  }
+
   .btn-done-edit {
     width: 100%;
     background-color: ${(p) => (p.isDark ? "#fff" : "#000000")};

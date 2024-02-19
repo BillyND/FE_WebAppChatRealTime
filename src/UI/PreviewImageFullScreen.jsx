@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 function PreviewImageFullScreen() {
   const {
-    state: { imgSrc, isCircle },
+    state: { imgSrc },
     setState: setImgPreview,
   } = useSubscription(previewImageFullScreenSubs, ["imgSrc"]);
 
@@ -15,7 +15,7 @@ function PreviewImageFullScreen() {
   return (
     <WrapPreviewImage
       onClick={() => {
-        setImgPreview({ imgSrc: "", isCircle: false });
+        setImgPreview({ imgSrc: "" });
       }}
     >
       <div>
@@ -24,7 +24,6 @@ function PreviewImageFullScreen() {
           onClick={(e) => e.stopPropagation()}
           className="img-preview-full-screen"
           src={imgSrc}
-          style={{ borderRadius: isCircle ? "50%" : "" }}
         />
       </div>
       <CloseOutlined className="icon-close-preview-image cursor-pointer transition-02" />

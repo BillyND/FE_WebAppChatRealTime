@@ -1,6 +1,8 @@
+import { SpinnerLoading } from "@UI//SpinnerLoading";
 import BaseModal from "@UI/BaseModal";
 import { UserThumbnail } from "@UI/UserThumbnail";
 import { LockOutlined } from "@ant-design/icons";
+import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useDebounce } from "@utils/hooks/useDebounce";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
@@ -11,10 +13,8 @@ import SeparatingLine from "../../UI/SeparatingLine";
 import { saveProfileUser } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
+import { showPopupError } from "../../utils/utilities";
 import { WrapEditProfile } from "./UserScreenStyled";
-import { SpinnerLoading } from "@UI//SpinnerLoading";
-import { compareChange, showPopupError } from "../../utils/utilities";
-import { useLayoutEffect } from "react";
 
 const InputInfoUser = (props) => {
   const { label, value, setValue } = props;
@@ -51,7 +51,11 @@ function EditProfileModal() {
     username: username,
     about: about,
     loadingUpdate: false,
+    avaUrl: avaUrl,
+    loadingParseImage: false,
   });
+
+  const [newAvaUrl, setNewAvaUrl] = useState(avaUrl);
 
   const handleClosePreview = () => {
     listPostSubs.updateState({
@@ -62,6 +66,7 @@ function EditProfileModal() {
   const handleCancelSave = () => {
     handleClosePreview();
     setInfoUser({ username: username, about: about });
+    setNewAvaUrl(avaUrl);
   };
 
   const handleSaveProfile = async () => {
@@ -70,7 +75,10 @@ function EditProfileModal() {
         ...infoUser,
         loadingUpdate: true,
       });
-      const resSaveProfile = await saveProfileUser(infoUser);
+      const resSaveProfile = await saveProfileUser({
+        ...infoUser,
+        avaUrl: newAvaUrl,
+      });
       login({ infoUser: { ...infoUser, ...resSaveProfile } });
       listPostSubs.updateState({
         currentUser: resSaveProfile,
@@ -84,6 +92,50 @@ function EditProfileModal() {
         ...infoUser,
         loadingUpdate: false,
       });
+    }
+  };
+
+  const handleFileChange = async (event) => {
+    setInfoUser({ ...infoUser, loadingParseImage: true });
+
+    const selectedFile = event.target.files[0];
+
+    if (!selectedFile) {
+      setInfoUser({ ...infoUser, loadingParseImage: false });
+      return;
+    }
+
+    if (!selectedFile.type.startsWith("image")) {
+      message.error("Please select an image!");
+      setInfoUser({
+        ...infoUser,
+        avaUrl: avaUrl,
+      });
+      setInfoUser({ ...infoUser, loadingParseImage: false });
+      return;
+    }
+
+    try {
+      const resizedFile = await resizeImage(selectedFile);
+
+      if (resizedFile.size > 500 * 1024) {
+        showPopupError("Please select an image smaller than 500KB");
+        setInfoUser({
+          ...infoUser,
+          avaUrl: avaUrl,
+        });
+        setInfoUser({ ...infoUser, loadingParseImage: false });
+        return;
+      }
+
+      const dataURL = await readFileAsDataURL(resizedFile);
+
+      setNewAvaUrl(dataURL);
+    } catch (error) {
+      console.error(error);
+      showPopupError("Image is incorrect, please choose another image!");
+    } finally {
+      setInfoUser({ ...infoUser, loadingParseImage: false });
     }
   };
 
@@ -115,7 +167,20 @@ function EditProfileModal() {
               </Flex>
               <SeparatingLine height={1} />
             </Flex>
-            <UserThumbnail avaUrl={avaUrl} size={55} />
+
+            <label
+              htmlFor="fileInput"
+              className="press-active label-input-avatar"
+            >
+              <UserThumbnail avaUrl={newAvaUrl} size={55} />
+            </label>
+
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </Flex>
 
           <InputInfoUser

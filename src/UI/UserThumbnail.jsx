@@ -7,6 +7,9 @@ export const UserThumbnail = ({ avaUrl, size = 36 }) => {
         width: `${size}px`,
         height: `${size}px`,
         minWidth: `${size}px`,
+        border: "0.5px solid #313131",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     />
   );
