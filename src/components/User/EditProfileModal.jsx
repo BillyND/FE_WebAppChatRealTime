@@ -41,12 +41,11 @@ function EditProfileModal() {
   const { login } = useAuthUser();
   const {
     state: { currentUser },
-  } = useSubscription(listPostSubs, ["currentUser"]);
+  } = useSubscription(listPostSubs);
   const {
     styleApp: { type: typeStyle },
   } = useStyleApp();
-  const { avaUrl, username, email, createdAt, showEditProfile, about } =
-    currentUser || {};
+  const { avaUrl, username, email, showEditProfile, about } = currentUser || {};
   const [infoUser, setInfoUser] = useState({
     username: username,
     about: about,
@@ -87,20 +86,18 @@ function EditProfileModal() {
       login({ infoUser: { ...infoUser, ...resSaveProfile } });
 
       // Update post states
-      listPostSubs.updateState((prevState) => ({
-        ...prevState,
-        currentUser: resSaveProfile,
-        showEditProfile: false,
-        listPostByUser: prevState.listPostByUser.map((post) => {
+      listPostSubs.updateState({
+        currentUser: { ...resSaveProfile, showEditProfile: false },
+        listPostByUser: listPostSubs.state.listPostByUser.map((post) => {
           return { ...post, avaUrl: resSaveProfile.avaUrl };
         }),
-        listPost: prevState.listPost.map((post) => {
+        listPost: listPostSubs.state.listPost.map((post) => {
           if (post.userId === currentUser._id) {
             return { ...post, avaUrl: resSaveProfile.avaUrl };
           }
           return post;
         }),
-      }));
+      });
 
       // Update the new avatar URL
       setNewAvaUrl(resSaveProfile?.avaUrl || avaUrl);
@@ -164,7 +161,7 @@ function EditProfileModal() {
     <BaseModal
       className="modal-delete-post"
       open={showEditProfile}
-      onCancel={handleCancelSave}
+      onCancel={!infoUser.loadingUpdate ? handleCancelSave : undefined}
       onOk={() => {}}
       hiddenClose={true}
       footer={<></>}
