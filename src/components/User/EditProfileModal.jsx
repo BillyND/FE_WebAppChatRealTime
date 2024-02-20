@@ -82,6 +82,11 @@ function EditProfileModal() {
         avaUrl: newAvaUrl,
       });
 
+      if (!resSaveProfile?._id) {
+        showPopupError();
+        return;
+      }
+
       // Update the logged-in user information and update display state
       login({ infoUser: { ...infoUser, ...resSaveProfile } });
 
