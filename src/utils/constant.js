@@ -30,7 +30,7 @@ export const TIME_DELAY_SEARCH_INPUT = 100;
 export const TIME_DELAY_FETCH_API = 300;
 
 export const regexValidateEmail =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export const KEY_NEW_POST = "NEW_POST";
 

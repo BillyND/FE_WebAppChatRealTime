@@ -114,7 +114,7 @@ function DetailUser() {
         <Flex vertical>
           <h2
             className="cursor-pointer"
-            style={{ fontSize: "24px" }}
+            style={{ fontSize: "24px", wordBreak: "break-all" }}
             onClick={handleShowPreviewUser}
           >
             {username}
@@ -126,7 +126,6 @@ function DetailUser() {
           onClick={() =>
             previewImageFullScreenSubs.updateState({
               imgSrc: avaUrl,
-              isCircle: true,
             })
           }
         >

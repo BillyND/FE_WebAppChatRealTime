@@ -1,24 +1,30 @@
 import { getInfoUserLocal } from "@services/customAxios";
-import { useSubscription } from "global-state-hook";
-import { useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
-import { WrapStyledApp } from "./StyledApp";
-import AuthScreen from "./components/Auth/AuthScreen";
-import HomeScreen from "./components/Home/HomeScreen";
-import ModalNewPost from "./components/Post/ModalNewPost";
-import { placeHolderInputPost } from "./components/Post/NewPost";
-import "./global.scss";
-import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import SearchScreen from "./components/Search/SearchScreen";
-import { BrowserRouter } from "react-router-dom";
-import Layout from "./Layout";
-import MessageScreen from "./components/Message/MessageScreen";
-import UserScreen from "./components/User/UserScreen";
 import { message } from "antd";
+import { useSubscription } from "global-state-hook";
+import { useEffect } from "react";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { io } from "socket.io-client";
+import Layout from "./Layout";
+import { WrapStyledApp } from "./StyledApp";
+import AuthScreen from "./components/Auth/AuthScreen";
+import HomeScreen from "./components/Home/HomeScreen";
+import MessageScreen from "./components/Message/MessageScreen";
+import ModalNewPost from "./components/Post/ModalNewPost";
+import { placeHolderInputPost } from "./components/Post/NewPost";
+import SearchScreen from "./components/Search/SearchScreen";
+import UserScreen from "./components/User/UserScreen";
+import "./global.scss";
+import { getDataInfoUser } from "./services/api";
+import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -49,9 +55,19 @@ const TriggerConnectSocketIo = () => {
   const { setState } = useSubscription(socketIoSubs, ["socketIo"]);
   const {
     infoUser: { _id: userId },
+    login,
   } = useAuthUser();
 
+  const handleApplyNewInfoUser = async () => {
+    const resInfoUser = await getDataInfoUser();
+
+    if (resInfoUser.data) {
+      login(resInfoUser.data);
+    }
+  };
+
   useEffect(() => {
+    handleApplyNewInfoUser();
     const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"],
     });

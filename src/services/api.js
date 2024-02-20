@@ -30,6 +30,10 @@ export const postLogin = ({ email, password }) => {
   return axios.post("auth/login", { email, password });
 };
 
+export const getDataInfoUser = () => {
+  return axios.get("auth/user", tokenHeaders());
+};
+
 export const getAllAccount = () => {
   return axios.get("auth/account", tokenHeaders());
 };

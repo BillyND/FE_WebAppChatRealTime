@@ -1,7 +1,12 @@
 import { getPost } from "@services/api";
 import { message } from "antd";
 import { cloneDeep, unionBy } from "lodash";
-import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
+import {
+  detailPostSubs,
+  infoUserSubscription,
+  listPostSubs,
+} from "./globalStates/initGlobalState";
+import { getDataInfoUser } from "../services/api";
 
 /**
  * Fetches and handles the list of posts.
@@ -363,4 +368,19 @@ export function formatDateToMonthYear(dateString) {
     console.error("===> Error at formatDateToMonthYear:", error);
     return null;
   }
+}
+
+export function isValidUsername(username) {
+  // Check length
+  if (username.length < 1 || username.length > 15) {
+    return false;
+  }
+
+  // Check character
+  const regex = /^[a-zA-Z0-9_]+$/;
+  if (!regex.test(username)) {
+    return false;
+  }
+
+  return true;
 }

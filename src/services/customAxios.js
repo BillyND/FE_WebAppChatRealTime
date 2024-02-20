@@ -94,7 +94,7 @@ instance.interceptors.response.use(
     ) {
       // Remove user info from local storage
       passLocalStorage.removeItem(KEY_INFO_USER);
-      window.location.href = "/login";
+      // window.location.href = "/login";
     }
 
     await handleDelayApiLocal();

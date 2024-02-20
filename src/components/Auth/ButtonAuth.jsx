@@ -5,6 +5,7 @@ import { postLogin, postRegister } from "@services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { regexValidateEmail } from "@utils/constant";
+import { isValidUsername, showPopupError } from "../../utils/utilities";
 
 export const ButtonAuth = ({
   loadingAuth,
@@ -70,7 +71,7 @@ export const ButtonAuth = ({
     if (
       !validateEmail(infoUserInput.email) ||
       !validateLength(infoUserInput.password, 6) ||
-      !validateLength(infoUserInput.username, 6)
+      !isValidUsername(infoUserInput.username)
     ) {
       if (!validateEmail(infoUserInput.email)) {
         message.error("Please enter a valid email address.");
@@ -80,8 +81,10 @@ export const ButtonAuth = ({
         message.error("Password must be at least 6 characters.");
         return;
       }
-      if (!validateLength(infoUserInput.username, 6)) {
-        message.error("Username must be at least 6 characters.");
+      if (!isValidUsername(infoUserInput.username)) {
+        showPopupError(
+          "Username must be between 1 and 15 characters long and contain only letters (uppercase and lowercase), numbers, and underscores."
+        );
         return;
       }
       return;
@@ -95,7 +98,7 @@ export const ButtonAuth = ({
         message.success(resRegister?.message);
         navigate("/login");
       } else {
-        message.error(resRegister?.data?.message);
+        message.error(resRegister?.message);
       }
 
       setLoadingAuth(false);

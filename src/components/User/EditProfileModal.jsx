@@ -18,19 +18,13 @@ import { WrapEditProfile } from "./UserScreenStyled";
 
 const InputInfoUser = (props) => {
   const { label, value, setValue } = props;
-  const [localValue, setLocalValue] = useState(value);
-  const debounceLocalValue = useDebounce(localValue, TIME_DELAY_FETCH_API);
-
-  useEffect(() => {
-    setValue(debounceLocalValue);
-  }, [debounceLocalValue]);
 
   return (
     <Flex vertical className="width-100-per">
       <b>{label}</b>
       <input
-        value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
         className="input-about-of-user"
       />
     </Flex>
@@ -41,7 +35,7 @@ function EditProfileModal() {
   const { login } = useAuthUser();
   const {
     state: { currentUser },
-  } = useSubscription(listPostSubs);
+  } = useSubscription(listPostSubs, ["currentUser"]);
   const {
     styleApp: { type: typeStyle },
   } = useStyleApp();
