@@ -25,6 +25,7 @@ import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
 import { getDataInfoUser } from "./services/api";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
+import { convertToTitleCase } from "./utils/utilities";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -35,10 +36,10 @@ const TriggerNavigate = () => {
   const isNotOnHomePage = pathname !== "/";
   const shouldRedirectToHome =
     accessToken && isOnLoginRegisterPage && isNotOnHomePage;
-
   const shouldRedirectToLogin = !accessToken && !isOnLoginRegisterPage;
 
   useEffect(() => {
+    document.title = convertToTitleCase(pathname) || "Home";
     if (shouldRedirectToHome) {
       navigate("/");
     }

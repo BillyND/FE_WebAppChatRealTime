@@ -384,3 +384,21 @@ export function isValidUsername(username) {
 
   return true;
 }
+
+export function convertToTitleCase(text) {
+  // Split the text into words
+  let words = text.split(" ");
+
+  // Iterate through each word
+  for (let i = 0; i < words.length; i++) {
+    // Check if the word starts with '/'
+    if (words[i].startsWith("/")) {
+      // Remove the '/' and convert the rest of the word to title case
+      words[i] = words[i].substring(1).toLowerCase();
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
+    }
+  }
+
+  // Join the words back into a single string
+  return words.join(" ");
+}

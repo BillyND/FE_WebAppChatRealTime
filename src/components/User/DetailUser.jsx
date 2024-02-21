@@ -15,6 +15,7 @@ import {
 import { showPopupError } from "../../utils/utilities";
 import InfoUserModal from "./InfoUserModal";
 import EditProfileModal from "./EditProfileModal";
+import { useEffect } from "react";
 
 function DetailUser() {
   const { isMobile } = useWindowSize();
