@@ -59,3 +59,5 @@ export const FILL_COLOR_ICON = {
   ACTIVE: "#fff",
   DE_ACTIVE: "#00000000",
 };
+
+export const TITLE_OF_CURRENT_SITE = "Home";

@@ -26,6 +26,7 @@ import "./global.scss";
 import { getDataInfoUser } from "./services/api";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 import { convertToTitleCase } from "./utils/utilities";
+import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const TriggerNavigate = () => {
   const shouldRedirectToLogin = !accessToken && !isOnLoginRegisterPage;
 
   useEffect(() => {
-    document.title = convertToTitleCase(pathname) || "Home";
+    document.title = convertToTitleCase(pathname) || TITLE_OF_CURRENT_SITE;
     if (shouldRedirectToHome) {
       navigate("/");
     }
