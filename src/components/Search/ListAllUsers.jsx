@@ -42,8 +42,6 @@ export default function ListAllUsers(props) {
   const handleGetUser = async (currentNext) => {
     const { page, limit } = currentNext || {};
 
-    console.log("===>finalResultUser", unionBy([...results], "_id"));
-
     if (!currentNext) return;
 
     setLoadingFetch(true);
