@@ -154,9 +154,8 @@ export const WrapDetailPost = styled.div`
     .img-post {
       border: 0.5px solid #313131;
       border-radius: 8px;
-      max-height: 430px;
       max-width: 100%;
-      min-height: 270px;
+      width: ${(p) => (p.isMobile ? "100%" : "80%")};
     }
   }
 

@@ -49,8 +49,8 @@ const WrapPreviewImage = styled.div`
     height: 100%;
     width: 100%;
     object-fit: contain;
-    min-width: 375px;
-    border: 0.5px solid #313131;
+    min-width: 100vw;
+    padding: 20px 0;
   }
 
   .icon-close-preview-image {
@@ -64,7 +64,7 @@ const WrapPreviewImage = styled.div`
 
     &:hover {
       transform: rotate(180deg);
-      scale: 1.2;
+      /* scale: 1.2; */
     }
 
     svg {

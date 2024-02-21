@@ -20,8 +20,6 @@ export default function ListAllUsers(props) {
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "results"]);
 
-  console.log("===>results:", results);
-
   const [loadingFetch, setLoadingFetch] = useState(false);
   const { infoUser } = useAuthUser();
   const scrollContainerRef = useRef();
@@ -53,11 +51,9 @@ export default function ListAllUsers(props) {
       const resGetUser = await getUser(page, limit);
       const { next, results: resResult } = resGetUser;
 
-      const finalResultUser = currentNext
-        ? [...results, ...resResult]
-        : [...resResult, ...results].filter(
-            (user) => user?._id !== infoUser?._id
-          );
+      const finalResultUser = (
+        currentNext ? [...results, ...resResult] : [...resResult, ...results]
+      ).filter((user) => user?._id !== infoUser?._id);
 
       setDataSearchUser({
         next: currentNext ? next : currentNext,

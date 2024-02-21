@@ -62,7 +62,9 @@ const TriggerConnectSocketIo = () => {
     const resInfoUser = await getDataInfoUser();
 
     if (resInfoUser.data) {
-      login(resInfoUser.data);
+      login({
+        infoUser: resInfoUser.data,
+      });
     }
   };
 
