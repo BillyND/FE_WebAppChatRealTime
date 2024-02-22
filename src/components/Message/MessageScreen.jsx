@@ -1,8 +1,15 @@
 import React from "react";
 import { WrapMessageScreen } from "./StyledMessageScreen";
+import ListConversations from "./ListConversations";
+import DetailConversation from "./DetailConversation";
 
 function MessageScreen(props) {
-  return <WrapMessageScreen>Message Screen</WrapMessageScreen>;
+  return (
+    <WrapMessageScreen>
+      <ListConversations />
+      <DetailConversation />
+    </WrapMessageScreen>
+  );
 }
 
 export default MessageScreen;

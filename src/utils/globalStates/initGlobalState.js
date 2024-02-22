@@ -26,3 +26,5 @@ export const searchInputSubs = createSubscription({
   results: [],
   resultsPreview: [],
 });
+
+export const conversationSubs = createSubscription({});

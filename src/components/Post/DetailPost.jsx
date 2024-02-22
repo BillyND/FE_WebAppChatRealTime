@@ -78,10 +78,6 @@ const DetailPost = (props) => {
       ? likerIds.filter((liker) => liker !== userId)
       : [...post.likerIds, userId];
 
-    // detailPostSubs.setState({
-    //   [`post-${postId}`]: { ...post, likerIds: updatedLikerIds },
-    // });
-
     updateCurrentPost({ ...post, likerIds: updatedLikerIds });
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter

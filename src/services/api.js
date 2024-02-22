@@ -121,3 +121,9 @@ export const saveProfileUser = (payload) => {
   const currentUserId = infoUserSubscription.state?.infoUser?._id;
   return axios.post(`users/${currentUserId}/profile`, payload, tokenHeaders());
 };
+
+// <===API MESSAGE===>
+export const getConversations = () => {
+  const currentUserId = infoUserSubscription.state?.infoUser?._id;
+  return axios.get(`conversation/${currentUserId}`, tokenHeaders());
+};
