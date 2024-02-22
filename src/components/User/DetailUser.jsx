@@ -13,9 +13,8 @@ import {
   searchInputSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
-import InfoUserModal from "./InfoUserModal";
 import EditProfileModal from "./EditProfileModal";
-import { useEffect } from "react";
+import InfoUserModal from "./InfoUserModal";
 
 function DetailUser() {
   const { isMobile } = useWindowSize();
@@ -151,8 +150,23 @@ function DetailUser() {
           <Flex
             style={{
               width: "100%",
-              background: type === TYPE_STYLE_APP.DARK ? "#fff" : "#000000",
-              color: type === TYPE_STYLE_APP.DARK ? "#000000" : "#fff",
+              background:
+                type === TYPE_STYLE_APP.DARK
+                  ? isFollowed
+                    ? ""
+                    : "#fff"
+                  : isFollowed
+                  ? ""
+                  : "#000000",
+
+              color:
+                type === TYPE_STYLE_APP.DARK
+                  ? isFollowed
+                    ? "#fff"
+                    : "#000000"
+                  : isFollowed
+                  ? "#000000"
+                  : "#fff",
             }}
             justify="center"
             align="center"

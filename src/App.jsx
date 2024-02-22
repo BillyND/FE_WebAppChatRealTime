@@ -27,6 +27,7 @@ import { getDataInfoUser } from "./services/api";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 import { convertToTitleCase } from "./utils/utilities";
 import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
+import PreviewImageFullScreen from "./UI/PreviewImageFullScreen";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const TriggerNavigate = () => {
     }
   }, [pathname]);
 
-  return <></>;
+  return <PreviewImageFullScreen />;
 };
 
 const TriggerConnectSocketIo = () => {

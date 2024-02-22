@@ -27,7 +27,7 @@ function ModalNewPost({ placeHolderInputPost }) {
     closeModal,
   } = useModal(["MODAL_NEW_POST"]);
   const {
-    infoUser: { _id: userId },
+    infoUser: { _id: userId, email },
   } = useAuthUser();
   const {
     state: { postHasUpdate = {} },

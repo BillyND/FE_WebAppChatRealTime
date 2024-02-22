@@ -1,8 +1,5 @@
-import { Flex } from "antd";
-import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
 import PopoverCustom from "@UI//PopoverCustom";
+import { UserThumbnail } from "@UI//UserThumbnail";
 import {
   IconDash,
   IconHeartActive,
@@ -19,6 +16,7 @@ import {
 } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { openModalWithOutRender } from "@utils/hooks/useModal";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import {
   formatTimeAgo,
@@ -26,11 +24,12 @@ import {
   handleUpdatePostSocket,
   updateCurrentPost,
 } from "@utils/utilities";
+import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
+import { debounce } from "lodash";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
-import PreviewImageFullScreen from "@UI//PreviewImageFullScreen";
-import { UserThumbnail } from "@UI//UserThumbnail";
-import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
@@ -186,7 +185,6 @@ const DetailPost = (props) => {
 
           {imageUrl && (
             <div className="image">
-              <PreviewImageFullScreen />
               <img
                 loading="lazy"
                 draggable={false}

@@ -64,7 +64,6 @@ const WrapPreviewImage = styled.div`
 
     &:hover {
       transform: rotate(180deg);
-      /* scale: 1.2; */
     }
 
     svg {
