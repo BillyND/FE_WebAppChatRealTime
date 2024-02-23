@@ -338,7 +338,7 @@ img {
 @media only screen and (min-width: 768px) {
   /* For WebKit browsers (Safari, Chrome, etc.) */
   ::-webkit-scrollbar {
-    width: 5px;
+    width: 10px;
   }
 
   ::-webkit-scrollbar-track {

@@ -155,7 +155,7 @@ export const WrapDetailPost = styled.div`
       border: 0.5px solid #313131;
       border-radius: 8px;
       max-width: 100%;
-      width: ${(p) => (p.isMobile ? "100%" : "80%")};
+      width: ${(p) => (p.isMobile ? "100%" : "70%")};
     }
   }
 
@@ -219,6 +219,10 @@ export const StyledMenuDetailPost = styled.div`
 
     &.critical {
       color: red;
+    }
+
+    &:active {
+      background-color: #b3b3b324;
     }
   }
 

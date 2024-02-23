@@ -136,7 +136,7 @@ const DetailPost = (props) => {
             {index > 0 && <hr className="boundary-line-item" />}
 
             <div
-              className={`item-menu transition-01 press-active none-copy ${
+              className={`item-menu transition-01 none-copy ${
                 critical && "critical"
               }`}
               onClick={() => onclick && onclick()}
