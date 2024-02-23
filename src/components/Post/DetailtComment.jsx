@@ -22,7 +22,7 @@ import { UserThumbnail } from "@UI//UserThumbnail";
 let timerQueryWithModal;
 
 export const DetailComment = (props) => {
-  const { posting, postId, commentId, tempComment } = props;
+  const { posting, postId, commentId, tempComment, avaUrlOfComment } = props;
   const {
     infoUser: { avaUrl, _id: userId, username: currentUserName },
   } = useAuthUser();
@@ -106,7 +106,7 @@ export const DetailComment = (props) => {
         setOpenDelete={setOpenDelete}
       />
       <Flex gap={12}>
-        <UserThumbnail avaUrl={avaUrl} size={32} />
+        <UserThumbnail avaUrl={avaUrlOfComment} size={32} />
         <div
           className="wrap-detail-comment"
           style={{ width: isEdit ? "100%" : "fit-content" }}

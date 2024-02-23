@@ -102,7 +102,7 @@ function ModalCommentPost(props) {
 
           <div className="list-comment mb-2">
             {comments?.map((comment, index) => {
-              const { _id } = comment || {};
+              const { _id, avaUrl: avaUrlOfComment } = comment || {};
 
               detailPostSubs.state = {
                 ...detailPostSubs.state,
@@ -114,7 +114,7 @@ function ModalCommentPost(props) {
               return (
                 <Fragment key={`${_id}-${index}`}>
                   <DetailComment
-                    comment={comment}
+                    avaUrlOfComment={avaUrlOfComment}
                     commentId={_id}
                     postId={postId}
                   />

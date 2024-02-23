@@ -30,6 +30,7 @@ import { debounce } from "lodash";
 import React, { Fragment, useCallback, useEffect, useState } from "react";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
+import { useNavigate } from "react-router-dom";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
@@ -48,6 +49,7 @@ const DetailPost = (props) => {
     description = "",
     countComment,
     createdAt,
+    userEmail,
   } = post;
   const [openComment, setOpenComment] = useState(false);
   const {
@@ -57,6 +59,7 @@ const DetailPost = (props) => {
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     socketIo.on("getPost", (post) => {
@@ -152,7 +155,13 @@ const DetailPost = (props) => {
   return (
     <WrapDetailPost type={type} isMobile={isMobile}>
       <div className="header">
-        <Flex justify="space-between" gap={8} align="center">
+        <Flex
+          justify="space-between"
+          gap={8}
+          align="center"
+          className="cursor-pointer"
+          onClick={() => navigate(`/user?email=${userEmail}`)}
+        >
           <UserThumbnail avaUrl={avaUrl} />
           <div className="name">{username}</div>
         </Flex>
