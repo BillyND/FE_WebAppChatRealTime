@@ -1,14 +1,14 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
+import { getUser } from "@services/api";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useScrollToBottom } from "@utils/hooks/useScrollBottom";
+import { showPopupError } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { getUser } from "@services/api";
-import { searchInputSubs } from "@utils/globalStates/initGlobalState";
-import { showPopupError } from "@utils/utilities";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import ItemPreviewUser from "./ItemPreviewUser";
-import { unionBy } from "lodash";
 
 /**
  * Functional component to display a list of all users.
@@ -65,22 +65,24 @@ export default function ListAllUsers(props) {
   };
 
   return (
-    <Flex
-      ref={scrollContainerRef}
-      vertical
-      gap={16}
-      className={`wrap-list-all-user enable-scroll px-2 ${next && "pb-3"}`}
+    <PerfectScrollbar
+      containerRef={(el) => (scrollContainerRef.current = el)}
+      className={`wrap-list-all-user px-2 ${next && "pb-3"}`}
       id="list-all-user"
     >
-      {results.map((user) => (
-        <Fragment key={user?._id}>
-          <ItemPreviewUser user={user} />
-        </Fragment>
-      ))}
-      <span>
-        <hr className="gray ml-5" />
-      </span>
-      {next && <SpinnerLoading style={{ opacity: loadingFetch ? "1" : "0" }} />}
-    </Flex>
+      <Flex vertical gap={16}>
+        {results.map((user) => (
+          <Fragment key={user?._id}>
+            <ItemPreviewUser user={user} />
+          </Fragment>
+        ))}
+        <span>
+          <hr className="gray ml-5" />
+        </span>
+        {next && (
+          <SpinnerLoading style={{ opacity: loadingFetch ? "1" : "0" }} />
+        )}
+      </Flex>
+    </PerfectScrollbar>
   );
 }

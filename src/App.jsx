@@ -5,6 +5,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { message } from "antd";
 import { useSubscription } from "global-state-hook";
 import { useEffect } from "react";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import {
   BrowserRouter,
   Route,
@@ -15,6 +16,7 @@ import {
 import { io } from "socket.io-client";
 import Layout from "./Layout";
 import { WrapStyledApp } from "./StyledApp";
+import PreviewImageFullScreen from "./UI/PreviewImageFullScreen";
 import AuthScreen from "./components/Auth/AuthScreen";
 import HomeScreen from "./components/Home/HomeScreen";
 import MessageScreen from "./components/Message/MessageScreen";
@@ -24,10 +26,9 @@ import SearchScreen from "./components/Search/SearchScreen";
 import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
 import { getDataInfoUser } from "./services/api";
+import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 import { convertToTitleCase } from "./utils/utilities";
-import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
-import PreviewImageFullScreen from "./UI/PreviewImageFullScreen";
 
 const TriggerNavigate = () => {
   const navigate = useNavigate();

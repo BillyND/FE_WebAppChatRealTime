@@ -49,6 +49,7 @@ export const WrapSearchScreen = styled.div`
   }
 
   .wrap-preview-search {
+    z-index: 1000 !important;
     box-shadow: ${(p) =>
       p.isMobile
         ? "0"

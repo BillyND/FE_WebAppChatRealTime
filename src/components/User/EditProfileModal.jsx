@@ -23,6 +23,7 @@ const InputInfoUser = (props) => {
     <Flex vertical className="width-100-per">
       <b>{label}</b>
       <input
+        type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="input-about-of-user"
@@ -184,7 +185,7 @@ function EditProfileModal() {
                   align="center"
                   justify="start"
                   gap={4}
-                  onClick={() => message.info("Cannot be edited!")}
+                  style={{ cursor: "no-drop" }}
                 >
                   <LockOutlined />
                   <span>{email}</span>

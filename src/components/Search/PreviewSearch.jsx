@@ -12,6 +12,7 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { Fragment, useEffect } from "react";
 import ItemPreviewUser from "./ItemPreviewUser";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 function PreviewSearch(props) {
   const { focusInput, setLoadingSearch, loadingSearch, inputSearch } = props;
@@ -64,10 +65,6 @@ function PreviewSearch(props) {
 
   return (
     <div
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-      className="wrap-preview-search transition-02 enable-scroll none-copy"
       style={{
         ...(isMobile ? styleApp : inputSearchStyle),
         height:
@@ -86,50 +83,56 @@ function PreviewSearch(props) {
             borderBottomRightRadius: "16px",
           }),
       }}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      className="wrap-preview-search transition-02 none-copy"
     >
-      <Flex
-        vertical
-        gap={10}
-        style={{
-          padding: "16px",
-        }}
-      >
+      <PerfectScrollbar>
         <Flex
-          className="cursor-pointer"
-          align="center"
-          justify="space-between"
-          gap={8}
+          vertical
+          gap={10}
           style={{
-            maxHeight: "67px",
-            boxSizing: "border-box",
+            padding: "16px",
           }}
         >
-          <Flex align="center" gap={16}>
-            <IconSearchDeActive style={{ scale: "0.7", minWidth: "26px" }} />
-            <span
-              style={{
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              }}
-            >{`Search "${inputSearch}"`}</span>
+          <Flex
+            className="cursor-pointer"
+            align="center"
+            justify="space-between"
+            gap={8}
+            style={{
+              maxHeight: "67px",
+              boxSizing: "border-box",
+            }}
+          >
+            <Flex align="center" gap={16}>
+              <IconSearchDeActive style={{ scale: "0.7", minWidth: "26px" }} />
+              <span
+                style={{
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+              >{`Search "${inputSearch}"`}</span>
+            </Flex>
+            <WrapIconAntdDeActive style={{ scale: "1.1", minWidth: "26px" }}>
+              <RightOutlined />
+            </WrapIconAntdDeActive>
           </Flex>
-          <WrapIconAntdDeActive style={{ scale: "1.1", minWidth: "26px" }}>
-            <RightOutlined />
-          </WrapIconAntdDeActive>
-        </Flex>
-        {loadingSearch && <SpinnerLoading />}
+          {loadingSearch && <SpinnerLoading />}
 
-        <Flex vertical gap={16} className="mt-2">
-          {resultsPreview.map((user) => {
-            return (
-              <Fragment key={user?._id}>
-                <ItemPreviewUser user={user} />
-              </Fragment>
-            );
-          })}
+          <Flex vertical gap={16} className="mt-2">
+            {resultsPreview.map((user) => {
+              return (
+                <Fragment key={user?._id}>
+                  <ItemPreviewUser user={user} />
+                </Fragment>
+              );
+            })}
+          </Flex>
         </Flex>
-      </Flex>
+      </PerfectScrollbar>
     </div>
   );
 }

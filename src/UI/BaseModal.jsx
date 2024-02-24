@@ -2,6 +2,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Modal } from "antd";
 import React from "react";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 function BaseModal(props) {
   const {
@@ -58,7 +59,7 @@ function BaseModal(props) {
           maxHeight: "calc(100vh - 250px)",
         }}
       >
-        {content || children}
+        <PerfectScrollbar> {content || children}</PerfectScrollbar>
       </div>
     </Modal>
   );
