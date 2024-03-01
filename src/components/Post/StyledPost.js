@@ -216,6 +216,7 @@ export const StyledMenuDetailPost = styled.div`
     align-items: center;
     padding: 12px;
     cursor: pointer;
+    border-radius: 10px;
 
     &.critical {
       color: red;

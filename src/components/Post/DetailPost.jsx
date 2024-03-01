@@ -174,7 +174,7 @@ const DetailPost = (props) => {
             content={wrapMenuDetailPost}
             trigger="click"
           >
-            <div className="icon-more-detail press-active">
+            <div className="icon-more-detail none-copy">
               <IconDash />
             </div>
           </PopoverCustom>
@@ -195,7 +195,6 @@ const DetailPost = (props) => {
           {imageUrl && (
             <div className="image">
               <img
-                loading="lazy"
                 draggable={false}
                 src={imageUrl}
                 className="img-post cursor-pointer transition-02 press-active"
