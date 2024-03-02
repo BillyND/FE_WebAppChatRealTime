@@ -36,10 +36,9 @@ const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
   const {
     state: { [`post-${postId}`]: post },
-    setState,
   } = useSubscription(detailPostSubs, [`post-${postId}`]);
   const {
-    infoUser: { _id: userId },
+    infoUser: { _id: userId, avaUrl: currentAvaUrl },
   } = useAuthUser();
   const {
     likerIds = [],
@@ -260,6 +259,7 @@ const DetailPost = (props) => {
         <ModalCommentPost
           post={post}
           {...props}
+          currentAvaUrl={currentAvaUrl}
           hasFooter={false}
           openComment={openComment}
           setOpenComment={setOpenComment}

@@ -1,16 +1,16 @@
-import { useSubscription } from "global-state-hook";
-import React, { Fragment, useEffect } from "react";
+import BaseModal from "@UI//BaseModal";
+import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { getCommentsInPost } from "@services/api";
 import { SOURCE_IMAGE_SEND } from "@utils/constant";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
-import { updateCurrentPost, showPopupError } from "@utils/utilities";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { showPopupError, updateCurrentPost } from "@utils/utilities";
+import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
+import React, { Fragment, useEffect } from "react";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
-import { useStyleApp } from "@utils/hooks/useStyleApp";
-import { Flex } from "antd";
-import BaseModal from "@UI//BaseModal";
-import { SpinnerLoading } from "@UI//SpinnerLoading";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   const handleOnclick = (e) => {
@@ -43,6 +43,7 @@ function ModalCommentPost(props) {
     setOpenComment,
     post: { username },
     postId,
+    currentAvaUrl,
   } = props;
   const {
     state: { [`post-${postId}`]: post },
@@ -133,7 +134,11 @@ function ModalCommentPost(props) {
             )}
 
             {posting && (
-              <DetailComment tempComment={tempComment} posting={posting} />
+              <DetailComment
+                avaUrlOfComment={currentAvaUrl}
+                tempComment={tempComment}
+                posting={posting}
+              />
             )}
           </div>
 
