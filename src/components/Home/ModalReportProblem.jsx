@@ -21,7 +21,7 @@ function ModalReportProblem(props) {
       const trimmedProblem = inputProblem?.trim();
       if (!trimmedProblem) throw "Detail problem cannot be left blank!";
 
-      if (Date.now() - cachedTimeReport < 30000)
+      if (Date.now() - cachedTimeReport < 35000)
         throw "Please wait 30 seconds to report back!";
 
       cachedTimeReport = Date.now();
