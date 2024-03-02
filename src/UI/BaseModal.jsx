@@ -28,12 +28,16 @@ function BaseModal(props) {
       zIndex={2000}
       footer={
         footer || (
-          <Flex justify="end" gap={8}>
-            <button2 className="btn-cancel" type="primary" onClick={onCancel}>
+          <Flex justify="end" gap={8} className="none-copy">
+            <button2
+              className="btn-cancel press-active"
+              type="primary"
+              onClick={onCancel}
+            >
               Cancel
             </button2>
             <button2
-              className="btn-ok"
+              className="btn-ok press-active"
               onClick={onOk}
               style={{
                 opacity: loadingFooter ? "0.7" : "1",

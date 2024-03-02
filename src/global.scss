@@ -466,6 +466,10 @@ img {
         background-color: #fff !important;
       }
     }
+
+    .input-problem {
+      color: #fff;
+    }
   }
 }
 
@@ -561,6 +565,10 @@ img {
 
 .ant-modal-wrap {
   background-color: #0000004f !important;
+}
+
+.ant-message {
+  z-index: 9999 !important;
 }
 
 .hidden-lose {

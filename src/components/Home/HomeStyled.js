@@ -114,3 +114,15 @@ export const WrapContentPopoverSettings = styled.div`
     height: 20px;
   }
 `;
+
+export const WrapInputProblem = styled.div`
+  .input-problem {
+    width: 100%;
+    border-radius: 12px;
+    padding: 8px;
+    height: 200px;
+    resize: none;
+    background-color: #ffffff0f;
+    outline: none;
+  }
+`;

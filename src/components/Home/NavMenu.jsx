@@ -32,6 +32,7 @@ import {
   WrapControlNav,
   WrapNavMenu,
 } from "./HomeStyled";
+import ModalReportProblem from "./ModalReportProblem";
 
 const ButtonSettings = (props) => {
   const { logout } = useAuthUser();
@@ -69,6 +70,7 @@ const ButtonSettings = (props) => {
     {
       id: "reportProblem",
       label: "Report problem",
+      onAction: () => openModalWithOutRender("REPORT_PROBLEM"),
     },
     {
       id: "logOut",
@@ -79,13 +81,14 @@ const ButtonSettings = (props) => {
         </Flex>
       ),
       disabled: loadingLogout,
+      onAction: handleLogout,
     },
   ];
 
   const listSettings = (
     <WrapContentPopoverSettings className="none-copy">
       {data.map((item, index) => {
-        const { id, disabled } = item;
+        const { id, disabled, onAction } = item;
         const isButtonLogout = id === "logOut" && !loadingLogout;
         const isPointer = id !== "appearance";
 
@@ -94,10 +97,10 @@ const ButtonSettings = (props) => {
             {index > 0 && <hr className="boundary-line-item" />}
 
             <div
-              onClick={() => isButtonLogout && handleLogout()}
-              className={` item-nav-menu ${disabled ? "disabled" : ""}  ${
-                isPointer ? "cursor-pointer" : ""
-              }`}
+              onClick={() => onAction && onAction()}
+              className={`${index > 0 ? "press-active" : ""} item-nav-menu ${
+                disabled ? "disabled" : ""
+              }  ${isPointer ? "cursor-pointer" : ""}`}
             >
               {item.label}
             </div>
@@ -108,21 +111,24 @@ const ButtonSettings = (props) => {
   );
 
   return (
-    <PopoverCustom
-      onOpenChange={setIsOpen}
-      content={listSettings}
-      trigger="click"
-      placement="bottomLeft"
-    >
-      <WrapButtonSettings
-        isMobile={isMobile}
-        className="cursor-pointer"
-        onMouseEnter={() => setIsHover(true)}
-        onMouseLeave={() => setIsHover(false)}
+    <>
+      <ModalReportProblem />
+      <PopoverCustom
+        onOpenChange={setIsOpen}
+        content={listSettings}
+        trigger="click"
+        placement="bottomLeft"
       >
-        <IconSettings isActive={isHover || isOpen} />
-      </WrapButtonSettings>
-    </PopoverCustom>
+        <WrapButtonSettings
+          isMobile={isMobile}
+          className="cursor-pointer"
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+        >
+          <IconSettings isActive={isHover || isOpen} />
+        </WrapButtonSettings>
+      </PopoverCustom>
+    </>
   );
 };
 
