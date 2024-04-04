@@ -1,15 +1,14 @@
 import { CloseOutlined } from "@ant-design/icons";
 import { IconSearchDeActive } from "@assets/icons/icon";
+import { TIME_DELAY_FETCH_API } from "@utils/constant";
+import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { debounce } from "lodash";
-import React, { useCallback, useRef, useState } from "react";
-import { TIME_DELAY_FETCH_API } from "@utils/constant";
-import { searchInputSubs } from "@utils/globalStates/initGlobalState";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import PreviewSearch from "./PreviewSearch";
-import { useEffect } from "react";
 
 /**
  * Functional component for search input.
@@ -20,10 +19,10 @@ function InputSearch(props) {
     styleApp: { inputSearch: inputSearchStyle },
   } = useStyleApp();
 
-  const {
-    state: { keySearchUser },
-    setState: setDataSearchUser,
-  } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
+  const { setState: setDataSearchUser } = useSubscription(searchInputSubs, [
+    "keySearchUser",
+    "resultsPreview",
+  ]);
 
   const { isMobile } = useWindowSize();
   const [inputSearch, setInputSearch] = useState("");
@@ -54,11 +53,12 @@ function InputSearch(props) {
 
   const handleChangeInput = (value) => {
     setLoadingSearch(true);
+    setInputSearch(value);
+    handleDebounceSearch(value);
+
     setDataSearchUser({
       resultsPreview: [],
     });
-    setInputSearch(value);
-    handleDebounceSearch(value);
   };
 
   const handleClearInputSearch = () => {
