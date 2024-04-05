@@ -125,7 +125,7 @@ function PreviewSearch(props) {
           <Flex vertical gap={16} className="mt-2">
             {resultsPreview.map((user) => {
               return (
-                <Fragment key={user?._id}>
+                <Fragment key={user?.email}>
                   <ItemPreviewUser user={user} />
                 </Fragment>
               );

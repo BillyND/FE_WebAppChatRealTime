@@ -72,7 +72,7 @@ export default function ListAllUsers(props) {
     >
       <Flex vertical gap={16}>
         {results.map((user) => (
-          <Fragment key={user?._id}>
+          <Fragment key={user?.email}>
             <ItemPreviewUser user={user} />
           </Fragment>
         ))}

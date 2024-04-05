@@ -69,9 +69,97 @@ const fakeDataListConversation = [
     lastMessage: "Oke bạn hiền",
     timeSendLast: Date.now(),
   },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
+  {
+    id: 5,
+    avaUrl:
+      "https://res.cloudinary.com/doykkq8t7/image/upload/v1712242278/zbhhavs9gas3qxexo4yx.jpg",
+    username: "Billy 2",
+    lastMessage: "Oke bạn hiền",
+    timeSendLast: Date.now(),
+  },
 ];
 
 export const conversationSubs = createSubscription({
-  listConversation: fakeDataListConversation || [],
+  listConversation: [],
   conversationSelected: null,
 });

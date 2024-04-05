@@ -37,8 +37,8 @@ export const WrapSearchUser = styled.div`
 
   .suffix-input-search {
     position: absolute;
-    right: 18px;
-    top: 18px;
+    right: 24px;
+    top: 26px;
     width: 20px;
     height: 20px;
     background-color: #b8b8b8;
@@ -56,6 +56,7 @@ export const WrapListConversation = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: scroll;
 
   .item-preview-conversation {
     width: 100%;
@@ -75,6 +76,33 @@ export const WrapListConversation = styled.div`
       white-space: nowrap;
       text-overflow: ellipsis;
       max-width: 160px;
+    }
+  }
+
+  .warning-no-conversation {
+    color: gray;
+  }
+
+  .item-user {
+    border-radius: 12px;
+
+    &:hover {
+      background-color: #80808026;
+    }
+
+    .user-email {
+      color: gray;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 250px;
+    }
+
+    .user-name {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 250px;
     }
   }
 `;
