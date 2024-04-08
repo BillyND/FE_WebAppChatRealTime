@@ -1,12 +1,7 @@
 import { getPost } from "@services/api";
 import { message } from "antd";
 import { cloneDeep, unionBy } from "lodash";
-import {
-  detailPostSubs,
-  infoUserSubscription,
-  listPostSubs,
-} from "./globalStates/initGlobalState";
-import { getDataInfoUser } from "../services/api";
+import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
 
 /**
  * Fetches and handles the list of posts.

@@ -2,18 +2,41 @@ import styled from "styled-components";
 
 export const WrapMessageScreen = styled.div`
   height: 100vh;
-  padding-top: 80px !important;
+  padding-top: 70px !important;
   font-weight: 400 !important;
   display: grid;
   grid-template-columns: 350px auto;
 
   .wrap-all-conversations {
-    height: calc(100vh - 80px);
+    height: ${(p) =>
+      p.isMobile ? "calc(100vh - 136px)" : "calc(100vh - 70px)"};
+
     border-inline-end: 1.5px solid #80808033;
   }
 
   .wrap-detail-conversation {
-    height: calc(100vh - 80px);
+    height: ${(p) =>
+      p.isMobile ? "calc(100vh - 136px)" : "calc(100vh - 70px)"};
+
+    .btn-view-profile {
+      border-radius: 16px;
+      border: none;
+      outline: none;
+      padding: 6px 16px;
+      font-weight: bold;
+      color: ${(p) => (p.isDark ? "#fff" : "#0000000")};
+      background-color: #88888838;
+    }
+
+    .user-email {
+      color: gray;
+    }
+
+    .content-conversation {
+      height: 100%;
+      max-height: 100%;
+      overflow-x: scroll;
+    }
   }
 `;
 

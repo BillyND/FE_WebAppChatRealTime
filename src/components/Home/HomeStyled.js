@@ -63,6 +63,7 @@ export const WrapNavMenu = styled.div`
 `;
 
 export const WrapControlNav = styled.div`
+  box-shadow: ${(p) => p.isMobile && "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"};
   position: fixed;
   bottom: 0;
   height: 66px;

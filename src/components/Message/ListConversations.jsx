@@ -15,47 +15,72 @@ import { showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
 function ListConversations() {
-  const { state, setState } = useSubscription(conversationSubs);
-  const { listConversation, conversationSelected } = state || {};
-  const [valueSearch, setValueSearch] = useState("");
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [listUser, setListUser] = useState([]);
-
   const {
     infoUser: { _id: currentIdUser },
   } = useAuthUser();
 
-  const { styleApp } = useStyleApp();
-  const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
+  const { state, setState } = useSubscription(conversationSubs);
+  const { listConversation, selectedConversation } = state || {};
+  const { conversationId } = selectedConversation || {};
+
+  const [valueSearch, setValueSearch] = useState("");
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const trimValueSearch = valueSearch?.trim() || "";
 
+  const [listUser, setListUser] = useState([]);
+  const { styleApp } = useStyleApp();
+  const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
+
   useEffect(() => {
-    setState({
-      conversationSelected: listConversation[0]?.id,
-    });
+    return () => {
+      applyInitDataConversation();
+    };
   }, []);
 
-  const handleQueryUser = useCallback(
+  const applyInitDataConversation = () => {
+    setState({
+      selectedConversation: listConversation[0]?.id || {},
+    });
+  };
+
+  const debounceQueryUser = useCallback(
     debounce(async (propValue) => {
-      if (!propValue?.trim()) {
-        setListUser([]);
-        return;
-      }
-
-      setLoadingSearch(true);
-
+      let finalListUser = [];
       try {
         const resUser = await searchUserByName({ username: propValue });
-        setListUser(resUser);
+
+        if (resUser.length) {
+          finalListUser = resUser;
+        }
       } catch (error) {
         showPopupError(error);
-        setListUser([]);
       } finally {
         setLoadingSearch(false);
+        setListUser(finalListUser);
       }
     }, TIME_DELAY_FETCH_API),
     []
   );
+
+  const handleQueryUser = (propValue) => {
+    if (!propValue?.trim()) {
+      setListUser([]);
+      return;
+    }
+
+    setLoadingSearch(true);
+    debounceQueryUser(propValue);
+  };
+
+  const handleSelectUser = (user) => {
+    setState({
+      selectedConversation: {
+        user1: user,
+      },
+    });
+
+    handleClearInputSearch();
+  };
 
   const handleGetAllConverSation = async () => {
     const resConversation = await getConversations();
@@ -63,7 +88,7 @@ function ListConversations() {
 
   const handleSelectConversation = (id) => {
     setState({
-      conversationSelected: id,
+      selectedConversation: id,
     });
   };
 
@@ -74,10 +99,9 @@ function ListConversations() {
 
   const renderConversationItem = (previewConversation, index) => {
     const { _id: id, user1, user2 } = previewConversation || {};
-    const counterpart = currentIdUser === user1?.userId ? user2 : user1;
-    const { avaUrl, timeSendLast, username, lastMessage } = counterpart || {};
-
-    const isSelected = conversationSelected === id;
+    const receiver = currentIdUser === user1?.userId ? user2 : user1;
+    const { avaUrl, timeSendLast, username, lastMessage } = receiver || {};
+    const isSelected = conversationId === id;
     const formattedTime = formatTimeAgo(timeSendLast);
 
     return (
@@ -112,6 +136,7 @@ function ListConversations() {
         align="center"
         gap={10}
         className="item-user p-2 cursor-pointer none-copy"
+        onClick={() => handleSelectUser(user)}
       >
         <UserThumbnail avaUrl={avaUrl} size={45} />
 
@@ -154,6 +179,7 @@ function ListConversations() {
       </Flex>
     );
   };
+
   return (
     <Flex vertical className="wrap-all-conversations">
       <WrapSearchUser isDark={isDark} className="p-3 width-100-per">

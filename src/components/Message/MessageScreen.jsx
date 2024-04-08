@@ -1,11 +1,18 @@
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 import React from "react";
-import { WrapMessageScreen } from "./StyledMessageScreen";
-import ListConversations from "./ListConversations";
+import { TYPE_STYLE_APP } from "../../utils/constant";
 import DetailConversation from "./DetailConversation";
+import ListConversations from "./ListConversations";
+import { WrapMessageScreen } from "./StyledMessageScreen";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 
-function MessageScreen(props) {
+function MessageScreen() {
+  const { styleApp } = useStyleApp();
+  const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
+  const { isMobile } = useWindowSize();
+
   return (
-    <WrapMessageScreen>
+    <WrapMessageScreen isDark={isDark} isMobile={isMobile}>
       <ListConversations />
       <DetailConversation />
     </WrapMessageScreen>

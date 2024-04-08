@@ -181,6 +181,7 @@ const ControlMenu = (props) => {
     <WrapControlNav
       isDark={type === TYPE_STYLE_APP.DARK}
       isTablet={isTablet}
+      isMobile={isMobile}
       style={isMobile ? navMenuStyle : undefined}
       className="group-nav"
     >

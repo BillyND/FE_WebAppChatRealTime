@@ -60,4 +60,4 @@ export const FILL_COLOR_ICON = {
   DE_ACTIVE: "#00000000",
 };
 
-export const TITLE_OF_CURRENT_SITE = "Home";
+export const TITLE_OF_CURRENT_SITE = "Social Media";

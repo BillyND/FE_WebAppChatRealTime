@@ -131,3 +131,7 @@ export const getConversations = () => {
   const currentUserId = infoUserSubscription.state?.infoUser?._id;
   return axios.get(`conversation/${currentUserId}`, tokenHeaders());
 };
+
+export const getMessages = (conversationId) => {
+  return axios.get(`message/${conversationId}`, tokenHeaders());
+};

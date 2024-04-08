@@ -29,8 +29,8 @@ export const resizeImage = (file) => {
     reader.onload = function () {
       const img = new Image();
       img.onload = function () {
-        const MAX_WIDTH = 400;
-        const MAX_HEIGHT = 300;
+        const MAX_WIDTH = 1000;
+        const MAX_HEIGHT = 750;
         let width = img.width;
         let height = img.height;
 
