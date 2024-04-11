@@ -11,6 +11,7 @@ import React, { Fragment, useEffect } from "react";
 import DetailPost from "./DetailPost";
 import { DetailComment } from "./DetailtComment";
 import { FooterComment } from "./FooterComment";
+import { IconSend } from "@assets/icons/icon";
 
 export const ButtonSend = ({ disabled, onClick }) => {
   const handleOnclick = (e) => {
@@ -27,12 +28,9 @@ export const ButtonSend = ({ disabled, onClick }) => {
       onTouchEnd={handleOnclick}
       className={`button-send cursor-pointer ${disabled ? "disabled" : ""}`}
     >
-      <div
-        className={`icon-send `}
-        style={{
-          backgroundImage: `url(${SOURCE_IMAGE_SEND})`,
-        }}
-      ></div>
+      <div className={`icon-send `}>
+        <IconSend />
+      </div>
     </div>
   );
 };

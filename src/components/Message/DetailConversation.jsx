@@ -1,14 +1,16 @@
+import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
-import { conversationSubs } from "../../utils/globalStates/initGlobalState";
-import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { useNavigate } from "react-router-dom";
 import { getMessages } from "../../services/api";
+import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { ButtonSend } from "../Post/ModalCommentPost";
 
 function DetailConversation() {
   const {
@@ -26,8 +28,9 @@ function DetailConversation() {
   const receiver = currentIdUser === user1?.userId ? user2 : user1;
   const { username, email, avaUrl } = receiver || {};
 
-  console.log("===>isTablet:", isTablet);
-  console.log("===>isMobile:", isMobile);
+  const [message, setMessage] = useState("");
+  const trimMessage = message.trim();
+  const isDisableButtonSend = !trimMessage || fetchingMessage;
 
   let containerConversation = (
     <Flex vertical align="center" justify="center" gap={12}>
@@ -79,6 +82,8 @@ function DetailConversation() {
     }
   };
 
+  const handleSendMessage = async () => {};
+
   return (
     <Flex vertical className="wrap-detail-conversation" gap={10}>
       <Flex vertical>
@@ -95,10 +100,33 @@ function DetailConversation() {
       </Flex>
 
       <div className="content-conversation pt-4">{containerConversation}</div>
+
       <Flex className="footer-conversation" justify="start" vertical>
         <hr className="gray width-100-per" />
-        <Flex className="px-4  pt-3 pb-4">
-          <textarea className="width-100-per" />
+
+        <Flex className="px-3  pt-2 pb-3 mt-1" gap={12}>
+          <PlusCircleOutlined className="icon-show-more-option" />
+
+          <textarea
+            maxLength={8000}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={1}
+            placeholder="Type a message..."
+            className={`input-comment ${
+              message.length > 100 ? "full" : "mini"
+            }`}
+            style={{
+              minWidth: `calc(100% - 110px)`,
+            }}
+          />
+
+          <div className={`${isDisableButtonSend ? "" : "press-active"}`}>
+            <ButtonSend
+              onClick={handleSendMessage}
+              disabled={isDisableButtonSend}
+            />
+          </div>
         </Flex>
       </Flex>
     </Flex>

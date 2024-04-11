@@ -1,6 +1,4 @@
-import { Flex } from "antd";
-import { useSubscription } from "global-state-hook";
-import React, { useEffect, useRef, useState } from "react";
+import { UserThumbnail } from "@UI//UserThumbnail";
 import { addCommentToPost } from "@services/api";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
@@ -9,8 +7,10 @@ import {
   showPopupError,
   updateCurrentPost,
 } from "@utils/utilities";
+import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
+import React, { useEffect, useRef, useState } from "react";
 import { ButtonSend } from "./ModalCommentPost";
-import { UserThumbnail } from "@UI//UserThumbnail";
 
 export const InputComment = (props) => {
   const {
@@ -26,6 +26,8 @@ export const InputComment = (props) => {
     subControl,
   } = props;
 
+  const isDisableButtonSend = !value.trim() || loading || posting;
+
   useEffect(() => {
     focus && refInput?.current?.focus();
   }, [focus]);
@@ -40,18 +42,18 @@ export const InputComment = (props) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         rows={1}
-        placeholder="Write your comment..."
+        placeholder="Type a comment..."
         className={`input-comment ${focus || value.trim() ? "full" : "mini"}`}
         style={{
-          minWidth: `calc(100% - 50px)`,
+          minWidth: `calc(100% - 55px)`,
         }}
       />
 
-      <div style={{ minWidth: "80px" }}>
-        <ButtonSend
-          onClick={onUpdate}
-          disabled={!value.trim() || loading || posting}
-        />
+      <div
+        style={{ minWidth: "80px" }}
+        className={`${isDisableButtonSend ? "" : "press-active"}`}
+      >
+        <ButtonSend onClick={onUpdate} disabled={isDisableButtonSend} />
 
         {subControl}
       </div>

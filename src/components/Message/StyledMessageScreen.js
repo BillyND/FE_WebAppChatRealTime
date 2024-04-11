@@ -38,6 +38,19 @@ export const WrapMessageScreen = styled.div`
       overflow-x: scroll;
     }
   }
+
+  .footer-conversation {
+    .icon-show-more-option {
+      scale: 1.6;
+      padding: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:active {
+        scale: 1.4;
+      }
+    }
+  }
 `;
 
 export const WrapSearchUser = styled.div`
