@@ -33,7 +33,7 @@ export const InputComment = (props) => {
   }, [focus]);
 
   return (
-    <Flex style={{ width: "100%" }} align="start" gap={8}>
+    <Flex style={{ width: "100%" }} align="center" gap={8}>
       <textarea
         maxLength={8000}
         onFocus={onFocus}
@@ -108,8 +108,8 @@ export const FooterComment = (props) => {
   };
 
   return (
-    <Flex gap={12}>
-      <UserThumbnail avaUrl={avaUrl} size={32} />
+    <Flex gap={12} align="center">
+      <UserThumbnail avaUrl={avaUrl} size={38} />
       <InputComment
         refInput={refInputComment}
         value={localValueComment}

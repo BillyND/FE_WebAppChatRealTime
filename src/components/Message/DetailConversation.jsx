@@ -84,6 +84,14 @@ function DetailConversation() {
 
   const handleSendMessage = async () => {};
 
+  if (!receiver) {
+    return (
+      <Flex align="center" justify="center" style={{ color: "gray" }}>
+        Please select a conversation!
+      </Flex>
+    );
+  }
+
   return (
     <Flex vertical className="wrap-detail-conversation" gap={10}>
       <Flex vertical>
@@ -104,7 +112,7 @@ function DetailConversation() {
       <Flex className="footer-conversation" justify="start" vertical>
         <hr className="gray width-100-per" />
 
-        <Flex className="px-3  pt-2 pb-3 mt-1" gap={12}>
+        <Flex className="px-3  pt-2 pb-3 mt-1" gap={12} align="center">
           <PlusCircleOutlined className="icon-show-more-option" />
 
           <textarea
