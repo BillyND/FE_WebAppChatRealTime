@@ -180,7 +180,7 @@ const DetailPost = (props) => {
         </Flex>
       </div>
 
-      <Flex gap={24} className="none-copy">
+      <Flex gap={24}>
         <div className="line-left-post" />
 
         <Flex gap={8} vertical style={{ width: "100%" }}>
