@@ -13,6 +13,7 @@ import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
+import { useNavigate } from "react-router-dom";
 
 function ListConversations() {
   const {
@@ -26,6 +27,7 @@ function ListConversations() {
   const [valueSearch, setValueSearch] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
   const trimValueSearch = valueSearch?.trim() || "";
+  const navigate = useNavigate();
 
   const [listUser, setListUser] = useState([]);
   const { styleApp } = useStyleApp();
@@ -73,12 +75,8 @@ function ListConversations() {
   };
 
   const handleSelectUser = (user) => {
-    setState({
-      selectedConversation: {
-        user1: user,
-      },
-    });
-
+    const { _id } = user || {};
+    navigate(`/message?receiverId=${_id}`);
     handleClearInputSearch();
   };
 
@@ -98,8 +96,7 @@ function ListConversations() {
   };
 
   const renderConversationItem = (previewConversation, index) => {
-    const { _id: id, user1, user2 } = previewConversation || {};
-    const receiver = currentIdUser === user1?.userId ? user2 : user1;
+    const { _id: id, receiver } = previewConversation || {};
     const { avaUrl, timeSendLast, username, lastMessage } = receiver || {};
     const isSelected = conversationId === id;
     const formattedTime = formatTimeAgo(timeSendLast);

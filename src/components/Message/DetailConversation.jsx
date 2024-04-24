@@ -1,36 +1,31 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
+import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMessages } from "../../services/api";
+import {
+  createConversation,
+  createMessage,
+  getConversationByReceiver,
+} from "../../services/api";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
 function DetailConversation() {
-  const {
-    infoUser: { _id: currentIdUser },
-  } = useAuthUser();
-
-  const { isMobile, isTablet } = useWindowSize();
-
   const navigate = useNavigate();
   const [fetchingMessage, setFetchingMessage] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
-  const { selectedConversation, dataMessage } = state || {};
-
-  const { _id: conversationId, user1, user2 } = selectedConversation || {};
-  const receiver = currentIdUser === user1?.userId ? user2 : user1;
+  let { receiver, listMessages, conversationId } = state || {};
   const { username, email, avaUrl } = receiver || {};
 
   const [message, setMessage] = useState("");
   const trimMessage = message.trim();
   const isDisableButtonSend = !trimMessage || fetchingMessage;
+  const [receiverId] = useSearchParams(["receiverId"]);
 
   let containerConversation = (
     <Flex vertical align="center" justify="center" gap={12}>
@@ -52,29 +47,28 @@ function DetailConversation() {
     </Flex>
   );
 
-  if (fetchingMessage) {
-    containerConversation = <SpinnerLoading />;
-  }
-
   useEffect(() => {
     handleGetMessage();
-  }, [email]);
+  }, [receiverId]);
 
   const handleGetMessage = async () => {
-    if (!conversationId) {
+    if (!receiverId) {
       return;
     }
 
     setFetchingMessage(true);
 
     try {
-      const resMessage = await getMessages(conversationId);
+      const resConversation = await getConversationByReceiver(receiverId);
+      const { receiver, listMessages, conversationId } = resConversation || {};
 
-      if (resMessage.length) {
-        setState({
-          dataMessage: resMessage,
-        });
-      }
+      setState({
+        receiver,
+        listMessages,
+        conversationId,
+      });
+
+      console.log("===>messages", resConversation);
     } catch (error) {
       showPopupError(error);
     } finally {
@@ -82,9 +76,36 @@ function DetailConversation() {
     }
   };
 
-  const handleSendMessage = async () => {};
+  const handleSendMessage = async () => {
+    if (!conversationId) {
+      const conversation = await createConversation(receiverId);
 
-  if (!receiver) {
+      if (conversation?._id) {
+        conversationId = conversation?._id;
+      } else {
+        return;
+      }
+    }
+
+    const optionSend = {
+      conversationId,
+      text: message,
+    };
+
+    const resSendMessage = await createMessage(optionSend);
+
+    console.log("===>resSendMessage", resSendMessage);
+  };
+
+  if (fetchingMessage) {
+    return (
+      <Flex align="center" justify="center" style={{ color: "gray" }}>
+        <SpinnerLoading />
+      </Flex>
+    );
+  }
+
+  if (!receiver && !fetchingMessage) {
     return (
       <Flex align="center" justify="center" style={{ color: "gray" }}>
         Please select a conversation!

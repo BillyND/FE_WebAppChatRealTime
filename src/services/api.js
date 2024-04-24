@@ -17,7 +17,7 @@ const tokenHeaders = () => {
   };
 };
 
-// <=====AUTH=====> //
+// <=====Auth=====> //
 export const postRegister = ({ email, username, password }) => {
   return axios.post("auth/register", {
     email,
@@ -48,7 +48,7 @@ export const postLogout = async () => {
   return resLogout;
 };
 
-// <===API POST===>
+// <===Api Post===>
 export const createPost = (dataPost) => {
   return axios.post("post", dataPost, tokenHeaders());
 };
@@ -108,7 +108,7 @@ export const updateCommentOfPost = (payload) => {
   );
 };
 
-// <===API USER===>
+// <===Api User===>
 export const getUser = (page = 1, limit = 10) => {
   return axios.get(`users?page=${page}&limit=${limit}`, tokenHeaders());
 };
@@ -131,12 +131,27 @@ export const reportProblem = (payload) => {
   return axios.post(`users/report-problem`, payload, tokenHeaders());
 };
 
-// <===API MESSAGE===>
+// <===Api Message===>
+export const createMessage = (payload) => {
+  const sender = infoUserSubscription.state?.infoUser?._id;
+  return axios.post(`message`, { sender, ...payload }, tokenHeaders());
+};
+
+export const getMessages = (conversationId) => {
+  return axios.get(`message/${conversationId}`, tokenHeaders());
+};
+
+// <===Api Conversation===>
+export const createConversation = (receiverId) => {
+  const senderId = infoUserSubscription.state?.infoUser?._id;
+  return axios.post(`conversation`, { senderId, receiverId }, tokenHeaders());
+};
+
 export const getConversations = () => {
   const currentUserId = infoUserSubscription.state?.infoUser?._id;
   return axios.get(`conversation/${currentUserId}`, tokenHeaders());
 };
 
-export const getMessages = (conversationId) => {
-  return axios.get(`message/${conversationId}`, tokenHeaders());
+export const getConversationByReceiver = (receiverId) => {
+  return axios.get(`conversation/receiver/${receiverId}`, tokenHeaders());
 };
