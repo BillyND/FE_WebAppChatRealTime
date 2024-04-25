@@ -51,6 +51,22 @@ export const WrapMessageScreen = styled.div`
       }
     }
   }
+
+  .wrap-message {
+    background-color: ${(p) => (p.isDark ? "#262626" : "#efefef")};
+    padding: 6px 12px;
+    border-radius: 18px;
+
+    &.sender {
+      background-color: #3797f0;
+      color: #fff;
+    }
+  }
+
+  #box-list-message {
+    height: calc(100vh - 222px);
+    overflow-y: scroll;
+  }
 `;
 
 export const WrapSearchUser = styled.div`

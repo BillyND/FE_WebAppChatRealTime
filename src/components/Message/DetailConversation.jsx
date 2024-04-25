@@ -1,9 +1,12 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
+import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
+import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,6 +19,10 @@ import { showPopupError } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
 function DetailConversation() {
+  const {
+    infoUser: { _id: userId },
+  } = useAuthUser();
+
   const navigate = useNavigate();
   const [fetchingMessage, setFetchingMessage] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
@@ -26,26 +33,8 @@ function DetailConversation() {
   const trimMessage = message.trim();
   const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
-
-  let containerConversation = (
-    <Flex vertical align="center" justify="center" gap={12}>
-      <UserThumbnail avaUrl={avaUrl} size={70} />
-
-      <Flex vertical gap={4} align="center" justify="center">
-        <b>{username}</b>
-        <span className="user-email">{email}</span>
-      </Flex>
-
-      <button
-        onClick={() => {
-          navigate(`/user?email=${email}`);
-        }}
-        className="btn-view-profile press-active"
-      >
-        View profile
-      </button>
-    </Flex>
-  );
+  const boxMessageId = "box-list-message";
+  let containerMessage = null;
 
   useEffect(() => {
     handleGetMessage();
@@ -53,6 +42,9 @@ function DetailConversation() {
 
   const handleGetMessage = async () => {
     if (!receiverId) {
+      setState({
+        receiver: null,
+      });
       return;
     }
 
@@ -67,12 +59,11 @@ function DetailConversation() {
         listMessages,
         conversationId,
       });
-
-      console.log("===>messages", resConversation);
     } catch (error) {
       showPopupError(error);
     } finally {
       setFetchingMessage(false);
+      scrollToBottomOfElement(boxMessageId);
     }
   };
 
@@ -93,9 +84,56 @@ function DetailConversation() {
     };
 
     const resSendMessage = await createMessage(optionSend);
-
-    console.log("===>resSendMessage", resSendMessage);
   };
+
+  if (listMessages?.length) {
+    containerMessage = (
+      <Flex vertical gap={4}>
+        {listMessages.map((message) => {
+          let { _id, text, sender } = message || {};
+          text = text.replaceAll("\n", "<br/>");
+          const isSender = sender === userId;
+
+          return (
+            <Flex
+              className="mx-2 px-1"
+              justify={isSender ? "end" : "start"}
+              key={_id}
+            >
+              <div
+                className={`${isSender ? "sender" : ""} wrap-message`}
+                dangerouslySetInnerHTML={{ __html: text }}
+              ></div>
+            </Flex>
+          );
+        })}
+      </Flex>
+    );
+  }
+
+  let containerConversation = (
+    <Flex vertical id={boxMessageId} gap={50}>
+      <Flex vertical align="center" justify="center" gap={12} className="pt-5">
+        <UserThumbnail avaUrl={avaUrl} size={70} />
+
+        <Flex vertical gap={4} align="center" justify="center">
+          <b>{username}</b>
+          <span className="user-email">{email}</span>
+        </Flex>
+
+        <button
+          onClick={() => {
+            navigate(`/user?email=${email}`);
+          }}
+          className="btn-view-profile press-active"
+        >
+          View profile
+        </button>
+      </Flex>
+
+      {containerMessage}
+    </Flex>
+  );
 
   if (fetchingMessage) {
     return (
@@ -105,7 +143,7 @@ function DetailConversation() {
     );
   }
 
-  if (!receiver && !fetchingMessage) {
+  if (isEmpty(receiver) && !fetchingMessage) {
     return (
       <Flex align="center" justify="center" style={{ color: "gray" }}>
         Please select a conversation!
@@ -114,7 +152,7 @@ function DetailConversation() {
   }
 
   return (
-    <Flex vertical className="wrap-detail-conversation" gap={10}>
+    <Flex vertical className="wrap-detail-conversation">
       <Flex vertical>
         <Flex
           gap={10}
@@ -128,7 +166,7 @@ function DetailConversation() {
         <hr className="width-100-per gray" />
       </Flex>
 
-      <div className="content-conversation pt-4">{containerConversation}</div>
+      <div className="content-conversation">{containerConversation}</div>
 
       <Flex className="footer-conversation" justify="start" vertical>
         <hr className="gray width-100-per" />
