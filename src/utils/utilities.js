@@ -155,12 +155,12 @@ export const scrollToTopOfElement = (elementId) => {
   smoothScroll(0);
 };
 
-export const formatTimeAgo = (timeInMilliseconds) => {
+export const formatTimeAgo = (time) => {
   const now = Date.now();
-  let formattedTime = timeInMilliseconds;
+  let formattedTime = time;
 
   try {
-    formattedTime = Number(new Date(timeInMilliseconds));
+    formattedTime = Number(new Date(time));
   } catch (error) {
     console.error("===> Error formatTimeAgo:", error);
   }

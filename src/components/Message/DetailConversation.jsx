@@ -2,6 +2,7 @@ import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useDebounce } from "@utils/hooks/useDebounce";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
@@ -26,31 +27,36 @@ function DetailConversation() {
   const navigate = useNavigate();
   const [fetchingMessage, setFetchingMessage] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
-  let { receiver, listMessages, conversationId } = state || {};
+  let { receiver, listMessages, conversationId, isSending, tempMessage } =
+    state || {};
+
   const { username, email, avaUrl } = receiver || {};
 
   const [message, setMessage] = useState("");
   const trimMessage = message.trim();
   const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
+  const debounceReceiverId = useDebounce(receiverId, 300);
   const boxMessageId = "box-list-message";
   let containerMessage = null;
 
   useEffect(() => {
     handleGetMessage();
-  }, [receiverId]);
 
-  const handleGetMessage = async () => {
-    if (!receiverId) {
+    return () => {
       setState({
         receiver: null,
       });
+    };
+  }, [debounceReceiverId]);
+
+  const handleGetMessage = async () => {
+    if (!receiverId) {
       return;
     }
 
-    setFetchingMessage(true);
-
     try {
+      setFetchingMessage(true);
       const resConversation = await getConversationByReceiver(receiverId);
       const { receiver, listMessages, conversationId } = resConversation || {};
 
@@ -68,45 +74,83 @@ function DetailConversation() {
   };
 
   const handleSendMessage = async () => {
-    if (!conversationId) {
-      const conversation = await createConversation(receiverId);
+    try {
+      const newConversationId =
+        conversationId || (await createConversation(receiverId))?._id;
 
-      if (conversation?._id) {
-        conversationId = conversation?._id;
-      } else {
+      if (!newConversationId) {
         return;
       }
+
+      const optionSend = {
+        conversationId: newConversationId,
+        text: message,
+        sender: userId,
+      };
+
+      setState({
+        isSending: true,
+        tempMessage: message,
+      });
+
+      scrollToBottomOfElement(boxMessageId);
+      setMessage("");
+
+      const resSendMessage = await createMessage(optionSend);
+      const newListMessages = [...listMessages, resSendMessage];
+
+      setState({
+        isSending: false,
+        tempMessage: "",
+        listMessages: newListMessages,
+      });
+    } catch (error) {
+      showPopupError(error);
     }
-
-    const optionSend = {
-      conversationId,
-      text: message,
-    };
-
-    const resSendMessage = await createMessage(optionSend);
   };
 
   if (listMessages?.length) {
     containerMessage = (
       <Flex vertical gap={4}>
-        {listMessages.map((message) => {
+        {listMessages.map((message, index) => {
           let { _id, text, sender } = message || {};
-          text = text.replaceAll("\n", "<br/>");
+          text = text?.replaceAll("\n", "<br/>");
           const isSender = sender === userId;
+          const { sender: startSender } = listMessages[index - 1] || {};
+          const { sender: endSender } = listMessages[index + 1] || {};
+          const isEndSectionSender = endSender ? endSender !== userId : false;
+
+          const isStartSectionSender = startSender
+            ? startSender !== userId
+            : false;
 
           return (
             <Flex
-              className="mx-2 px-1"
+              className={`mx-2 px-1 ${isStartSectionSender ? "pt-4" : ""} ${
+                isEndSectionSender ? "pb-4" : ""
+              }`}
               justify={isSender ? "end" : "start"}
               key={_id}
             >
               <div
                 className={`${isSender ? "sender" : ""} wrap-message`}
                 dangerouslySetInnerHTML={{ __html: text }}
-              ></div>
+              />
             </Flex>
           );
         })}
+
+        {isSending && (
+          <Flex className="mx-2 px-1" justify={"end"} align="center" gap={6}>
+            <SpinnerLoading className="icon-load-send-message" />
+            <div
+              className={`sender wrap-message`}
+              dangerouslySetInnerHTML={{
+                __html: tempMessage?.replaceAll("\n", "<br/>"),
+              }}
+            />
+          </Flex>
+        )}
       </Flex>
     );
   }

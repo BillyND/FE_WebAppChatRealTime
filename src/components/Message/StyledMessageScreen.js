@@ -56,6 +56,9 @@ export const WrapMessageScreen = styled.div`
     background-color: ${(p) => (p.isDark ? "#262626" : "#efefef")};
     padding: 6px 12px;
     border-radius: 18px;
+    max-width: 70%;
+    word-break: break-word;
+    overflow-wrap: break-word;
 
     &.sender {
       background-color: #3797f0;
@@ -66,6 +69,13 @@ export const WrapMessageScreen = styled.div`
   #box-list-message {
     height: calc(100vh - 222px);
     overflow-y: scroll;
+  }
+
+  .icon-load-send-message {
+    height: 20px;
+    .icon-loading {
+      scale: 1;
+    }
   }
 `;
 

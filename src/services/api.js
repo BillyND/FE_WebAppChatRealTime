@@ -133,8 +133,8 @@ export const reportProblem = (payload) => {
 
 // <===Api Message===>
 export const createMessage = (payload) => {
-  const sender = infoUserSubscription.state?.infoUser?._id;
-  return axios.post(`message`, { sender, ...payload }, tokenHeaders());
+  const { sender, ...rest } = payload || {};
+  return axios.post(`message`, rest, tokenHeaders());
 };
 
 export const getMessages = (conversationId) => {

@@ -161,6 +161,7 @@ const fakeDataListConversation = [
 
 export const conversationSubs = createSubscription({
   listConversation: [],
-  selectedConversation: {},
+  selectedConversation: -1,
   dataMessage: [],
+  isSending: false,
 });

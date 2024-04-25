@@ -20,9 +20,9 @@ function ListConversations() {
     infoUser: { _id: currentIdUser },
   } = useAuthUser();
 
+  const [fetchingConversion, setFetchingConversion] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
   const { listConversation, selectedConversation } = state || {};
-  const { conversationId } = selectedConversation || {};
 
   const [valueSearch, setValueSearch] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -34,14 +34,22 @@ function ListConversations() {
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
 
   useEffect(() => {
-    return () => {
-      applyInitDataConversation();
-    };
+    handleGetAllConverSation();
   }, []);
 
+  useEffect(() => {
+    applyInitDataConversation();
+  }, [listConversation]);
+
   const applyInitDataConversation = () => {
+    if (!listConversation?.length) return;
+
+    const firstReceiver = listConversation[0]?.receiver;
+    const { _id: receiverId } = firstReceiver || {};
+    navigate(`/message?receiverId=${receiverId}`);
+
     setState({
-      selectedConversation: listConversation[0]?.id || {},
+      selectedConversation: listConversation[0]?._id || -1,
     });
   };
 
@@ -81,12 +89,25 @@ function ListConversations() {
   };
 
   const handleGetAllConverSation = async () => {
-    const resConversation = await getConversations();
+    setFetchingConversion(true);
+    try {
+      const resConversation = await getConversations();
+
+      if (resConversation.length) {
+        setState({ listConversation: resConversation });
+      }
+    } catch (error) {
+      showPopupError(error);
+    } finally {
+      setFetchingConversion(false);
+    }
   };
 
-  const handleSelectConversation = (id) => {
+  const handleSelectConversation = (receiverId, conversionId) => {
+    navigate(`/message?receiverId=${receiverId}`);
+
     setState({
-      selectedConversation: id,
+      selectedConversation: conversionId,
     });
   };
 
@@ -96,9 +117,10 @@ function ListConversations() {
   };
 
   const renderConversationItem = (previewConversation, index) => {
-    const { _id: id, receiver } = previewConversation || {};
-    const { avaUrl, timeSendLast, username, lastMessage } = receiver || {};
-    const isSelected = conversationId === id;
+    const { _id: id, receiver, lastMessage } = previewConversation || {};
+    const { avaUrl, username, _id: receiverId } = receiver || {};
+    const { timeSendLast, text } = lastMessage || {};
+    const isSelected = selectedConversation === id;
     const formattedTime = formatTimeAgo(timeSendLast);
 
     return (
@@ -107,7 +129,7 @@ function ListConversations() {
         className={`item-preview-conversation p-3 pr-3 ${
           isSelected ? "selected" : ""
         }`}
-        onClick={() => handleSelectConversation(id)}
+        onClick={() => handleSelectConversation(receiverId, id)}
         gap={8}
       >
         <UserThumbnail avaUrl={avaUrl} size={45} />
@@ -116,7 +138,7 @@ function ListConversations() {
           <b>{username}</b>
 
           <Flex justify="space-between" className="info-last-message">
-            <span className="content-last-message">{lastMessage}</span>
+            <span className="content-last-message">{text}</span>
             <span>{formattedTime}</span>
           </Flex>
         </Flex>
@@ -201,18 +223,23 @@ function ListConversations() {
       </WrapSearchUser>
 
       <WrapListConversation className="px-3 pb-3">
-        {loadingSearch && <SpinnerLoading />}
+        {(loadingSearch || fetchingConversion) && <SpinnerLoading />}
 
-        <EmptyConversation />
-
-        {!loadingSearch && (
+        {!fetchingConversion && (
           <>
-            <EmptyUser />
-            {!listUser?.length && listConversation.map(renderConversationItem)}
+            <EmptyConversation />
 
-            <Flex vertical gap={12}>
-              {listUser.map(renderUserItem)}
-            </Flex>
+            {!loadingSearch && (
+              <>
+                <EmptyUser />
+                {!listUser?.length &&
+                  listConversation.map(renderConversationItem)}
+
+                <Flex vertical gap={12}>
+                  {listUser.map(renderUserItem)}
+                </Flex>
+              </>
+            )}
           </>
         )}
       </WrapListConversation>

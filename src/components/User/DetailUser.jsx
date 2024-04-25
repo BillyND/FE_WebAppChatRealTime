@@ -15,8 +15,10 @@ import {
 import { showPopupError } from "../../utils/utilities";
 import EditProfileModal from "./EditProfileModal";
 import InfoUserModal from "./InfoUserModal";
+import { useNavigate } from "react-router-dom";
 
 function DetailUser() {
+  const navigate = useNavigate();
   const { isMobile } = useWindowSize();
   const {
     styleApp: { type },
@@ -106,6 +108,10 @@ function DetailUser() {
     });
   };
 
+  const goToConversation = () => {
+    navigate(`/message?receiverId=${userId}`);
+  };
+
   if (!currentUser) return;
 
   return (
@@ -134,7 +140,7 @@ function DetailUser() {
       </Flex>
       <span style={{ fontSize: "14px" }}>{about}</span>
       <a className="count-follower none-copy transition-01">
-        {` ${followings?.length} follower${followings?.length > 1 ? "s" : ""}`}
+        {`${followings?.length} follower${followings?.length > 1 ? "s" : ""}`}
       </a>
       {isAuthor ? (
         <Flex
@@ -181,6 +187,7 @@ function DetailUser() {
             justify="center"
             align="center"
             className="btn-edit-profile cursor-pointer press-active"
+            onClick={goToConversation}
           >
             Message
           </Flex>
