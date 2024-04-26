@@ -399,3 +399,15 @@ export function convertToTitleCase(text) {
   // Join the words back into a single string
   return words.join(" ");
 }
+
+const timerDebounce = {};
+export const debounce = (func, time) => {
+  return () => {
+    clearTimeout(timerDebounce[func]);
+
+    timerDebounce[func] = setTimeout(() => {
+      delete timerDebounce[func];
+      return func();
+    }, time);
+  };
+};

@@ -2,7 +2,6 @@ import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { useDebounce } from "@utils/hooks/useDebounce";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
@@ -15,8 +14,9 @@ import {
   createMessage,
   getConversationByReceiver,
 } from "../../services/api";
+import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
-import { showPopupError } from "../../utils/utilities";
+import { debounce, showPopupError } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
 function DetailConversation() {
@@ -41,11 +41,15 @@ function DetailConversation() {
   const trimMessage = message.trim();
   const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
-  const debounceReceiverId = useDebounce(receiverId, 300);
   const boxMessageId = "box-list-message";
   let containerMessage = null;
 
   useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      fetchingMessage: true,
+    }));
+
     handleGetMessage();
 
     return () => {
@@ -53,19 +57,14 @@ function DetailConversation() {
         receiver: null,
       });
     };
-  }, [debounceReceiverId]);
+  }, [receiverId]);
 
-  const handleGetMessage = async () => {
+  const handleGetMessage = debounce(async () => {
     if (!receiverId) {
       return;
     }
 
     try {
-      setState((prev) => ({
-        ...prev,
-        fetchingMessage: true,
-      }));
-
       const resConversation = await getConversationByReceiver(receiverId);
       const { receiver, listMessages, conversationId } = resConversation || {};
 
@@ -85,7 +84,7 @@ function DetailConversation() {
 
       scrollToBottomOfElement(boxMessageId);
     }
-  };
+  }, TIME_DELAY_FETCH_API);
 
   const handleSendMessage = async () => {
     try {
