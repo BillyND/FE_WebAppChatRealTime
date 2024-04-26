@@ -8,13 +8,12 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { handleGetListPost } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
 import React, { useEffect, useRef } from "react";
 import { useSearchParams } from "../../utils/hooks/useSearchParams";
 import ListPost from "../Post/ListPost";
 import DetailUser from "./DetailUser";
 import { WrapUserScreen } from "./UserScreenStyled";
-import { compareChange } from "../../utils/utilities";
+import { compareChange, debounce } from "../../utils/utilities";
 
 function UserScreen(props) {
   const { isMobile, isTablet } = useWindowSize();

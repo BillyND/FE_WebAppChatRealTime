@@ -1,25 +1,20 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { CloseOutlined } from "@ant-design/icons";
-import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { formatTimeAgo } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
-import { showPopupError } from "../../utils/utilities";
+import { debounce, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
-import { useNavigate } from "react-router-dom";
 
 function ListConversations() {
-  const {
-    infoUser: { _id: currentIdUser },
-  } = useAuthUser();
-
   const [fetchingConversion, setFetchingConversion] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
   const { listConversation, selectedConversation } = state || {};
@@ -32,6 +27,7 @@ function ListConversations() {
   const [listUser, setListUser] = useState([]);
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
+  const [receiverIdParams] = useSearchParams(["receiverId"]);
 
   useEffect(() => {
     handleGetAllConverSation();
@@ -44,6 +40,17 @@ function ListConversations() {
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;
 
+    const existConversion = listConversation.find(
+      (conversation) => receiverIdParams === conversation?.receiver?._id
+    );
+
+    const { _id: existConversionId } = existConversion || {};
+
+    if (receiverIdParams && existConversionId) {
+      handleSelectConversation(receiverIdParams, existConversionId);
+      return;
+    }
+
     const firstReceiver = listConversation[0]?.receiver;
     const { _id: receiverId } = firstReceiver || {};
     navigate(`/message?receiverId=${receiverId}`);
@@ -53,24 +60,21 @@ function ListConversations() {
     });
   };
 
-  const debounceQueryUser = useCallback(
-    debounce(async (propValue) => {
-      let finalListUser = [];
-      try {
-        const resUser = await searchUserByName({ username: propValue });
+  const debounceQueryUser = debounce(async (propValue) => {
+    let finalListUser = [];
+    try {
+      const resUser = await searchUserByName({ username: propValue });
 
-        if (resUser.length) {
-          finalListUser = resUser;
-        }
-      } catch (error) {
-        showPopupError(error);
-      } finally {
-        setLoadingSearch(false);
-        setListUser(finalListUser);
+      if (resUser.length) {
+        finalListUser = resUser;
       }
-    }, TIME_DELAY_FETCH_API),
-    []
-  );
+    } catch (error) {
+      showPopupError(error);
+    } finally {
+      setLoadingSearch(false);
+      setListUser(finalListUser);
+    }
+  }, TIME_DELAY_FETCH_API);
 
   const handleQueryUser = (propValue) => {
     if (!propValue?.trim()) {

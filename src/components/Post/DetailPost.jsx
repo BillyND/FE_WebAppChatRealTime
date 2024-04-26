@@ -26,11 +26,11 @@ import {
 } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
 import React, { Fragment, useCallback, useEffect, useState } from "react";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
 import { useNavigate } from "react-router-dom";
+import { debounce } from "../../utils/utilities";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
@@ -91,12 +91,9 @@ const DetailPost = (props) => {
     });
   };
 
-  const debounceUpdateLikes = useCallback(
-    debounce(async (postId) => {
-      await updateLikeOfPost(postId);
-    }, TIME_DELAY_FETCH_API),
-    []
-  );
+  const debounceUpdateLikes = debounce(async (postId) => {
+    await updateLikeOfPost(postId);
+  }, TIME_DELAY_FETCH_API);
 
   const dataMenuDetailPost = [
     {

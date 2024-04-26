@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-import { useDebounce } from "./useDebounce";
+import { useEffect, useState } from "react";
 import { TIME_DELAY_SEARCH_INPUT } from "../constant";
-import { debounce } from "lodash";
+import { debounce } from "../utilities";
 
 export const useWindowSize = () => {
   const [size, setSize] = useState({

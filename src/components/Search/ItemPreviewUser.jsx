@@ -1,14 +1,13 @@
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { followersUser } from "@services/api";
-import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "@utils/constant";
+import { TYPE_STYLE_APP } from "@utils/constant";
 import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { showPopupError } from "@utils/utilities";
 import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
-import React, { useCallback } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function ItemPreviewUser(props) {

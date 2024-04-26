@@ -402,12 +402,16 @@ export function convertToTitleCase(text) {
 
 const timerDebounce = {};
 export const debounce = (func, time) => {
-  return () => {
+  return (props) => {
     clearTimeout(timerDebounce[func]);
 
-    timerDebounce[func] = setTimeout(() => {
+    const delayedFunction = () => {
       delete timerDebounce[func];
-      return func();
-    }, time);
+      return func(props);
+    };
+
+    timerDebounce[func] = time
+      ? setTimeout(delayedFunction, time)
+      : delayedFunction();
   };
 };

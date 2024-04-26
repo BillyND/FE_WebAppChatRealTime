@@ -6,9 +6,9 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import PreviewSearch from "./PreviewSearch";
+import { debounce } from "../../utils/utilities";
 
 /**
  * Functional component for search input.
@@ -42,14 +42,11 @@ function InputSearch(props) {
     };
   }, []);
 
-  const handleDebounceSearch = useCallback(
-    debounce((value) => {
-      setDataSearchUser({
-        keySearchUser: value.trim(),
-      });
-    }, TIME_DELAY_FETCH_API),
-    []
-  );
+  const handleDebounceSearch = debounce((value) => {
+    setDataSearchUser({
+      keySearchUser: value.trim(),
+    });
+  }, TIME_DELAY_FETCH_API);
 
   const handleChangeInput = (value) => {
     setLoadingSearch(true);
