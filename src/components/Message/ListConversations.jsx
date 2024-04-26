@@ -108,6 +108,7 @@ function ListConversations() {
 
     setState({
       selectedConversation: conversionId,
+      fetchingMessage: true,
     });
   };
 

@@ -25,10 +25,15 @@ function DetailConversation() {
   } = useAuthUser();
 
   const navigate = useNavigate();
-  const [fetchingMessage, setFetchingMessage] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
-  let { receiver, listMessages, conversationId, isSending, tempMessage } =
-    state || {};
+  let {
+    receiver,
+    listMessages,
+    conversationId,
+    isSending,
+    tempMessage,
+    fetchingMessage,
+  } = state || {};
 
   const { username, email, avaUrl } = receiver || {};
 
@@ -56,19 +61,28 @@ function DetailConversation() {
     }
 
     try {
-      setFetchingMessage(true);
+      setState((prev) => ({
+        ...prev,
+        fetchingMessage: true,
+      }));
+
       const resConversation = await getConversationByReceiver(receiverId);
       const { receiver, listMessages, conversationId } = resConversation || {};
 
-      setState({
+      setState((prev) => ({
+        ...prev,
         receiver,
         listMessages,
         conversationId,
-      });
+      }));
     } catch (error) {
       showPopupError(error);
     } finally {
-      setFetchingMessage(false);
+      setState((prev) => ({
+        ...prev,
+        fetchingMessage: false,
+      }));
+
       scrollToBottomOfElement(boxMessageId);
     }
   };
@@ -88,10 +102,7 @@ function DetailConversation() {
         sender: userId,
       };
 
-      setState({
-        isSending: true,
-        tempMessage: message,
-      });
+      setState((prev) => ({ ...prev, isSending: true, tempMessage: message }));
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
@@ -99,11 +110,12 @@ function DetailConversation() {
       const resSendMessage = await createMessage(optionSend);
       const newListMessages = [...listMessages, resSendMessage];
 
-      setState({
+      setState((prev) => ({
+        ...prev,
         isSending: false,
         tempMessage: "",
         listMessages: newListMessages,
-      });
+      }));
     } catch (error) {
       showPopupError(error);
     }
