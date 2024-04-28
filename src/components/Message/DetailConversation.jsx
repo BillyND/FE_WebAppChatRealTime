@@ -126,7 +126,7 @@ function DetailConversation() {
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
-      scrollIntoViewById(`conversation-${conversationId}`);
+      scrollIntoViewById(`conversation-${conversationId}`, 400);
 
       const resSendMessage = await createMessage(optionSend);
 

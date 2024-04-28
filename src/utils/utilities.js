@@ -416,11 +416,11 @@ export const debounce = (func, time) => {
   };
 };
 
-export const scrollIntoViewById = (elementId) => {
+export const scrollIntoViewById = (elementId, time) => {
   setTimeout(() => {
     const element = document.getElementById(elementId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, 400);
+  }, time || 0);
 };
