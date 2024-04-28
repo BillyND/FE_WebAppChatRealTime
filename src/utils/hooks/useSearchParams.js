@@ -1,6 +1,7 @@
 import { union } from "lodash";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { debounce } from "../utilities";
 
 export const useSearchParams = (keys) => {
   const location = useLocation();
@@ -19,7 +20,9 @@ export const useSearchParams = (keys) => {
   useEffect(() => {
     keys.forEach((key) => getEmailFromURL(key));
 
-    setValues(union(tempValues));
+    debounce(() => {
+      setValues(union(tempValues));
+    }, 5)();
   }, [location.search]);
 
   return values;

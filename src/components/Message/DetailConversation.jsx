@@ -92,6 +92,7 @@ function DetailConversation() {
         ...prev,
         isSending: true,
         tempMessage: message,
+        conversationId,
         listConversation: listConversation.map((conversation) =>
           conversation?._id === conversationId
             ? {

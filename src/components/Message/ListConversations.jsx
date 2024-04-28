@@ -20,7 +20,10 @@ function ListConversations() {
   const { _id: userId } = infoUser;
 
   const [fetchingConversion, setFetchingConversion] = useState(false);
-  const { state, setState } = useSubscription(conversationSubs);
+  const { state, setState } = useSubscription(conversationSubs, [
+    "listConversation",
+    "selectedConversation",
+  ]);
   const { listConversation, selectedConversation } = state || {};
 
   const [valueSearch, setValueSearch] = useState("");
@@ -39,7 +42,7 @@ function ListConversations() {
 
   useEffect(() => {
     applyInitDataConversation();
-  }, [listConversation]);
+  }, [listConversation, receiverIdParams]);
 
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;
@@ -50,7 +53,7 @@ function ListConversations() {
 
     const { _id: existConversionId } = existConversion || {};
 
-    if (receiverIdParams && existConversionId) {
+    if (receiverIdParams) {
       handleSelectConversation(receiverIdParams, existConversionId);
       return;
     }
