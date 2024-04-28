@@ -13,8 +13,12 @@ import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { debounce, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
 
 function ListConversations() {
+  const { infoUser } = useAuthUser();
+  const { _id: userId } = infoUser;
+
   const [fetchingConversion, setFetchingConversion] = useState(false);
   const { state, setState } = useSubscription(conversationSubs);
   const { listConversation, selectedConversation } = state || {};
@@ -92,6 +96,14 @@ function ListConversations() {
     handleClearInputSearch();
   };
 
+  const handleSelectConversation = (receiverId, conversionId) => {
+    navigate(`/message?receiverId=${receiverId}`);
+
+    setState({
+      selectedConversation: conversionId,
+    });
+  };
+
   const handleGetAllConverSation = async () => {
     setFetchingConversion(true);
     try {
@@ -107,14 +119,6 @@ function ListConversations() {
     }
   };
 
-  const handleSelectConversation = (receiverId, conversionId) => {
-    navigate(`/message?receiverId=${receiverId}`);
-
-    setState({
-      selectedConversation: conversionId,
-    });
-  };
-
   const handleClearInputSearch = () => {
     handleQueryUser("");
     setValueSearch("");
@@ -123,9 +127,10 @@ function ListConversations() {
   const renderConversationItem = (previewConversation, index) => {
     const { _id: id, receiver, lastMessage } = previewConversation || {};
     const { avaUrl, username, _id: receiverId } = receiver || {};
-    const { timeSendLast, text } = lastMessage || {};
+    const { timeSendLast, text, sender } = lastMessage || {};
     const isSelected = selectedConversation === id;
     const formattedTime = formatTimeAgo(timeSendLast);
+    const isSender = sender === userId;
 
     return (
       <Flex
@@ -142,7 +147,9 @@ function ListConversations() {
           <b>{username}</b>
 
           <Flex justify="space-between" className="info-last-message">
-            <span className="content-last-message">{text}</span>
+            <span className="content-last-message">{`${
+              isSender ? "Me: " : ""
+            }${text}`}</span>
             <span>{formattedTime}</span>
           </Flex>
         </Flex>

@@ -1,24 +1,27 @@
-import { useEffect, useState } from "react";
+import { createSubscription, useSubscription } from "global-state-hook";
+import { useEffect } from "react";
 import { TIME_DELAY_SEARCH_INPUT } from "../constant";
 import { debounce } from "../utilities";
 
+const windowSizeSubs = createSubscription({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  isTablet: window.innerWidth < 960,
+  isMobile: window.innerWidth < 700,
+});
+
 export const useWindowSize = () => {
-  const [size, setSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    isTablet: window.innerWidth < 960,
-    isMobile: window.innerWidth < 700,
-  });
+  const { state, setState } = useSubscription(windowSizeSubs);
 
   useEffect(() => {
     const handleResize = debounce(() => {
-      setSize({
+      setState({
         width: window.innerWidth,
         height: window.innerHeight,
         isTablet: window.innerWidth < 960,
         isMobile: window.innerWidth < 700,
       });
-    }, TIME_DELAY_SEARCH_INPUT / 4);
+    }, TIME_DELAY_SEARCH_INPUT);
 
     window.addEventListener("resize", handleResize);
 
@@ -28,5 +31,5 @@ export const useWindowSize = () => {
     };
   }, []);
 
-  return size;
+  return state;
 };

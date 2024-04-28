@@ -33,6 +33,7 @@ function DetailConversation() {
     isSending,
     tempMessage,
     fetchingMessage,
+    listConversation,
   } = state || {};
 
   const { username, email, avaUrl } = receiver || {};
@@ -88,20 +89,39 @@ function DetailConversation() {
 
   const handleSendMessage = async () => {
     try {
-      const newConversationId =
+      conversationId =
         conversationId || (await createConversation(receiverId))?._id;
 
-      if (!newConversationId) {
+      if (!conversationId) {
         return;
       }
 
       const optionSend = {
-        conversationId: newConversationId,
+        conversationId,
         text: message,
         sender: userId,
       };
 
-      setState((prev) => ({ ...prev, isSending: true, tempMessage: message }));
+      listConversation = listConversation.map((conversation) => {
+        const { lastMessage } = conversation || {};
+
+        if (conversation?._id === conversationId) {
+          conversation.lastMessage = {
+            ...lastMessage,
+            ...optionSend,
+            timeSendLast: new Date(),
+          };
+        }
+
+        return conversation;
+      });
+
+      setState((prev) => ({
+        ...prev,
+        listConversation,
+        isSending: true,
+        tempMessage: message,
+      }));
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
@@ -127,19 +147,12 @@ function DetailConversation() {
           let { _id, text, sender } = message || {};
           text = text?.replaceAll("\n", "<br/>");
           const isSender = sender === userId;
-          const { sender: startSender } = listMessages[index - 1] || {};
-          const { sender: endSender } = listMessages[index + 1] || {};
-          const isEndSectionSender = endSender ? endSender !== userId : false;
-
-          const isStartSectionSender = startSender
-            ? startSender !== userId
-            : false;
+          const { sender: endSender } = listMessages[index - 1] || {};
+          const isStartSectionSender = endSender ? endSender !== sender : false;
 
           return (
             <Flex
-              className={`mx-2 px-1 ${isStartSectionSender ? "pt-4" : ""} ${
-                isEndSectionSender ? "pb-4" : ""
-              }`}
+              className={`mx-2 px-1 ${isStartSectionSender ? "pt-4" : ""}`}
               justify={isSender ? "end" : "start"}
               key={_id}
             >
