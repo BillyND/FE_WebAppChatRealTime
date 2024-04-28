@@ -46,22 +46,17 @@ function DetailConversation() {
   let containerMessage = null;
 
   useEffect(() => {
-    setState((prev) => ({
-      ...prev,
-      fetchingMessage: true,
-    }));
-
+    setState((prev) => ({ ...prev, fetchingMessage: true }));
     handleGetMessage();
 
     return () => {
-      setState({
-        receiver: null,
-      });
+      setState({ receiver: null });
     };
   }, [receiverId]);
 
   const handleGetMessage = debounce(async () => {
     if (!receiverId) {
+      setState((prev) => ({ ...prev, fetchingMessage: false }));
       return;
     }
 
@@ -74,16 +69,13 @@ function DetailConversation() {
         receiver,
         listMessages,
         conversationId,
-      }));
-    } catch (error) {
-      showPopupError(error);
-    } finally {
-      setState((prev) => ({
-        ...prev,
         fetchingMessage: false,
       }));
 
       scrollToBottomOfElement(boxMessageId);
+    } catch (error) {
+      setState((prev) => ({ ...prev, fetchingMessage: false }));
+      showPopupError(error);
     }
   }, TIME_DELAY_FETCH_API);
 
@@ -134,11 +126,11 @@ function DetailConversation() {
     containerMessage = (
       <Flex vertical gap={4}>
         {listMessages.map((message, index) => {
-          let { _id, text, sender } = message || {};
-          text = text?.replaceAll("\n", "<br/>");
+          const { _id, text, sender } = message || {};
+          const formattedText = text?.replaceAll("\n", "<br/>");
           const isSender = sender === userId;
           const { sender: endSender } = listMessages[index - 1] || {};
-          const isStartSectionSender = endSender ? endSender !== sender : false;
+          const isStartSectionSender = endSender !== sender;
 
           return (
             <Flex
@@ -148,17 +140,17 @@ function DetailConversation() {
             >
               <div
                 className={`${isSender ? "sender" : ""} wrap-message`}
-                dangerouslySetInnerHTML={{ __html: text }}
+                dangerouslySetInnerHTML={{ __html: formattedText }}
               />
             </Flex>
           );
         })}
 
         {isSending && (
-          <Flex className="mx-2 px-1" justify={"end"} align="center" gap={6}>
+          <Flex className="mx-2 px-1" justify="end" align="center" gap={6}>
             <SpinnerLoading className="icon-load-send-message" />
             <div
-              className={`sender wrap-message`}
+              className="sender wrap-message"
               dangerouslySetInnerHTML={{
                 __html: tempMessage?.replaceAll("\n", "<br/>"),
               }}
