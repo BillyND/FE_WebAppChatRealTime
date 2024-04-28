@@ -37,9 +37,9 @@ function DetailConversation() {
   } = state || {};
 
   const { username, email, avaUrl } = receiver || {};
-
   const [message, setMessage] = useState("");
   const trimMessage = message.trim();
+
   const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
   const boxMessageId = "box-list-message";
@@ -92,48 +92,38 @@ function DetailConversation() {
       conversationId =
         conversationId || (await createConversation(receiverId))?._id;
 
-      if (!conversationId) {
-        return;
-      }
+      if (!conversationId) return;
 
-      const optionSend = {
-        conversationId,
-        text: message,
-        sender: userId,
-      };
-
-      listConversation = listConversation.map((conversation) => {
-        const { lastMessage } = conversation || {};
-
-        if (conversation?._id === conversationId) {
-          conversation.lastMessage = {
-            ...lastMessage,
-            ...optionSend,
-            timeSendLast: new Date(),
-          };
-        }
-
-        return conversation;
-      });
+      const optionSend = { conversationId, text: message, sender: userId };
 
       setState((prev) => ({
         ...prev,
-        listConversation,
         isSending: true,
         tempMessage: message,
+        listConversation: listConversation.map((conversation) =>
+          conversation?._id === conversationId
+            ? {
+                ...conversation,
+                lastMessage: {
+                  ...conversation.lastMessage,
+                  ...optionSend,
+                  timeSendLast: new Date(),
+                },
+              }
+            : conversation
+        ),
       }));
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
 
       const resSendMessage = await createMessage(optionSend);
-      const newListMessages = [...listMessages, resSendMessage];
 
       setState((prev) => ({
         ...prev,
         isSending: false,
         tempMessage: "",
-        listMessages: newListMessages,
+        listMessages: [...listMessages, resSendMessage],
       }));
     } catch (error) {
       showPopupError(error);
