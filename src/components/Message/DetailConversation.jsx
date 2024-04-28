@@ -90,10 +90,7 @@ function DetailConversation() {
       conversationId = conversationId || newConversationId;
       const optionSend = { conversationId, text: message, sender: userId };
 
-      listConversation = newConversation
-        ? [newConversation, ...listConversation]
-        : listConversation;
-
+      newConversation && listConversation.unshift(newConversation);
       listConversation = listConversation.map((conversation) =>
         conversation?._id === conversationId
           ? {
@@ -108,8 +105,8 @@ function DetailConversation() {
       );
 
       const newListConversation = listConversation.sort((a, b) => {
-        const timeA = new Date(a.lastMessage?.timeSendLast) || 0;
-        const timeB = new Date(b.lastMessage?.timeSendLast) || 0;
+        const timeA = new Date(a?.lastMessage?.timeSendLast) || 0;
+        const timeB = new Date(b?.lastMessage?.timeSendLast) || 0;
 
         return timeB - timeA;
       });
@@ -133,13 +130,6 @@ function DetailConversation() {
         tempMessage: "",
         listMessages: [...listMessages, resSendMessage],
       });
-
-      // const newListConversation = await getConversations();
-
-      // setState({
-      //   fetchingConversion: false,
-      //   listConversation: newListConversation,
-      // });
     } catch (error) {
       console.error("===>Error handleSendMessage:", error);
       showPopupError(error);
@@ -149,7 +139,6 @@ function DetailConversation() {
   const processCreateNewConversation = async (receiverId) => {
     try {
       setState({
-        // fetchingConversion: true,
         isSending: true,
         tempMessage: message,
       });
