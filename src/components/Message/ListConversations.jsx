@@ -11,20 +11,22 @@ import { useNavigate } from "react-router-dom";
 import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
-import { debounce, showPopupError } from "../../utils/utilities";
+import {
+  debounce,
+  scrollIntoViewById,
+  showPopupError,
+} from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 
 function ListConversations() {
+  const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;
 
-  const [fetchingConversion, setFetchingConversion] = useState(false);
-  const { state, setState } = useSubscription(conversationSubs, [
-    "listConversation",
-    "selectedConversation",
-  ]);
-  const { listConversation, selectedConversation } = state || {};
+  const { state, setState } = useSubscription(conversationSubs);
+  const { listConversation, selectedConversation, fetchingConversion } =
+    state || {};
 
   const [valueSearch, setValueSearch] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -34,7 +36,6 @@ function ListConversations() {
   const [listUser, setListUser] = useState([]);
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
-  const [receiverIdParams] = useSearchParams(["receiverId"]);
 
   useEffect(() => {
     handleGetAllConverSation();
@@ -105,20 +106,22 @@ function ListConversations() {
     setState({
       selectedConversation: conversionId,
     });
+
+    scrollIntoViewById(`conversion-${conversionId}`);
   };
 
   const handleGetAllConverSation = async () => {
-    setFetchingConversion(true);
+    setState({ fetchingConversion: true });
     try {
       const resConversation = await getConversations();
 
-      if (resConversation.length) {
+      if (typeof resConversation === "object" && resConversation.length) {
         setState({ listConversation: resConversation });
       }
     } catch (error) {
       showPopupError(error);
     } finally {
-      setFetchingConversion(false);
+      setState({ fetchingConversion: false });
     }
   };
 
@@ -137,6 +140,7 @@ function ListConversations() {
 
     return (
       <Flex
+        id={`conversion-${id}`}
         key={`${id}-${index}`}
         className={`item-preview-conversation p-3 pr-3 ${
           isSelected ? "selected" : ""

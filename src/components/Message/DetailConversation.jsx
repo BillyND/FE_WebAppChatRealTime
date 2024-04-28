@@ -13,6 +13,7 @@ import {
   createConversation,
   createMessage,
   getConversationByReceiver,
+  getConversations,
 } from "../../services/api";
 import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
@@ -81,49 +82,88 @@ function DetailConversation() {
 
   const handleSendMessage = async () => {
     try {
-      conversationId =
-        conversationId || (await createConversation(receiverId))?._id;
+      let newConversation = conversationId
+        ? null
+        : await processCreateNewConversation(receiverId);
+
+      const { _id: newConversationId } = newConversation || {};
+      conversationId = conversationId || newConversationId;
+      const optionSend = { conversationId, text: message, sender: userId };
+
+      listConversation = newConversation
+        ? [newConversation, ...listConversation]
+        : listConversation;
+
+      listConversation = listConversation.map((conversation) =>
+        conversation?._id === conversationId
+          ? {
+              ...conversation,
+              lastMessage: {
+                ...conversation.lastMessage,
+                ...optionSend,
+                timeSendLast: new Date(),
+              },
+            }
+          : conversation
+      );
+
+      const newListConversation = listConversation.sort((a, b) => {
+        const timeA = new Date(a.lastMessage?.timeSendLast) || 0;
+        const timeB = new Date(b.lastMessage?.timeSendLast) || 0;
+
+        return timeB - timeA;
+      });
 
       if (!conversationId) return;
 
-      const optionSend = { conversationId, text: message, sender: userId };
-
-      setState((prev) => ({
-        ...prev,
+      setState({
         isSending: true,
         tempMessage: message,
         conversationId,
-        listConversation: listConversation.map((conversation) =>
-          conversation?._id === conversationId
-            ? {
-                ...conversation,
-                lastMessage: {
-                  ...conversation.lastMessage,
-                  ...optionSend,
-                  timeSendLast: new Date(),
-                },
-              }
-            : conversation
-        ),
-      }));
+        listConversation: newListConversation,
+      });
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
 
       const resSendMessage = await createMessage(optionSend);
 
-      setState((prev) => ({
-        ...prev,
+      setState({
         isSending: false,
         tempMessage: "",
         listMessages: [...listMessages, resSendMessage],
-      }));
+      });
+
+      // const newListConversation = await getConversations();
+
+      // setState({
+      //   fetchingConversion: false,
+      //   listConversation: newListConversation,
+      // });
     } catch (error) {
+      console.error("===>Error handleSendMessage:", error);
       showPopupError(error);
     }
   };
 
-  if (listMessages?.length) {
+  const processCreateNewConversation = async (receiverId) => {
+    try {
+      setState({
+        // fetchingConversion: true,
+        isSending: true,
+        tempMessage: message,
+      });
+
+      setMessage("");
+      const resConversation = await createConversation(receiverId);
+
+      return resConversation;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  if (listMessages?.length || tempMessage) {
     containerMessage = (
       <Flex vertical gap={4}>
         {listMessages.map((message, index) => {
@@ -131,7 +171,7 @@ function DetailConversation() {
           const formattedText = text?.replaceAll("\n", "<br/>");
           const isSender = sender === userId;
           const { sender: endSender } = listMessages[index - 1] || {};
-          const isStartSectionSender = endSender !== sender;
+          const isStartSectionSender = endSender ? endSender !== sender : false;
 
           return (
             <Flex

@@ -106,7 +106,7 @@ export const scrollToBottomOfElement = (elementId) => {
       /*** If an error occurs, fall back to a basic scroll to the bottom ***/
       console.error("===> Error scrollToBottomOfElement:", error);
 
-      if (elementHasScrollBottom.scrollTop) {
+      if (elementHasScrollBottom) {
         elementHasScrollBottom.scrollTop = scrollHeight;
       }
     }
@@ -402,16 +402,23 @@ export function convertToTitleCase(text) {
 
 const timerDebounce = {};
 export const debounce = (func, time) => {
-  return (props) => {
+  return (...args) => {
     clearTimeout(timerDebounce[func]);
 
     const delayedFunction = () => {
       delete timerDebounce[func];
-      return func(props);
+      return func(...args);
     };
 
     timerDebounce[func] = time
       ? setTimeout(delayedFunction, time)
       : delayedFunction();
   };
+};
+
+export const scrollIntoViewById = (elementId) => {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 };
