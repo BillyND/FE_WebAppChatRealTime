@@ -17,7 +17,11 @@ import {
 } from "../../services/api";
 import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
-import { debounce, showPopupError } from "../../utils/utilities";
+import {
+  debounce,
+  scrollIntoViewById,
+  showPopupError,
+} from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
 function DetailConversation() {
@@ -122,6 +126,7 @@ function DetailConversation() {
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
+      scrollIntoViewById(`conversation-${conversationId}`);
 
       const resSendMessage = await createMessage(optionSend);
 

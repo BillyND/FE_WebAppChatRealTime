@@ -25,7 +25,7 @@ function ListConversations() {
   const { _id: userId } = infoUser;
 
   const { state, setState } = useSubscription(conversationSubs);
-  const { listConversation, selectedConversation, fetchingConversion } =
+  const { listConversation, selectedConversation, fetchingConversation } =
     state || {};
 
   const [valueSearch, setValueSearch] = useState("");
@@ -48,14 +48,14 @@ function ListConversations() {
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;
 
-    const existConversion = listConversation.find(
+    const existConversation = listConversation.find(
       (conversation) => receiverIdParams === conversation?.receiver?._id
     );
 
-    const { _id: existConversionId } = existConversion || {};
+    const { _id: existconversationId } = existConversation || {};
 
     if (receiverIdParams) {
-      handleSelectConversation(receiverIdParams, existConversionId);
+      handleSelectConversation(receiverIdParams, existconversationId);
       return;
     }
 
@@ -100,18 +100,18 @@ function ListConversations() {
     handleClearInputSearch();
   };
 
-  const handleSelectConversation = (receiverId, conversionId) => {
+  const handleSelectConversation = (receiverId, conversationId) => {
     navigate(`/message?receiverId=${receiverId}`);
 
     setState({
-      selectedConversation: conversionId,
+      selectedConversation: conversationId,
     });
 
-    scrollIntoViewById(`conversion-${conversionId}`);
+    scrollIntoViewById(`conversation-${conversationId}`);
   };
 
   const handleGetAllConverSation = async () => {
-    setState({ fetchingConversion: true });
+    setState({ fetchingConversation: true });
     try {
       const resConversation = await getConversations();
 
@@ -121,7 +121,7 @@ function ListConversations() {
     } catch (error) {
       showPopupError(error);
     } finally {
-      setState({ fetchingConversion: false });
+      setState({ fetchingConversation: false });
     }
   };
 
@@ -140,7 +140,7 @@ function ListConversations() {
 
     return (
       <Flex
-        id={`conversion-${id}`}
+        id={`conversation-${id}`}
         key={`${id}-${index}`}
         className={`item-preview-conversation p-3 pr-3 ${
           isSelected ? "selected" : ""
@@ -241,9 +241,9 @@ function ListConversations() {
       </WrapSearchUser>
 
       <WrapListConversation className="px-3 pb-3">
-        {(loadingSearch || fetchingConversion) && <SpinnerLoading />}
+        {(loadingSearch || fetchingConversation) && <SpinnerLoading />}
 
-        {!fetchingConversion && (
+        {!fetchingConversation && (
           <>
             <EmptyConversation />
 
