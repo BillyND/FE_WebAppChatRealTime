@@ -9,6 +9,7 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
 import {
+  conversationsRead,
   getConversations,
   searchUserByName,
   updateUsersReadConversation,
@@ -22,6 +23,22 @@ import {
   showPopupError,
 } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
+
+export const handleGetAllConversations = async (fetching = true) => {
+  fetching && conversationSubs.updateState({ fetchingConversation: true });
+
+  try {
+    const resConversation = await getConversations();
+
+    if (typeof resConversation === "object" && resConversation.length) {
+      conversationSubs.updateState({ listConversation: resConversation });
+    }
+  } catch (error) {
+    showPopupError(error);
+  } finally {
+    conversationSubs.updateState({ fetchingConversation: false });
+  }
+};
 
 function ListConversations() {
   const { state, setState } = useSubscription(conversationSubs, [
@@ -46,19 +63,20 @@ function ListConversations() {
 
   useEffect(() => handleGetAllConversations(), []);
 
-  useEffect(() => handleReadConversation(), [selectedConversation]);
+  useEffect(() => {
+    applyInitDataConversation();
+  }, [JSON.stringify(listConversation), receiverIdParams]);
 
-  useEffect(
-    () => applyInitDataConversation(),
-    [JSON.stringify(listConversation), receiverIdParams]
-  );
+  const handleReadConversation = (conversationId) => {
+    updateUsersReadConversation(conversationId);
+    debouncedReadConversation();
+  };
 
-  const handleReadConversation = () => {
+  const debouncedReadConversation = debounce(() => {
     const newList = listConversation.map((conversation) => {
       const { _id, usersRead = [] } = conversation || {};
 
-      if (_id === selectedConversation && !usersRead.includes(userId)) {
-        updateUsersReadConversation(selectedConversation);
+      if (conversationsRead[_id] && !usersRead.includes(userId)) {
         return { ...conversation, usersRead: [...usersRead, userId] };
       }
 
@@ -68,7 +86,7 @@ function ListConversations() {
     setState({
       listConversation: newList,
     });
-  };
+  }, TIME_DELAY_FETCH_API);
 
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;
@@ -127,22 +145,8 @@ function ListConversations() {
     navigate(`/message?receiverId=${receiverId}`);
     setSelectedConversation(conversationId);
     scrollIntoViewById(`conversation-${conversationId}`);
-  }, 50);
-
-  const handleGetAllConversations = async () => {
-    setState({ fetchingConversation: true });
-    try {
-      const resConversation = await getConversations();
-
-      if (typeof resConversation === "object" && resConversation.length) {
-        setState({ listConversation: resConversation });
-      }
-    } catch (error) {
-      showPopupError(error);
-    } finally {
-      setState({ fetchingConversation: false });
-    }
-  };
+    handleReadConversation(conversationId);
+  }, 30);
 
   const handleClearInputSearch = () => {
     handleQueryUser("");

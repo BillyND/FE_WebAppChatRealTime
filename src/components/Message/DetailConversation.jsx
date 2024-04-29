@@ -13,7 +13,7 @@ import {
   createMessage,
   getConversationByReceiver,
 } from "../../services/api";
-import { TIME_DELAY_FETCH_API } from "../../utils/constant";
+import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import {
@@ -23,6 +23,37 @@ import {
   showPopupError,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
+import { handleGetAllConversations } from "./ListConversations";
+
+const handleGetMessage = debounce(async (receiverId) => {
+  if (!receiverId) {
+    conversationSubs.updateState({
+      fetchingMessage: false,
+    });
+    return;
+  }
+
+  try {
+    handleGetAllConversations(false);
+    const resConversation = await getConversationByReceiver(receiverId);
+    const { receiver, listMessages, conversationId } = resConversation || {};
+
+    conversationSubs.updateState({
+      receiver,
+      listMessages,
+      conversationId,
+      fetchingMessage: false,
+    });
+
+    scrollToBottomOfElement(boxMessageId);
+  } catch (error) {
+    console.error("===>Error handleGetMessage:", error);
+    conversationSubs.updateState({
+      fetchingMessage: false,
+    });
+    showPopupError(error);
+  }
+}, TIME_DELAY_FETCH_API);
 
 function DetailConversation() {
   const {
@@ -31,6 +62,7 @@ function DetailConversation() {
 
   const navigate = useNavigateCustom();
   const { state, setState } = useSubscription(conversationSubs);
+
   let {
     receiver,
     listMessages,
@@ -45,42 +77,17 @@ function DetailConversation() {
 
   const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
-  const boxMessageId = "box-list-message";
   let containerMessage = null;
 
   useEffect(() => {
     setState((prev) => ({ ...prev, fetchingMessage: true }));
-    handleGetMessage();
+    handleGetMessage(receiverId);
 
     return () => {
       setState({ receiver: null });
+      setMessage("");
     };
   }, [receiverId]);
-
-  const handleGetMessage = debounce(async () => {
-    if (!receiverId) {
-      setState((prev) => ({ ...prev, fetchingMessage: false }));
-      return;
-    }
-
-    try {
-      const resConversation = await getConversationByReceiver(receiverId);
-      const { receiver, listMessages, conversationId } = resConversation || {};
-
-      setState((prev) => ({
-        ...prev,
-        receiver,
-        listMessages,
-        conversationId,
-        fetchingMessage: false,
-      }));
-
-      scrollToBottomOfElement(boxMessageId);
-    } catch (error) {
-      setState((prev) => ({ ...prev, fetchingMessage: false }));
-      showPopupError(error);
-    }
-  }, TIME_DELAY_FETCH_API);
 
   const handleSendMessage = async () => {
     try {

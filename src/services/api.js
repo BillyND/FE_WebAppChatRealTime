@@ -156,7 +156,16 @@ export const getConversationByReceiver = (receiverId) => {
   return axios.get(`conversation/receiver/${receiverId}`, tokenHeaders());
 };
 
+export const conversationsRead = {};
 export const updateUsersReadConversation = (conversationId) => {
+  if (conversationsRead[conversationId]) {
+    return;
+  }
+
+  if (conversationId) {
+    conversationsRead[conversationId] = true;
+  }
+
   return axios.put(
     `conversation/users-read`,
     { conversationId },

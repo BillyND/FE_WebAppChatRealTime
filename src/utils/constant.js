@@ -61,3 +61,5 @@ export const FILL_COLOR_ICON = {
 };
 
 export const TITLE_OF_CURRENT_SITE = "Social Media";
+
+export const boxMessageId = "box-list-message";
