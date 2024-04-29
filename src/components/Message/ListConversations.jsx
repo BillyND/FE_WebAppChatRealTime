@@ -7,7 +7,6 @@ import { formatTimeAgo } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
@@ -18,20 +17,24 @@ import {
 } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function ListConversations() {
+  const { state, setState } = useSubscription(conversationSubs, [
+    "listConversation",
+    "fetchingConversation",
+  ]);
+
+  const { listConversation, fetchingConversation } = state || {};
   const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;
-
-  const { state, setState } = useSubscription(conversationSubs);
-  const { listConversation, selectedConversation, fetchingConversation } =
-    state || {};
+  const [selectedConversation, setSelectedConversation] = useState(-1);
 
   const [valueSearch, setValueSearch] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
   const trimValueSearch = valueSearch?.trim() || "";
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
 
   const [listUser, setListUser] = useState([]);
   const { styleApp } = useStyleApp();
@@ -61,11 +64,9 @@ function ListConversations() {
 
     const firstReceiver = listConversation[0]?.receiver;
     const { _id: receiverId } = firstReceiver || {};
-    navigate(`/message?receiverId=${receiverId}`);
 
-    setState({
-      selectedConversation: listConversation[0]?._id || -1,
-    });
+    navigate(`/message?receiverId=${receiverId}`);
+    setSelectedConversation(listConversation[0]?._id || -1);
   };
 
   const debounceQueryUser = debounce(async (propValue) => {
@@ -102,11 +103,7 @@ function ListConversations() {
 
   const handleSelectConversation = (receiverId, conversationId) => {
     navigate(`/message?receiverId=${receiverId}`);
-
-    setState({
-      selectedConversation: conversationId,
-    });
-
+    setSelectedConversation(conversationId);
     scrollIntoViewById(`conversation-${conversationId}`);
   };
 

@@ -29,8 +29,8 @@ import { useSubscription } from "global-state-hook";
 import React, { Fragment, useCallback, useEffect, useState } from "react";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
-import { useNavigate } from "react-router-dom";
 import { debounce } from "../../utils/utilities";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
@@ -58,7 +58,7 @@ const DetailPost = (props) => {
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
 
   useEffect(() => {
     socketIo.on("getPost", (post) => {

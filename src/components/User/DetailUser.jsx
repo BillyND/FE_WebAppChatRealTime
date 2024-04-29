@@ -15,10 +15,10 @@ import {
 import { showPopupError } from "../../utils/utilities";
 import EditProfileModal from "./EditProfileModal";
 import InfoUserModal from "./InfoUserModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function DetailUser() {
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
   const { isMobile } = useWindowSize();
   const {
     styleApp: { type },

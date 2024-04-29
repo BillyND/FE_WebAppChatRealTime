@@ -3,14 +3,15 @@ import { TIME_DEBOUNCE_INPUT_LOGIN_REGISTER } from "@utils/constant";
 import { Input } from "antd";
 import Link from "antd/es/typography/Link";
 import { useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { debounce } from "../../utils/utilities";
 import { WrapAuthScreen } from "./AuthScreenStyled";
 import { ButtonAuth } from "./ButtonAuth";
 import ForgotPass from "./ForgotPass";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 export default function AuthScreen() {
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
   const { pathname } = useLocation();
   const [loadingAuth, setLoadingAuth] = useState(false);
   const [infoUserInput, setInfoUserInput] = useState({});

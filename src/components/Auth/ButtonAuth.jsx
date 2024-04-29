@@ -1,10 +1,11 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import { message } from "antd";
-import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { postLogin, postRegister } from "@services/api";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { regexValidateEmail } from "@utils/constant";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { message } from "antd";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { isValidUsername, showPopupError } from "../../utils/utilities";
 
 export const ButtonAuth = ({
@@ -15,7 +16,7 @@ export const ButtonAuth = ({
   setInfoUserInput,
 }) => {
   const { login } = useAuthUser();
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
   const { pathname } = useLocation();
 
   useEffect(() => {

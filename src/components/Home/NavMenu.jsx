@@ -25,7 +25,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { scrollToTopOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import React, { Fragment, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   WrapButtonSettings,
   WrapContentPopoverSettings,
@@ -33,6 +33,7 @@ import {
   WrapNavMenu,
 } from "./HomeStyled";
 import ModalReportProblem from "./ModalReportProblem";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 const ButtonSettings = (props) => {
   const { logout } = useAuthUser();
@@ -211,7 +212,7 @@ function NavMenu() {
     styleApp: { navMenuStyle },
   } = useStyleApp();
   const { isMobile, isTablet } = useWindowSize();
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
 
   const handleNavigation = (path) => {
     path !== "/post" && navigate(path);

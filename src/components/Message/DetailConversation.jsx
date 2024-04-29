@@ -8,7 +8,6 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   createConversation,
   createMessage,
@@ -23,13 +22,14 @@ import {
   showPopupError,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function DetailConversation() {
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
 
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
   const { state, setState } = useSubscription(conversationSubs);
   let {
     receiver,

@@ -6,13 +6,7 @@ import { message } from "antd";
 import { useSubscription } from "global-state-hook";
 import { useEffect } from "react";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 import Layout from "./Layout";
 import { WrapStyledApp } from "./StyledApp";
@@ -29,9 +23,10 @@ import { getDataInfoUser } from "./services/api";
 import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
 import { socketIoSubs } from "./utils/globalStates/initGlobalState";
 import { convertToTitleCase } from "./utils/utilities";
+import { useNavigateCustom } from "./utils/hooks/useNavigateCustom";
 
 const TriggerNavigate = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
   const { pathname } = useLocation();
   const { accessToken } = getInfoUserLocal();
   const isOnLoginRegisterPage =

@@ -8,7 +8,7 @@ import { showPopupError } from "@utils/utilities";
 import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function ItemPreviewUser(props) {
   const { user } = props;
@@ -25,7 +25,7 @@ function ItemPreviewUser(props) {
     state: { resultsPreview, results },
     setState: setDataSearchUser,
   } = useSubscription(searchInputSubs, ["keySearchUser", "resultsPreview"]);
-  const navigate = useNavigate();
+  const navigate = useNavigateCustom();
   const isFollowed = followers?.includes(userId);
 
   const borderStyle = `1px solid ${
