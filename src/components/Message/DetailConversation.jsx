@@ -12,17 +12,17 @@ import {
   createConversation,
   createMessage,
   getConversationByReceiver,
-  getConversations,
 } from "../../services/api";
 import { TIME_DELAY_FETCH_API } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import {
   debounce,
+  preventKeydown,
   scrollIntoViewById,
   showPopupError,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
-import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function DetailConversation() {
   const {
@@ -263,6 +263,7 @@ function DetailConversation() {
             maxLength={8000}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => preventKeydown(e, "Enter", handleSendMessage)}
             rows={1}
             placeholder="Type a message..."
             className={`input-comment ${

@@ -46,7 +46,7 @@ function ListConversations() {
 
   useEffect(() => {
     applyInitDataConversation();
-  }, [listConversation, receiverIdParams]);
+  }, [JSON.stringify(listConversation), receiverIdParams]);
 
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;

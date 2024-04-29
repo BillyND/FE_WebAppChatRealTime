@@ -424,3 +424,10 @@ export const scrollIntoViewById = (elementId, time) => {
     }
   }, time || 0);
 };
+
+export const preventKeydown = (event, key, functionPrevent) => {
+  if (event.key === key) {
+    event.preventDefault();
+    functionPrevent();
+  }
+};

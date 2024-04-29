@@ -1,39 +1,31 @@
 import { union } from "lodash";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { debounce } from "../utilities";
 
-/**
- * Custom hook to extract and manage search parameters from the URL.
- * @param {Array} keys - An array of parameter keys to extract from the URL.
- * @returns {Array} - An array containing the extracted parameter values.
- */
 export const useSearchParams = (keys) => {
   const location = useLocation();
   const [values, setValues] = useState([]);
-
-  // Temporary array to store parameter values
   const tempValues = [];
 
-  // Function to extract parameter value from URL by key
-  const getValueFromURL = (key) => {
+  // Function to extract email from URL
+  const getEmailFromURL = (key) => {
+    // Get the search query parameters from the URL
     const searchParams = new URLSearchParams(location.search);
+    // Extract the parameter value
     const value = searchParams.get(key);
     tempValues.push(value);
   };
 
-  // Debounced function to update values with extracted parameters
-  const onChangeParams = debounce(() => {
+  // Adding debounce here will cause an error that the listConversation screen will not receive changes in params
+  const onChangeParams = () => {
     setValues(union(tempValues));
-  }, 10);
+  };
 
   useEffect(() => {
-    // Extract parameter values from URL for each key
-    keys.forEach((key) => getValueFromURL(key));
+    keys.forEach((key) => getEmailFromURL(key));
 
-    // Update values when search parameters change
     onChangeParams();
-  }, [location.search]); // Re-run effect when the search query changes
+  }, [location.search]);
 
-  return values; // Return the extracted parameter values
+  return values;
 };
