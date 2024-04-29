@@ -6,7 +6,7 @@ import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { isEmpty } from "lodash";
+import { isEmpty, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   createConversation,
@@ -23,7 +23,9 @@ import {
   showPopupError,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
+import asyncWait from "../../utils/asyncWait";
 
+let isCreatingConversation = false;
 function DetailConversation() {
   const {
     infoUser: { _id: userId },
@@ -85,10 +87,12 @@ function DetailConversation() {
   const handleSendMessage = async () => {
     try {
       if (isDisableButtonSend) return;
+      const keyNewMessage = Date.now();
 
       const newConversation = await processCreateNewConversation(
         conversationId,
-        receiverId
+        receiverId,
+        keyNewMessage
       );
 
       const { _id: newConversationId } = newConversation || {};
@@ -99,7 +103,7 @@ function DetailConversation() {
       const optionSend = { conversationId, text: message, sender: userId };
       newConversation && listConversation.unshift(newConversation);
 
-      listConversation = listConversation.map((conversation) =>
+      listConversation = unionBy(listConversation, "_id").map((conversation) =>
         conversation?._id === conversationId
           ? {
               ...conversation,
@@ -119,15 +123,15 @@ function DetailConversation() {
         return timeB - timeA;
       });
 
-      const keyNewMessage = Date.now();
-
       setState({
         conversationId,
         listConversation: newListConversation,
-        listMessages: [
-          ...listMessages,
-          { ...optionSend, key: keyNewMessage, isSending: true },
-        ],
+        ...(!newConversation && {
+          listMessages: [
+            ...listMessages,
+            { ...optionSend, key: keyNewMessage, isSending: true },
+          ],
+        }),
       });
 
       scrollToBottomOfElement(boxMessageId);
@@ -153,16 +157,31 @@ function DetailConversation() {
     }
   };
 
-  const processCreateNewConversation = async (conversationId, receiverId) => {
+  const processCreateNewConversation = async (
+    conversationId,
+    receiverId,
+    keyNewMessage
+  ) => {
     try {
       setMessage("");
+
+      setState({
+        listMessages: [
+          ...listMessages,
+          {
+            text: message,
+            sender: userId,
+            key: keyNewMessage,
+            isSending: true,
+          },
+        ],
+      });
 
       if (conversationId) {
         return null;
       }
 
       const resConversation = await createConversation(receiverId);
-
       return resConversation;
     } catch (error) {
       return null;

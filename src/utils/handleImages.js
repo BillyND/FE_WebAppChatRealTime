@@ -1,4 +1,4 @@
-import asyncWait from "./asysnWait";
+import asyncWait from "./asyncWait";
 
 export const readFileAsDataURL = (file) => {
   const timeoutPromise = new Promise((resolve, reject) => {

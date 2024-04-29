@@ -1,5 +1,5 @@
 import axios from "axios";
-import asyncWait from "@utils/asysnWait";
+import asyncWait from "@utils/asyncWait";
 import { KEY_INFO_USER } from "@utils/constant";
 import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
 import { passLocalStorage } from "@utils/passLocalStorage";
