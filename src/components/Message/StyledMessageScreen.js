@@ -120,10 +120,26 @@ export const WrapListConversation = styled.div`
   gap: 12px;
   overflow-y: scroll;
 
+  .icon-un-read {
+    width: 10px;
+    min-height: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #0765ff;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+  }
+
   .item-preview-conversation {
     width: 100%;
     border-radius: 12px;
     cursor: pointer;
+    position: relative;
+
+    &:hover {
+      background-color: #80808014;
+    }
 
     &.selected {
       background-color: #80808026;
@@ -138,6 +154,12 @@ export const WrapListConversation = styled.div`
       white-space: nowrap;
       text-overflow: ellipsis;
       max-width: 160px;
+      color: ${(p) => (p.isDark ? "#DADDE1" : "#464646")};
+      font-size: 13px;
+
+      &.read {
+        color: gray;
+      }
     }
   }
 

@@ -8,7 +8,11 @@ import { formatTimeAgo } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
-import { getConversations, searchUserByName } from "../../services/api";
+import {
+  getConversations,
+  searchUserByName,
+  updateUsersReadConversation,
+} from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
@@ -40,13 +44,31 @@ function ListConversations() {
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
 
-  useEffect(() => {
-    handleGetAllConverSation();
-  }, []);
+  useEffect(() => handleGetAllConverSation(), []);
 
-  useEffect(() => {
-    applyInitDataConversation();
-  }, [JSON.stringify(listConversation), receiverIdParams]);
+  useEffect(() => handleReadConversation(), [selectedConversation]);
+
+  useEffect(
+    () => applyInitDataConversation(),
+    [JSON.stringify(listConversation), receiverIdParams]
+  );
+
+  const handleReadConversation = () => {
+    const newList = listConversation.map((conversation) => {
+      const { _id, usersRead = [] } = conversation || {};
+
+      if (_id === selectedConversation && !usersRead.includes(userId)) {
+        updateUsersReadConversation(selectedConversation);
+        return { ...conversation, usersRead: [...usersRead, userId] };
+      }
+
+      return conversation;
+    });
+
+    setState({
+      listConversation: newList,
+    });
+  };
 
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;
@@ -101,11 +123,11 @@ function ListConversations() {
     handleClearInputSearch();
   };
 
-  const handleSelectConversation = (receiverId, conversationId) => {
+  const handleSelectConversation = debounce((receiverId, conversationId) => {
     navigate(`/message?receiverId=${receiverId}`);
     setSelectedConversation(conversationId);
     scrollIntoViewById(`conversation-${conversationId}`);
-  };
+  }, 50);
 
   const handleGetAllConverSation = async () => {
     setState({ fetchingConversation: true });
@@ -128,12 +150,19 @@ function ListConversations() {
   };
 
   const renderConversationItem = (previewConversation, index) => {
-    const { _id: id, receiver, lastMessage } = previewConversation || {};
+    const {
+      _id: id,
+      receiver,
+      lastMessage,
+      usersRead,
+    } = previewConversation || {};
     const { avaUrl, username, _id: receiverId } = receiver || {};
     const { timeSendLast, text, sender } = lastMessage || {};
+
     const isSelected = selectedConversation === id;
     const formattedTime = formatTimeAgo(timeSendLast);
     const isSender = sender === userId;
+    const isRead = usersRead?.includes(userId);
 
     return (
       <Flex
@@ -145,15 +174,17 @@ function ListConversations() {
         onClick={() => handleSelectConversation(receiverId, id)}
         gap={8}
       >
+        {!isRead && <div className="icon-un-read"></div>}
+
         <UserThumbnail avaUrl={avaUrl} size={45} />
 
         <Flex vertical gap={2} className="width-100-per none-copy">
           <b>{username}</b>
 
           <Flex justify="space-between" className="info-last-message">
-            <span className="content-last-message">{`${
-              isSender ? "Me: " : ""
-            }${text}`}</span>
+            <span
+              className={`content-last-message ${isRead ? "read" : ""}`}
+            >{`${isSender ? "Me: " : ""}${text}`}</span>
             <span>{formattedTime}</span>
           </Flex>
         </Flex>
@@ -216,7 +247,7 @@ function ListConversations() {
 
   return (
     <Flex vertical className="wrap-all-conversations">
-      <WrapSearchUser isDark={isDark} className="p-3 width-100-per">
+      <WrapSearchUser isDark={isDark} className="p-2 mt-1 width-100-per">
         <input
           placeholder="Search"
           className="width-100-per search-conversation"
@@ -237,7 +268,7 @@ function ListConversations() {
         )}
       </WrapSearchUser>
 
-      <WrapListConversation className="px-3 pb-3">
+      <WrapListConversation isDark={isDark} className="px-2 pb-2">
         {(loadingSearch || fetchingConversation) && <SpinnerLoading />}
 
         {!fetchingConversation && (

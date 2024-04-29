@@ -155,3 +155,11 @@ export const getConversations = () => {
 export const getConversationByReceiver = (receiverId) => {
   return axios.get(`conversation/receiver/${receiverId}`, tokenHeaders());
 };
+
+export const updateUsersReadConversation = (conversationId) => {
+  return axios.put(
+    `conversation/users-read`,
+    { conversationId },
+    tokenHeaders()
+  );
+};
