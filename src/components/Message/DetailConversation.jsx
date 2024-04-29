@@ -23,9 +23,7 @@ import {
   showPopupError,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
-import asyncWait from "../../utils/asyncWait";
 
-let isCreatingConversation = false;
 function DetailConversation() {
   const {
     infoUser: { _id: userId },
@@ -86,46 +84,68 @@ function DetailConversation() {
 
   const handleSendMessage = async () => {
     try {
+      // If the send button is disabled, return early
       if (isDisableButtonSend) return;
+
+      // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
+      // Process creating a new conversation asynchronously
       const newConversation = await processCreateNewConversation(
         conversationId,
         receiverId,
         keyNewMessage
       );
 
+      // Extract the new conversation ID or use the existing one
       const { _id: newConversationId } = newConversation || {};
-      conversationId = conversationId || newConversationId;
+      const updatedConversationId = conversationId || newConversationId;
 
-      if (!conversationId) return;
+      // If no updated conversation ID is available, return early
+      if (!updatedConversationId) return;
 
-      const optionSend = { conversationId, text: message, sender: userId };
-      newConversation && listConversation.unshift(newConversation);
+      // Prepare the message send option
+      const optionSend = {
+        conversationId: updatedConversationId,
+        text: message,
+        sender: userId,
+      };
 
-      listConversation = unionBy(listConversation, "_id").map((conversation) =>
-        conversation?._id === conversationId
-          ? {
-              ...conversation,
-              lastMessage: {
-                ...conversation.lastMessage,
-                ...optionSend,
-                timeSendLast: new Date(),
-              },
-            }
-          : conversation
+      // Create a copy of the list of conversations
+      let updatedListConversation = [...listConversation];
+
+      // If a new conversation was created, add it to the beginning of the list
+      if (newConversation) {
+        updatedListConversation.unshift(newConversation);
+      }
+
+      // Update the conversation list with the new message and sort by the latest message time
+      updatedListConversation = unionBy(updatedListConversation, "_id").map(
+        (conversation) =>
+          conversation._id === updatedConversationId
+            ? {
+                ...conversation,
+                lastMessage: {
+                  ...conversation.lastMessage,
+                  ...optionSend,
+                  timeSendLast: new Date(),
+                },
+              }
+            : conversation
       );
 
-      const newListConversation = listConversation.sort((a, b) => {
-        const timeA = new Date(a?.lastMessage?.timeSendLast) || 0;
-        const timeB = new Date(b?.lastMessage?.timeSendLast) || 0;
+      // Sort the updated conversation list by the time of the last message
+      updatedListConversation.sort(
+        (a, b) =>
+          (new Date(b?.lastMessage?.timeSendLast) || 0) -
+          (new Date(a?.lastMessage?.timeSendLast) || 0)
+      );
 
-        return timeB - timeA;
-      });
-
+      // Update the component state with the updated conversation ID and list
       setState({
-        conversationId,
-        listConversation: newListConversation,
+        conversationId: updatedConversationId,
+        listConversation: updatedListConversation,
+        // If it's not a new conversation, add the message to the list of messages
         ...(!newConversation && {
           listMessages: [
             ...listMessages,
@@ -136,20 +156,16 @@ function DetailConversation() {
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
-      scrollIntoViewById(`conversation-${conversationId}`, 400);
+      scrollIntoViewById(`conversation-${updatedConversationId}`, 400);
 
+      // Send the message
       const resSendMessage = await createMessage(optionSend);
 
-      setState((prev) => ({
-        listMessages: prev.listMessages.map((message) => {
-          const { key } = message || {};
-
-          if (key === keyNewMessage) {
-            return resSendMessage;
-          }
-
-          return message;
-        }),
+      // Update the list of messages with the sent message
+      setState((prevState) => ({
+        listMessages: prevState.listMessages.map((message) =>
+          message.key === keyNewMessage ? resSendMessage : message
+        ),
       }));
     } catch (error) {
       console.error("===>Error handleSendMessage:", error);
@@ -177,12 +193,9 @@ function DetailConversation() {
         ],
       });
 
-      if (conversationId) {
-        return null;
-      }
+      if (conversationId) return null;
 
-      const resConversation = await createConversation(receiverId);
-      return resConversation;
+      return await createConversation(receiverId);
     } catch (error) {
       return null;
     }
