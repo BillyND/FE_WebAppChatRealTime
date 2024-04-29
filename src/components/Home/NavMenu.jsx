@@ -1,5 +1,5 @@
-import PopoverCustom from "@UI//PopoverCustom";
-import ToggleSwitch from "@UI//ToggleSwitch";
+import PopoverCustom from "@UI/PopoverCustom";
+import ToggleSwitch from "@UI/ToggleSwitch";
 import { LoadingOutlined } from "@ant-design/icons";
 import {
   IconHomeActive,

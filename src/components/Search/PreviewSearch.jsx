@@ -1,4 +1,4 @@
-import { SpinnerLoading } from "@UI//SpinnerLoading";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { RightOutlined } from "@ant-design/icons";
 import { IconSearchDeActive, WrapIconAntdDeActive } from "@assets/icons/icon";
 import { searchUserByName } from "@services/api";

@@ -1,4 +1,4 @@
-import { UserThumbnail } from "@UI//UserThumbnail";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { addCommentToPost } from "@services/api";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";

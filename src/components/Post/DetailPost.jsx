@@ -1,5 +1,5 @@
-import PopoverCustom from "@UI//PopoverCustom";
-import { UserThumbnail } from "@UI//UserThumbnail";
+import PopoverCustom from "@UI/PopoverCustom";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import {
   IconDash,
   IconHeartActive,

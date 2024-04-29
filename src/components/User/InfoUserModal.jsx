@@ -1,5 +1,5 @@
-import BaseModal from "@UI//BaseModal";
-import { UserThumbnail } from "@UI//UserThumbnail";
+import BaseModal from "@UI/BaseModal";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React from "react";

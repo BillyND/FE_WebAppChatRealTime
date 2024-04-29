@@ -1,4 +1,4 @@
-import BaseModal from "@UI//BaseModal";
+import BaseModal from "@UI/BaseModal";
 import { deletePost } from "@services/api";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useModal } from "@utils/hooks/useModal";

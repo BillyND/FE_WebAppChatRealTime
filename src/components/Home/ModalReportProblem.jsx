@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BaseModal from "@UI//BaseModal";
+import BaseModal from "@UI/BaseModal";
 import { useModal } from "@utils/hooks/useModal";
 import { WrapInputProblem } from "./HomeStyled";
 import { reportProblem } from "../../services/api";

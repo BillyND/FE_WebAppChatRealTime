@@ -1,4 +1,4 @@
-import { UserThumbnail } from "@UI//UserThumbnail";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { followersUser } from "@services/api";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";

@@ -1,4 +1,4 @@
-import { SpinnerLoading } from "@UI//SpinnerLoading";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import { listPostSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";

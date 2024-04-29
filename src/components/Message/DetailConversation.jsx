@@ -1,5 +1,5 @@
-import { SpinnerLoading } from "@UI//SpinnerLoading";
-import { UserThumbnail } from "@UI//UserThumbnail";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";

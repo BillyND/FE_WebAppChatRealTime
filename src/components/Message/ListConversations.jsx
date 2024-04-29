@@ -1,5 +1,5 @@
-import { SpinnerLoading } from "@UI//SpinnerLoading";
-import { UserThumbnail } from "@UI//UserThumbnail";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { CloseOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
@@ -44,7 +44,7 @@ function ListConversations() {
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
 
-  useEffect(() => handleGetAllConverSation(), []);
+  useEffect(() => handleGetAllConversations(), []);
 
   useEffect(() => handleReadConversation(), [selectedConversation]);
 
@@ -129,7 +129,7 @@ function ListConversations() {
     scrollIntoViewById(`conversation-${conversationId}`);
   }, 50);
 
-  const handleGetAllConverSation = async () => {
+  const handleGetAllConversations = async () => {
     setState({ fetchingConversation: true });
     try {
       const resConversation = await getConversations();

@@ -17,7 +17,7 @@ import {
 } from "@utils/utilities";
 import { InputComment } from "./FooterComment";
 import ModalDeleteComment from "./ModalDeleteComment";
-import { UserThumbnail } from "@UI//UserThumbnail";
+import { UserThumbnail } from "@UI/UserThumbnail";
 
 let timerQueryWithModal;
 

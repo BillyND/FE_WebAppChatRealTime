@@ -1,4 +1,4 @@
-import { UserThumbnail } from "@UI//UserThumbnail";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { followersUser } from "@services/api";
 import { TYPE_STYLE_APP } from "@utils/constant";
 import { searchInputSubs } from "@utils/globalStates/initGlobalState";

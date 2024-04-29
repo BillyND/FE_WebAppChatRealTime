@@ -1,4 +1,4 @@
-import { SpinnerLoading } from "@UI//SpinnerLoading";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
 import BaseModal from "@UI/BaseModal";
 import { UserThumbnail } from "@UI/UserThumbnail";
 import { LockOutlined } from "@ant-design/icons";

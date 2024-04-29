@@ -1,5 +1,5 @@
-import BaseModal from "@UI//BaseModal";
-import { SpinnerLoading } from "@UI//SpinnerLoading";
+import BaseModal from "@UI/BaseModal";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { getCommentsInPost } from "@services/api";
 import { SOURCE_IMAGE_SEND } from "@utils/constant";
 import { detailPostSubs } from "@utils/globalStates/initGlobalState";

@@ -1,4 +1,4 @@
-import { SpinnerLoading } from "@UI//SpinnerLoading";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { getUser } from "@services/api";
 import { searchInputSubs } from "@utils/globalStates/initGlobalState";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
