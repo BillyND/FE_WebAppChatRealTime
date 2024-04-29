@@ -1,31 +1,21 @@
-import { union } from "lodash";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 export const useSearchParams = (keys) => {
   const location = useLocation();
-  const [values, setValues] = useState([]);
-  const tempValues = [];
+  const [searchParams, setSearchParams] = useState(
+    new URLSearchParams(location.search)
+  );
 
-  // Function to extract email from URL
-  const getEmailFromURL = (key) => {
-    // Get the search query parameters from the URL
-    const searchParams = new URLSearchParams(location.search);
-    // Extract the parameter value
-    const value = searchParams.get(key);
-    tempValues.push(value);
-  };
-
-  // Adding debounce here will cause an error that the listConversation screen will not receive changes in params
-  const onChangeParams = () => {
-    setValues(union(tempValues));
+  const onUpdatePrams = () => {
+    setSearchParams(new URLSearchParams(location.search));
   };
 
   useEffect(() => {
-    keys.forEach((key) => getEmailFromURL(key));
-
-    onChangeParams();
+    onUpdatePrams();
   }, [location.search]);
+
+  const values = keys.map((key) => searchParams.get(key));
 
   return values;
 };

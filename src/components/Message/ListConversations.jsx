@@ -1,6 +1,7 @@
 import { SpinnerLoading } from "@UI//SpinnerLoading";
 import { UserThumbnail } from "@UI//UserThumbnail";
 import { CloseOutlined } from "@ant-design/icons";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { formatTimeAgo } from "@utils/utilities";
@@ -10,14 +11,13 @@ import React, { useEffect, useState } from "react";
 import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import {
   debounce,
   scrollIntoViewById,
   showPopupError,
 } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
-import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function ListConversations() {
   const { state, setState } = useSubscription(conversationSubs, [
@@ -55,10 +55,10 @@ function ListConversations() {
       (conversation) => receiverIdParams === conversation?.receiver?._id
     );
 
-    const { _id: existconversationId } = existConversation || {};
+    const { _id: existConversationId } = existConversation || {};
 
     if (receiverIdParams) {
-      handleSelectConversation(receiverIdParams, existconversationId);
+      handleSelectConversation(receiverIdParams, existConversationId);
       return;
     }
 
