@@ -4,11 +4,11 @@ import { Input } from "antd";
 import Link from "antd/es/typography/Link";
 import { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { debounce } from "../../utils/utilities";
 import { WrapAuthScreen } from "./AuthScreenStyled";
 import { ButtonAuth } from "./ButtonAuth";
 import ForgotPass from "./ForgotPass";
-import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 export default function AuthScreen() {
   const navigate = useNavigateCustom();
