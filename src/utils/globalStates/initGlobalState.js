@@ -28,8 +28,12 @@ export const searchInputSubs = createSubscription({
 });
 
 export const initConversationSubs = {
-  listConversation: [],
-  dataMessage: [],
+  conversationId: null,
+  fetchingConversation: false,
+  fetchingMessage: false,
   isSending: false,
+  listConversation: [],
+  listMessage: [],
+  receiver: null,
 };
 export const conversationSubs = createSubscription(initConversationSubs);

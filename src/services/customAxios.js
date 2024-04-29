@@ -16,7 +16,7 @@ const instance = axios.create({ baseURL: baseURL + "v1/api/" });
 
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
-    await asyncWait(400);
+    await asyncWait(1000);
   }
 };
 

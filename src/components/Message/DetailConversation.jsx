@@ -35,8 +35,6 @@ function DetailConversation() {
     receiver,
     listMessages,
     conversationId,
-    isSending,
-    tempMessage,
     fetchingMessage,
     listConversation,
   } = state || {};
@@ -86,15 +84,21 @@ function DetailConversation() {
 
   const handleSendMessage = async () => {
     try {
-      let newConversation = conversationId
-        ? null
-        : await processCreateNewConversation(receiverId);
+      if (isDisableButtonSend) return;
+
+      const newConversation = await processCreateNewConversation(
+        conversationId,
+        receiverId
+      );
 
       const { _id: newConversationId } = newConversation || {};
       conversationId = conversationId || newConversationId;
-      const optionSend = { conversationId, text: message, sender: userId };
 
+      if (!conversationId) return;
+
+      const optionSend = { conversationId, text: message, sender: userId };
       newConversation && listConversation.unshift(newConversation);
+
       listConversation = listConversation.map((conversation) =>
         conversation?._id === conversationId
           ? {
@@ -115,13 +119,15 @@ function DetailConversation() {
         return timeB - timeA;
       });
 
-      if (!conversationId) return;
+      const keyNewMessage = Date.now();
 
       setState({
-        isSending: true,
-        tempMessage: message,
         conversationId,
         listConversation: newListConversation,
+        listMessages: [
+          ...listMessages,
+          { ...optionSend, key: keyNewMessage, isSending: true },
+        ],
       });
 
       scrollToBottomOfElement(boxMessageId);
@@ -130,25 +136,31 @@ function DetailConversation() {
 
       const resSendMessage = await createMessage(optionSend);
 
-      setState({
-        isSending: false,
-        tempMessage: "",
-        listMessages: [...listMessages, resSendMessage],
-      });
+      setState((prev) => ({
+        listMessages: prev.listMessages.map((message) => {
+          const { key } = message || {};
+
+          if (key === keyNewMessage) {
+            return resSendMessage;
+          }
+
+          return message;
+        }),
+      }));
     } catch (error) {
       console.error("===>Error handleSendMessage:", error);
       showPopupError(error);
     }
   };
 
-  const processCreateNewConversation = async (receiverId) => {
+  const processCreateNewConversation = async (conversationId, receiverId) => {
     try {
-      setState({
-        isSending: true,
-        tempMessage: message,
-      });
-
       setMessage("");
+
+      if (conversationId) {
+        return null;
+      }
+
       const resConversation = await createConversation(receiverId);
 
       return resConversation;
@@ -157,11 +169,11 @@ function DetailConversation() {
     }
   };
 
-  if (listMessages?.length || tempMessage) {
+  if (listMessages?.length) {
     containerMessage = (
       <Flex vertical gap={4}>
         {listMessages.map((message, index) => {
-          const { _id, text, sender } = message || {};
+          const { _id, text, sender, isSending } = message || {};
           const formattedText = text?.replaceAll("\n", "<br/>");
           const isSender = sender === userId;
           const { sender: endSender } = listMessages[index - 1] || {};
@@ -171,8 +183,14 @@ function DetailConversation() {
             <Flex
               className={`mx-2 px-1 ${isStartSectionSender ? "pt-4" : ""}`}
               justify={isSender ? "end" : "start"}
+              align="center"
+              gap={6}
               key={_id}
             >
+              {isSending && (
+                <SpinnerLoading className="icon-load-send-message" />
+              )}
+
               <div
                 className={`${isSender ? "sender" : ""} wrap-message`}
                 dangerouslySetInnerHTML={{ __html: formattedText }}
@@ -180,18 +198,6 @@ function DetailConversation() {
             </Flex>
           );
         })}
-
-        {isSending && (
-          <Flex className="mx-2 px-1" justify="end" align="center" gap={6}>
-            <SpinnerLoading className="icon-load-send-message" />
-            <div
-              className="sender wrap-message"
-              dangerouslySetInnerHTML={{
-                __html: tempMessage?.replaceAll("\n", "<br/>"),
-              }}
-            />
-          </Flex>
-        )}
       </Flex>
     );
   }
