@@ -108,6 +108,8 @@ const TriggerConnectSocketIo = () => {
       return;
     }
 
+    handleGetAllConversations(false);
+
     if (
       window.location.search?.includes(sender) ||
       isChanged([targetSocketId, socketIo?.id])
@@ -119,8 +121,6 @@ const TriggerConnectSocketIo = () => {
       handleGetMessage(idHasGetMessage);
       return;
     }
-
-    handleGetAllConversations(false);
   }, 10);
 
   const initFunction = () => {
