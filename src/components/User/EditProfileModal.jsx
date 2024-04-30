@@ -1,17 +1,16 @@
-import { SpinnerLoading } from "@UI/SpinnerLoading";
 import BaseModal from "@UI/BaseModal";
+import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { UserThumbnail } from "@UI/UserThumbnail";
 import { LockOutlined } from "@ant-design/icons";
 import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { useDebounce } from "@utils/hooks/useDebounce";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SeparatingLine from "../../UI/SeparatingLine";
 import { saveProfileUser } from "../../services/api";
-import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
+import { TYPE_STYLE_APP } from "../../utils/constant";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { showPopupError } from "../../utils/utilities";
 import { WrapEditProfile } from "./UserScreenStyled";
@@ -144,15 +143,15 @@ function EditProfileModal() {
     try {
       const resizedFile = await resizeImage(selectedFile);
 
-      if (resizedFile.size > 500 * 1024) {
-        showPopupError("Please select an image smaller than 500KB");
-        setInfoUser({
-          ...infoUser,
-          avaUrl: avaUrl,
-        });
-        setInfoUser({ ...infoUser, loadingParseImage: false });
-        return;
-      }
+      // if (resizedFile.size > 500 * 1024) {
+      //   showPopupError("Please select an image smaller than 500KB");
+      //   setInfoUser({
+      //     ...infoUser,
+      //     avaUrl: avaUrl,
+      //   });
+      //   setInfoUser({ ...infoUser, loadingParseImage: false });
+      //   return;
+      // }
 
       const dataURL = await readFileAsDataURL(resizedFile);
 

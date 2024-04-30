@@ -175,12 +175,12 @@ function ModalNewPost({ placeHolderInputPost }) {
     try {
       const resizedFile = await resizeImage(selectedFile);
 
-      if (resizedFile.size > 500 * 1024) {
-        message.error("Please select an image smaller than 500KB");
-        setSelectedImage(null);
-        setLoadings({ parseFile: false, createPost: false });
-        return;
-      }
+      // if (resizedFile.size > 500 * 1024) {
+      //   message.error("Please select an image smaller than 500KB");
+      //   setSelectedImage(null);
+      //   setLoadings({ parseFile: false, createPost: false });
+      //   return;
+      // }
 
       const dataURL = await readFileAsDataURL(resizedFile);
       setSelectedImage(dataURL);
