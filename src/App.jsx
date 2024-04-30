@@ -101,7 +101,7 @@ const TriggerConnectSocketIo = () => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
   }, [socketIo, conversationId]);
 
-  const handleUpdateMessageSocket = (dataMessage) => {
+  const handleUpdateMessageSocket = debounce((dataMessage) => {
     const { targetSocketId, sender } = dataMessage || {};
 
     if (!isChanged([targetSocketId, socketIo?.id])) {
@@ -114,7 +114,7 @@ const TriggerConnectSocketIo = () => {
     }
 
     handleGetAllConversations(false);
-  };
+  }, 10);
 
   const initFunction = () => {
     handleGetAllConversations(false);
