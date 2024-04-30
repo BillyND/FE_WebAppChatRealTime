@@ -1,9 +1,9 @@
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import React from "react";
 import { TYPE_STYLE_APP } from "../../utils/constant";
-import DetailConversation from "./DetailConversation";
-import ListConversations from "./ListConversations";
-import { WrapMessageScreen } from "./StyledMessageScreen";
+import ConversationBox from "../Conversation/ConversationBox";
+import ListConversations from "../Conversation/ListConversations";
+import { WrapMessageScreen } from "../Conversation/StyledMessageScreen";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 function MessageScreen() {
@@ -14,7 +14,7 @@ function MessageScreen() {
   return (
     <WrapMessageScreen isDark={isDark} isMobile={isMobile}>
       <ListConversations />
-      <DetailConversation />
+      <ConversationBox />
     </WrapMessageScreen>
   );
 }

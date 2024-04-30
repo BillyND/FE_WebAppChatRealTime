@@ -1,6 +1,4 @@
 import { SpinnerLoading } from "@UI/SpinnerLoading";
-import { UserThumbnail } from "@UI/UserThumbnail";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { scrollToBottomOfElement } from "@utils/utilities";
@@ -18,14 +16,10 @@ import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
-import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
-import {
-  debounce,
-  isChanged,
-  preventKeydown,
-  showPopupError,
-} from "../../utils/utilities";
-import { ButtonSend } from "../Post/ModalCommentPost";
+import { debounce, isChanged, showPopupError } from "../../utils/utilities";
+import ConversationContent from "./ConversationContent";
+import ConversationFooter from "./ConversationFooter";
+import ConversationHeader from "./ConversationHeader";
 import { handleGetAllConversations } from "./ListConversations";
 
 const handleGetMessage = debounce(async (receiverId) => {
@@ -58,7 +52,7 @@ const handleGetMessage = debounce(async (receiverId) => {
   }
 }, TIME_DELAY_FETCH_API);
 
-function DetailConversation() {
+function ConversationBox() {
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
@@ -67,7 +61,6 @@ function DetailConversation() {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
 
-  const navigate = useNavigateCustom();
   const { state, setState } = useSubscription(conversationSubs);
 
   let {
@@ -81,10 +74,8 @@ function DetailConversation() {
   const { username, email, avaUrl } = receiver || {};
   const [message, setMessage] = useState("");
   const trimMessage = message.trim();
-
   const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
-  let containerMessage = null;
 
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
@@ -101,18 +92,8 @@ function DetailConversation() {
   }, [receiverId]);
 
   const handleUpdateMessageSocket = debounce((dataMessage) => {
-    const {
-      sender,
-      conversationId: socketConversationId,
-      targetSocketId,
-    } = dataMessage || {};
-
-    console.log("===>data", dataMessage);
-    console.log("===>userId", userId);
-    console.log(
-      "===>isChanged",
-      isChanged([conversationId, socketConversationId])
-    );
+    const { conversationId: socketConversationId, targetSocketId } =
+      dataMessage || {};
 
     if (!isChanged([targetSocketId, socketIo?.id]) || !conversationId) {
       return;
@@ -124,7 +105,7 @@ function DetailConversation() {
     }
 
     handleGetAllConversations(false);
-  }, 50);
+  }, 30);
 
   const handleSendMessage = async () => {
     try {
@@ -140,8 +121,6 @@ function DetailConversation() {
         receiverId,
         keyNewMessage
       );
-
-      console.log("===>conversationId", conversationId);
 
       // Extract the new conversation ID or use the existing one
       const { _id: newConversationId } = newConversation || {};
@@ -249,63 +228,6 @@ function DetailConversation() {
     }
   };
 
-  if (listMessages?.length) {
-    containerMessage = (
-      <Flex vertical gap={4}>
-        {listMessages.map((message, index) => {
-          const { _id, text, sender, isSending } = message || {};
-          const formattedText = text?.replaceAll("\n", "<br/>");
-          const isSender = sender === userId;
-          const { sender: endSender } = listMessages[index - 1] || {};
-          const isStartSectionSender = endSender ? endSender !== sender : false;
-
-          return (
-            <Flex
-              className={`mx-2 px-1 ${isStartSectionSender ? "pt-4" : ""}`}
-              justify={isSender ? "end" : "start"}
-              align="center"
-              gap={6}
-              key={_id}
-            >
-              {isSending && (
-                <SpinnerLoading className="icon-load-send-message" />
-              )}
-
-              <div
-                className={`${isSender ? "sender" : ""} wrap-message`}
-                dangerouslySetInnerHTML={{ __html: formattedText }}
-              />
-            </Flex>
-          );
-        })}
-      </Flex>
-    );
-  }
-
-  let containerConversation = (
-    <Flex vertical id={boxMessageId} gap={50}>
-      <Flex vertical align="center" justify="center" gap={12} className="pt-5">
-        <UserThumbnail avaUrl={avaUrl} size={70} />
-
-        <Flex vertical gap={4} align="center" justify="center">
-          <b>{username}</b>
-          <span className="user-email">{email}</span>
-        </Flex>
-
-        <button
-          onClick={() => {
-            navigate(`/user?email=${email}`);
-          }}
-          className="btn-view-profile press-active"
-        >
-          View profile
-        </button>
-      </Flex>
-
-      {containerMessage}
-    </Flex>
-  );
-
   if (fetchingMessage) {
     return (
       <Flex align="center" justify="center" style={{ color: "gray" }}>
@@ -324,52 +246,18 @@ function DetailConversation() {
 
   return (
     <Flex vertical className="wrap-detail-conversation">
-      <Flex vertical>
-        <Flex
-          gap={10}
-          className="header-conversation pt-3 pb-2 px-3"
-          align="center"
-          justify="start"
-        >
-          <UserThumbnail avaUrl={avaUrl} size={35} />
-          <b>{username}</b>
-        </Flex>
-        <hr className="width-100-per gray" />
-      </Flex>
+      <ConversationHeader username={username} avaUrl={avaUrl} />
 
-      <div className="content-conversation">{containerConversation}</div>
+      <ConversationContent avaUrl={avaUrl} username={username} email={email} />
 
-      <Flex className="footer-conversation" justify="start" vertical>
-        <hr className="gray width-100-per" />
-
-        <Flex className="px-3  pt-2 pb-3 mt-1" gap={12} align="center">
-          <PlusCircleOutlined className="icon-show-more-option" />
-
-          <textarea
-            maxLength={8000}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => preventKeydown(e, "Enter", handleSendMessage)}
-            rows={1}
-            placeholder="Type a message..."
-            className={`input-comment ${
-              message.length > 100 ? "full" : "mini"
-            }`}
-            style={{
-              minWidth: `calc(100% - 110px)`,
-            }}
-          />
-
-          <div className={`${isDisableButtonSend ? "" : "press-active"}`}>
-            <ButtonSend
-              onClick={handleSendMessage}
-              disabled={isDisableButtonSend}
-            />
-          </div>
-        </Flex>
-      </Flex>
+      <ConversationFooter
+        message={message}
+        setMessage={setMessage}
+        isDisableButtonSend={isDisableButtonSend}
+        handleSendMessage={handleSendMessage}
+      />
     </Flex>
   );
 }
 
-export default DetailConversation;
+export default ConversationBox;

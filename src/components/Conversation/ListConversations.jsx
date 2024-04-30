@@ -57,7 +57,9 @@ function ListConversations() {
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
 
-  useEffect(() => handleGetAllConversations(), []);
+  useEffect(() => {
+    handleGetAllConversations();
+  }, []);
 
   useEffect(() => {
     applyInitDataConversation();
