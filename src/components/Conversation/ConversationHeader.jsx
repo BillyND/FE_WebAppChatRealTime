@@ -1,13 +1,25 @@
 import { UserThumbnail } from "@UI/UserThumbnail";
 import { LeftOutlined } from "@ant-design/icons";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
 import React from "react";
+import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 function ConversationHeader({ username, avaUrl, email }) {
   const navigate = useNavigateCustom();
   const { isMobile } = useWindowSize();
+  const { infoUser } = useAuthUser();
+
+  const { _id: userId } = infoUser;
+  const { state } = useSubscription(conversationSubs, ["listConversation"]);
+  const { listConversation } = state || {};
+
+  const conversationsUnread = listConversation.filter(
+    (conversation) => !conversation?.usersRead?.includes(userId)
+  )?.length;
 
   const goToProfileUser = () => {
     navigate(`/user?email=${email}`);
@@ -26,14 +38,21 @@ function ConversationHeader({ username, avaUrl, email }) {
         justify="start"
       >
         {isMobile && (
-          <Flex
-            onClick={backToScreenListConversation}
-            align="center"
-            justify="center"
-            className="icon-back-conversation press-active"
-          >
-            <LeftOutlined />
-          </Flex>
+          <div>
+            <div
+              className={`icon-un-read ${conversationsUnread ? "show" : ""}`}
+            >
+              {conversationsUnread}
+            </div>
+            <Flex
+              onClick={backToScreenListConversation}
+              align="center"
+              justify="center"
+              className="icon-back-conversation press-active"
+            >
+              <LeftOutlined />
+            </Flex>
+          </div>
         )}
 
         <div className="cursor-pointer" onClick={goToProfileUser}>

@@ -12,18 +12,18 @@ import {
   createMessage,
   getConversationByReceiver,
 } from "../../services/api";
-import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
+import { boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
-import { debounce, showPopupError } from "../../utils/utilities";
+import { showPopupError } from "../../utils/utilities";
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 import { handleGetAllConversations } from "./ListConversations";
 
-export const handleGetMessage = debounce(async (receiverId) => {
+export const handleGetMessage = async (receiverId) => {
   if (!receiverId) {
     conversationSubs.updateState({
       fetchingMessage: false,
@@ -32,7 +32,6 @@ export const handleGetMessage = debounce(async (receiverId) => {
   }
 
   try {
-    handleGetAllConversations(false);
     const resConversation = await getConversationByReceiver(receiverId);
     const { receiver, listMessages, conversationId } = resConversation || {};
 
@@ -51,7 +50,7 @@ export const handleGetMessage = debounce(async (receiverId) => {
     });
     showPopupError(error);
   }
-}, TIME_DELAY_FETCH_API);
+};
 
 function ConversationBox() {
   const {
@@ -177,7 +176,11 @@ function ConversationBox() {
         ),
       }));
 
-      socketIo?.emit("sendMessage", resSendMessage);
+      socketIo?.emit("sendMessage", {
+        newMessage: resSendMessage,
+        newConversation,
+        receiverId,
+      });
     } catch (error) {
       console.error("===>Error handleSendMessage:", error);
       showPopupError(error);

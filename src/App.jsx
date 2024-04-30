@@ -4,6 +4,7 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { message } from "antd";
 import { useSubscription } from "global-state-hook";
+import { isEmpty } from "lodash";
 import { useEffect } from "react";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
@@ -12,6 +13,7 @@ import Layout from "./Layout";
 import { WrapStyledApp } from "./StyledApp";
 import PreviewImageFullScreen from "./UI/PreviewImageFullScreen";
 import AuthScreen from "./components/Auth/AuthScreen";
+import { handleGetAllConversations } from "./components/Conversation/ListConversations";
 import HomeScreen from "./components/Home/HomeScreen";
 import MessageScreen from "./components/Message/MessageScreen";
 import ModalNewPost from "./components/Post/ModalNewPost";
@@ -20,15 +22,18 @@ import SearchScreen from "./components/Search/SearchScreen";
 import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
 import { getDataInfoUser } from "./services/api";
-import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
+import { TITLE_OF_CURRENT_SITE, boxMessageId } from "./utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "./utils/globalStates/initGlobalState";
-import { convertToTitleCase, debounce, isChanged } from "./utils/utilities";
 import { useNavigateCustom } from "./utils/hooks/useNavigateCustom";
-import { handleGetMessage } from "./components/Conversation/ConversationBox";
-import { handleGetAllConversations } from "./components/Conversation/ListConversations";
+import {
+  convertToTitleCase,
+  debounce,
+  isChanged,
+  scrollToBottomOfElement,
+} from "./utils/utilities";
 
 const TriggerNavigate = () => {
   const navigate = useNavigateCustom();
@@ -101,27 +106,40 @@ const TriggerConnectSocketIo = () => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
   }, [socketIo, conversationId]);
 
-  const handleUpdateMessageSocket = debounce((dataMessage) => {
-    const { targetSocketId, sender } = dataMessage || {};
+  const handleUpdateMessageSocket = debounce(async (data) => {
+    const { targetSocketId, newMessage, receiverId } = data || {};
+    const { sender, conversationId: conversationIdSocket } = newMessage || {};
+    const { listMessages } = conversationSubs.state || {};
+
+    // If the sender is the current user (in case one account logs into multiple devices)
+    const isSenderCurrentUser = sender === userId;
 
     if (!isChanged([targetSocketId, socketIo?.id])) {
       return;
     }
 
-    handleGetAllConversations(false);
-
-    if (
-      window.location.search?.includes(sender) ||
-      isChanged([targetSocketId, socketIo?.id])
-    ) {
-      const idHasGetMessage = isChanged([targetSocketId, socketIo?.id])
-        ? receiver?._id
-        : userId;
-
-      handleGetMessage(idHasGetMessage);
+    if (isChanged([receiverId, userId]) && !isSenderCurrentUser) {
       return;
     }
-  }, 10);
+
+    // If in a conversation screen with the sender
+    const inConversationWithSender = window.location.search?.includes(sender);
+
+    // Update new messages
+    if (
+      (inConversationWithSender || isSenderCurrentUser) &&
+      !isEmpty(listMessages) &&
+      conversationId === conversationIdSocket
+    ) {
+      conversationSubs.updateState({
+        listMessages: [...listMessages, newMessage],
+      });
+
+      scrollToBottomOfElement(boxMessageId);
+    }
+
+    handleGetAllConversations(false);
+  }, 50);
 
   const initFunction = () => {
     handleGetAllConversations(false);

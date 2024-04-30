@@ -21,20 +21,25 @@ import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
+let timerGetAllConversation;
 export const handleGetAllConversations = async (fetching = true) => {
   fetching && conversationSubs.updateState({ fetchingConversation: true });
 
-  try {
-    const resConversation = await getConversations();
+  clearTimeout(timerGetAllConversation);
 
-    if (typeof resConversation === "object" && resConversation.length) {
-      conversationSubs.updateState({ listConversation: resConversation });
+  timerGetAllConversation = setTimeout(async () => {
+    try {
+      const resConversation = await getConversations();
+
+      if (typeof resConversation === "object" && resConversation.length) {
+        conversationSubs.updateState({ listConversation: resConversation });
+      }
+    } catch (error) {
+      showPopupError(error);
+    } finally {
+      conversationSubs.updateState({ fetchingConversation: false });
     }
-  } catch (error) {
-    showPopupError(error);
-  } finally {
-    conversationSubs.updateState({ fetchingConversation: false });
-  }
+  }, TIME_DELAY_FETCH_API);
 };
 
 function ListConversations() {
@@ -115,7 +120,7 @@ function ListConversations() {
     try {
       const resUser = await searchUserByName({ username: propValue });
 
-      if (resUser.length) {
+      if (resUser.length && typeof resUser === "object") {
         finalListUser = resUser;
       }
     } catch (error) {
@@ -143,7 +148,6 @@ function ListConversations() {
   };
 
   const handleSelectConversation = (receiverId, conversationId) => {
-    console.log("===>?here");
     setSelectedConversation(conversationId);
     handleReadConversation(conversationId);
 
@@ -294,7 +298,7 @@ function ListConversations() {
                   listConversation.map(renderConversationItem)}
 
                 <Flex vertical gap={12}>
-                  {listUser.map(renderUserItem)}
+                  {listUser?.map(renderUserItem)}
                 </Flex>
               </>
             )}

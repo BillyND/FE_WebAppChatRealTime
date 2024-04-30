@@ -606,8 +606,28 @@ img {
   align-items: center;
   font-size: 13px;
   color: #fff;
-  transition: 0.2s;
+  animation: shake 1s ease-in-out infinite;
   scale: 0;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0) translateY(1px);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(1px) rotate(10deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(-1px) rotate(-10deg);
+  }
 }
 
 .icon-un-read.show {
