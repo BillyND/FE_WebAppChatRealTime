@@ -71,7 +71,7 @@ function PreviewSearch(props) {
           inputSearch.trim() && focusInput
             ? !resultsPreview?.length
               ? "fit-content"
-              : `calc(100vh - 200px)`
+              : `calc(100dvh - 200px)`
             : "0px",
         ...(inputSearch &&
           focusInput &&

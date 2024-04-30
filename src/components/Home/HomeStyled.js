@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const WrapHomeScreen = styled.div`
   overflow-x: hidden;
-  height: 100vh;
+  height: 100dvh;
   padding-top: 70px !important;
   width: 100%;
   display: grid;

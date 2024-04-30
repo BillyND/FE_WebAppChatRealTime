@@ -5,7 +5,8 @@ import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
 import { passLocalStorage } from "@utils/passLocalStorage";
 
 // Base URL for API requests
-const baseURL = import.meta.env.VITE_BACKEND_URL;
+const baseURL = "https://socialbe.billynd.site/";
+// const baseURL = import.meta.env.VITE_BACKEND_URL;
 // Header to indicate no retry for failed requests
 const NO_RETRY_HEADER = "x-no-retry";
 // Check if the API is local

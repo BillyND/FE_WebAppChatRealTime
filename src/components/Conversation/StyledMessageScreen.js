@@ -1,21 +1,21 @@
 import styled from "styled-components";
 
 export const WrapMessageScreen = styled.div`
-  height: 100vh;
+  height: ${(p) => (p.isMobile ? "100dvh" : "100vh")};
   padding-top: 70px !important;
   font-weight: 400 !important;
   display: grid;
-  grid-template-columns: 350px auto;
+  grid-template-columns: ${(p) => (p.isMobile ? "100%" : "350px auto")};
 
   .wrap-all-conversations {
     height: ${(p) =>
-      p.isMobile ? "calc(100vh - 136px)" : "calc(100vh - 70px)"};
+      p.isMobile ? "calc(100dvh - 136px)" : "calc(100vh - 70px)"};
     width: ${(p) => (p.isMobile ? "100vw" : undefined)};
     border-inline-end: 1.5px solid #80808033;
   }
 
   .wrap-detail-conversation {
-    height: ${(p) => (p.isMobile ? "100vh" : "calc(100vh - 70px)")};
+    height: ${(p) => (p.isMobile ? "100dvh" : "calc(100vh - 70px)")};
     width: ${(p) => (p.isMobile ? "100vw" : undefined)};
     top: 0;
     position: ${(p) => (p.isMobile ? "fixed" : "static")};
@@ -65,6 +65,15 @@ export const WrapMessageScreen = styled.div`
       &:active {
         scale: 1.4;
       }
+    }
+
+    .input-comment {
+      background-color: ${(p) => (p.isDark ? "#3a3b3c" : "#adadad4f")};
+      color: ${(p) => (p.isDark ? "#fff" : "#000000")};
+    }
+
+    .button-send:hover {
+      background-color: ${(p) => (p.isDark ? "rgb(56, 56, 56)" : "#3838381c")};
     }
   }
 

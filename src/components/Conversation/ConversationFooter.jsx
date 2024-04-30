@@ -1,8 +1,8 @@
-import React from "react";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { ButtonSend } from "../Post/ModalCommentPost";
 import { Flex } from "antd";
+import React from "react";
 import { preventKeydown } from "../../utils/utilities";
+import { ButtonSend } from "../Post/ModalCommentPost";
 
 function ConversationFooter({
   message,
@@ -14,7 +14,7 @@ function ConversationFooter({
     <Flex className="footer-conversation" justify="start" vertical>
       <hr className="gray width-100-per" />
 
-      <Flex className="px-3  pt-2 pb-3 mt-1" gap={12} align="center">
+      <Flex className={`px-3 pt-2 pb-3 mt-1 `} gap={12} align="center">
         <PlusCircleOutlined className="icon-show-more-option" />
 
         <textarea

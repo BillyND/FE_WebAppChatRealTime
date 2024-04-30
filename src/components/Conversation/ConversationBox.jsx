@@ -226,7 +226,12 @@ function ConversationBox() {
 
   if (isEmpty(receiver) && !fetchingMessage) {
     return (
-      <Flex align="center" justify="center" style={{ color: "gray" }}>
+      <Flex
+        className="wrap-detail-conversation"
+        align="center"
+        justify="center"
+        style={{ color: "gray" }}
+      >
         Please select a conversation!
       </Flex>
     );

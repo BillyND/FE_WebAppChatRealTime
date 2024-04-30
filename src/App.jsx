@@ -112,7 +112,6 @@ const TriggerConnectSocketIo = () => {
       window.location.search?.includes(sender) ||
       isChanged([targetSocketId, socketIo?.id])
     ) {
-      console.log("===>receiver:", receiver);
       const idHasGetMessage = isChanged([targetSocketId, socketIo?.id])
         ? receiver?._id
         : userId;

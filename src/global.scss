@@ -149,7 +149,7 @@ body {
 }
 
 .ant-modal-content {
-  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
   padding: 0 !important;
   color: #fff;
   border-radius: 10px !important;
@@ -328,7 +328,7 @@ img {
   overflow-y: scroll;
 
   .ant-modal-content {
-    max-height: calc(100vh - 60px);
+    max-height: calc(100dvh - 60px);
   }
 }
 
