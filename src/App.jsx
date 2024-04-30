@@ -62,7 +62,7 @@ const TriggerConnectSocketIo = () => {
   } = useSubscription(socketIoSubs, ["socketIo"]);
 
   const {
-    state: { conversationId },
+    state: { conversationId, receiver },
   } = useSubscription(conversationSubs);
 
   const {
@@ -108,8 +108,16 @@ const TriggerConnectSocketIo = () => {
       return;
     }
 
-    if (window.location.search?.includes(sender)) {
-      handleGetMessage(userId);
+    if (
+      window.location.search?.includes(sender) ||
+      isChanged([targetSocketId, socketIo?.id])
+    ) {
+      console.log("===>receiver:", receiver);
+      const idHasGetMessage = isChanged([targetSocketId, socketIo?.id])
+        ? receiver?._id
+        : userId;
+
+      handleGetMessage(idHasGetMessage);
       return;
     }
 

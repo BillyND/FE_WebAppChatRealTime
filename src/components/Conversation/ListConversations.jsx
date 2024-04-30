@@ -4,6 +4,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { formatTimeAgo } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
@@ -42,11 +43,12 @@ function ListConversations() {
     "fetchingConversation",
   ]);
 
+  const [selectedConversation, setSelectedConversation] = useState(-1);
+  const { isMobile } = useWindowSize();
   const { listConversation, fetchingConversation } = state || {};
   const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;
-  const [selectedConversation, setSelectedConversation] = useState(-1);
 
   const [valueSearch, setValueSearch] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -93,6 +95,11 @@ function ListConversations() {
 
     if (receiverIdParams) {
       handleSelectConversation(receiverIdParams, existConversationId);
+      return;
+    }
+
+    if (isMobile) {
+      setSelectedConversation(-1);
       return;
     }
 
@@ -244,6 +251,10 @@ function ListConversations() {
       </Flex>
     );
   };
+
+  if (isMobile && receiverIdParams) {
+    return null;
+  }
 
   return (
     <Flex vertical className="wrap-all-conversations">

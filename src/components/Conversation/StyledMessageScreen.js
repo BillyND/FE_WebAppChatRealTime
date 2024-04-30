@@ -10,13 +10,17 @@ export const WrapMessageScreen = styled.div`
   .wrap-all-conversations {
     height: ${(p) =>
       p.isMobile ? "calc(100vh - 136px)" : "calc(100vh - 70px)"};
-
+    width: ${(p) => (p.isMobile ? "100vw" : undefined)};
     border-inline-end: 1.5px solid #80808033;
   }
 
   .wrap-detail-conversation {
-    height: ${(p) =>
-      p.isMobile ? "calc(100vh - 136px)" : "calc(100vh - 70px)"};
+    height: ${(p) => (p.isMobile ? "100vh" : "calc(100vh - 70px)")};
+    width: ${(p) => (p.isMobile ? "100vw" : undefined)};
+    top: 0;
+    position: ${(p) => (p.isMobile ? "fixed" : "static")};
+    z-index: ${(p) => (p.isMobile ? "1000" : undefined)};
+    background-color: ${(p) => (p.isDark ? "#101010" : "#FFFFFF")};
 
     .btn-view-profile {
       border-radius: 16px;
@@ -36,6 +40,18 @@ export const WrapMessageScreen = styled.div`
       height: 100%;
       max-height: 100%;
       overflow-x: scroll;
+    }
+
+    .icon-back-conversation {
+      padding: 6px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      transition: 0.2s;
+
+      &:hover {
+        background: #8080805c;
+      }
     }
   }
 
@@ -67,7 +83,7 @@ export const WrapMessageScreen = styled.div`
   }
 
   #box-list-message {
-    height: calc(100vh - 222px);
+    height: ${(p) => (p.isMobile ? "100%" : "calc(100vh - 222px)")};
     overflow-y: scroll;
   }
 

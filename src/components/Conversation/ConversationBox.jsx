@@ -1,6 +1,7 @@
 import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
@@ -61,6 +62,7 @@ function ConversationBox() {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
 
+  const { isMobile } = useWindowSize();
   const { state, setState } = useSubscription(conversationSubs);
 
   let {
@@ -86,6 +88,8 @@ function ConversationBox() {
       setMessage("");
     };
   }, [receiverId]);
+
+  if (isMobile && !receiverId) return null;
 
   const handleSendMessage = async () => {
     try {
@@ -210,7 +214,11 @@ function ConversationBox() {
 
   if (fetchingMessage) {
     return (
-      <Flex align="center" justify="center" style={{ color: "gray" }}>
+      <Flex
+        align="center"
+        justify="center"
+        style={{ color: "gray", width: "100vw" }}
+      >
         <SpinnerLoading />
       </Flex>
     );
@@ -226,7 +234,7 @@ function ConversationBox() {
 
   return (
     <Flex vertical className="wrap-detail-conversation">
-      <ConversationHeader username={username} avaUrl={avaUrl} />
+      <ConversationHeader username={username} avaUrl={avaUrl} email={email} />
 
       <ConversationContent avaUrl={avaUrl} username={username} email={email} />
 

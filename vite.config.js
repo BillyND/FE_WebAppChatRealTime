@@ -8,6 +8,9 @@ export default defineConfig({
     "process.env": {}, // to workaround the process.env error but not a
     //permanent fix
   },
+  server: {
+    port: 3006,
+  },
   resolve: {
     alias: {
       "@utils": `/src/utils`,
