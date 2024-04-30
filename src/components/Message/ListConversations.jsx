@@ -7,6 +7,7 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { formatTimeAgo } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
+import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   getConversations,
@@ -18,7 +19,6 @@ import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
-import { isEmpty } from "lodash";
 
 export const handleGetAllConversations = async (fetching = true) => {
   fetching && conversationSubs.updateState({ fetchingConversation: true });
@@ -134,8 +134,6 @@ function ListConversations() {
   };
 
   const handleSelectConversation = (receiverId, conversationId) => {
-    console.log("===>receiverIdParams:", receiverIdParams);
-    console.log("===>receiverId:", receiverId);
     setSelectedConversation(conversationId);
     handleReadConversation(conversationId);
 

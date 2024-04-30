@@ -6,7 +6,7 @@ import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { cloneDeep, isEmpty, unionBy } from "lodash";
+import { isEmpty, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   createConversation,
@@ -20,10 +20,9 @@ import {
 } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import {
-  isChanged,
   debounce,
+  isChanged,
   preventKeydown,
-  scrollIntoViewById,
   showPopupError,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
