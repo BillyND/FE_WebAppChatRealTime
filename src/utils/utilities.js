@@ -49,7 +49,7 @@ export const handleGetListPost = async ({ page, limit, email }) => {
   }
 };
 
-export const compareChange = (values) => {
+export const isChanged = (values) => {
   try {
     return values.some(
       (value) =>
@@ -242,19 +242,16 @@ export const handleUpdatePostSocket = (postSocket, postId, keys) => {
   } = postSocket || {};
 
   const isIdChanged =
-    !compareChange([postIdSocket, postId]) &&
-    compareChange([targetSocketId, currentSocketId]);
+    !isChanged([postIdSocket, postId]) &&
+    isChanged([targetSocketId, currentSocketId]);
 
-  const isPostChanged = compareChange([
+  const isPostChanged = isChanged([
     postSocket,
     detailPostSubs.state[`post-${postSocket}`],
   ]);
 
   const isPostChangedWithKeys = keys?.some((key) =>
-    compareChange([
-      postSocket[key],
-      detailPostSubs.state[`post-${postId}`][key],
-    ])
+    isChanged([postSocket[key], detailPostSubs.state[`post-${postId}`][key]])
   );
 
   if (isIdChanged && (keys ? isPostChangedWithKeys : isPostChanged)) {
@@ -287,14 +284,14 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
   } = commentSocket || {};
 
   const isIdChanged =
-    !compareChange([commentIdSocket, commentId]) &&
-    compareChange([targetSocketId, currentSocketId]);
-  const isCommentChanged = compareChange([
+    !isChanged([commentIdSocket, commentId]) &&
+    isChanged([targetSocketId, currentSocketId]);
+  const isCommentChanged = isChanged([
     commentSocket,
     detailPostSubs.state[`comment-${commentId}`],
   ]);
   const isCommentChangedWithKeys = keys?.some((key) =>
-    compareChange([
+    isChanged([
       commentSocket[key],
       detailPostSubs.state[`comment-${commentId}`][key],
     ])

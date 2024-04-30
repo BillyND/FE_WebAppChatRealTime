@@ -9,7 +9,7 @@ import { useModal } from "@utils/hooks/useModal";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import {
-  compareChange,
+  isChanged,
   handleGetListPost,
   showPopupError,
   updateCurrentPost,
@@ -46,8 +46,8 @@ function ModalNewPost({ placeHolderInputPost }) {
   const disableBtnCreatePost =
     (!valueInputPost?.trim() && !selectedImage) ||
     loadings.createPost ||
-    (!compareChange([imageUrl, selectedImage]) &&
-      !compareChange([description.trim(), valueInputPost.trim()]));
+    (!isChanged([imageUrl, selectedImage]) &&
+      !isChanged([description.trim(), valueInputPost.trim()]));
   const debounceDataUpdate = useDebounce(
     JSON.stringify(postHasUpdate),
     TIME_DELAY_SEARCH_INPUT

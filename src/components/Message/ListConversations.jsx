@@ -9,7 +9,6 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
 import {
-  conversationsRead,
   getConversations,
   searchUserByName,
   updateUsersReadConversation,
@@ -17,12 +16,9 @@ import {
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
-import {
-  debounce,
-  scrollIntoViewById,
-  showPopupError,
-} from "../../utils/utilities";
+import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
+import { isEmpty } from "lodash";
 
 export const handleGetAllConversations = async (fetching = true) => {
   fetching && conversationSubs.updateState({ fetchingConversation: true });
@@ -67,26 +63,22 @@ function ListConversations() {
     applyInitDataConversation();
   }, [JSON.stringify(listConversation), receiverIdParams]);
 
-  const handleReadConversation = (conversationId) => {
-    updateUsersReadConversation(conversationId);
-    debouncedReadConversation();
+  const handleReadConversation = async (conversationId) => {
+    const resUpdated = await updateUsersReadConversation(conversationId);
+
+    if (isEmpty(resUpdated)) return;
+
+    const newList = listConversation.map((conversation) =>
+      conversation._id === resUpdated._id &&
+      isChanged([conversation.usersRead, resUpdated.usersRead])
+        ? { ...conversation, usersRead: resUpdated.usersRead }
+        : conversation
+    );
+
+    if (isChanged([listConversation, newList])) {
+      setState({ listConversation: newList });
+    }
   };
-
-  const debouncedReadConversation = debounce(() => {
-    const newList = listConversation.map((conversation) => {
-      const { _id, usersRead = [] } = conversation || {};
-
-      if (conversationsRead[_id] && !usersRead.includes(userId)) {
-        return { ...conversation, usersRead: [...usersRead, userId] };
-      }
-
-      return conversation;
-    });
-
-    setState({
-      listConversation: newList,
-    });
-  }, TIME_DELAY_FETCH_API);
 
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;
@@ -141,12 +133,16 @@ function ListConversations() {
     handleClearInputSearch();
   };
 
-  const handleSelectConversation = debounce((receiverId, conversationId) => {
-    navigate(`/message?receiverId=${receiverId}`);
+  const handleSelectConversation = (receiverId, conversationId) => {
+    console.log("===>receiverIdParams:", receiverIdParams);
+    console.log("===>receiverId:", receiverId);
     setSelectedConversation(conversationId);
-    scrollIntoViewById(`conversation-${conversationId}`);
     handleReadConversation(conversationId);
-  }, 30);
+
+    if (receiverIdParams === receiverId) return;
+
+    navigate(`/message?receiverId=${receiverId}`);
+  };
 
   const handleClearInputSearch = () => {
     handleQueryUser("");

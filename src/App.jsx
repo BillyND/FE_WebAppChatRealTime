@@ -75,7 +75,11 @@ const TriggerConnectSocketIo = () => {
 
     newSocket.emit("addUser", userId);
     setState({ socketIo: newSocket });
-    return () => newSocket.close();
+
+    return () => {
+      newSocket.close();
+      setState({ socketIo: null });
+    };
   }, []);
 
   return <></>;

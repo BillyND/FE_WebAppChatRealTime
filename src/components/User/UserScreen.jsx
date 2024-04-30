@@ -13,7 +13,7 @@ import { useSearchParams } from "../../utils/hooks/useSearchParams";
 import ListPost from "../Post/ListPost";
 import DetailUser from "./DetailUser";
 import { WrapUserScreen } from "./UserScreenStyled";
-import { compareChange, debounce } from "../../utils/utilities";
+import { isChanged, debounce } from "../../utils/utilities";
 
 function UserScreen(props) {
   const { isMobile, isTablet } = useWindowSize();
@@ -34,7 +34,7 @@ function UserScreen(props) {
     infoUser: { _id: currentUserId },
   } = useAuthUser();
   const { _id: userId } = currentUser || {};
-  const isCurrentUserPage = !compareChange([currentUserId, userId]);
+  const isCurrentUserPage = !isChanged([currentUserId, userId]);
 
   useEffect(() => {
     nextByUser && isBottom && handleFetchNewPost();

@@ -6,7 +6,7 @@ import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { isEmpty, unionBy } from "lodash";
+import { cloneDeep, isEmpty, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   createConversation,
@@ -14,9 +14,13 @@ import {
   getConversationByReceiver,
 } from "../../services/api";
 import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
-import { conversationSubs } from "../../utils/globalStates/initGlobalState";
+import {
+  conversationSubs,
+  socketIoSubs,
+} from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import {
+  isChanged,
   debounce,
   preventKeydown,
   scrollIntoViewById,
@@ -60,6 +64,10 @@ function DetailConversation() {
     infoUser: { _id: userId },
   } = useAuthUser();
 
+  const {
+    state: { socketIo },
+  } = useSubscription(socketIoSubs, ["socketIo"]);
+
   const navigate = useNavigateCustom();
   const { state, setState } = useSubscription(conversationSubs);
 
@@ -80,6 +88,10 @@ function DetailConversation() {
   let containerMessage = null;
 
   useEffect(() => {
+    socketIo?.on("getMessage", handleUpdateMessageSocket);
+  }, [socketIo, conversationId]);
+
+  useEffect(() => {
     setState((prev) => ({ ...prev, fetchingMessage: true }));
     handleGetMessage(receiverId);
 
@@ -88,6 +100,32 @@ function DetailConversation() {
       setMessage("");
     };
   }, [receiverId]);
+
+  const handleUpdateMessageSocket = debounce((dataMessage) => {
+    const {
+      sender,
+      conversationId: socketConversationId,
+      targetSocketId,
+    } = dataMessage || {};
+
+    console.log("===>data", dataMessage);
+    console.log("===>userId", userId);
+    console.log(
+      "===>isChanged",
+      isChanged([conversationId, socketConversationId])
+    );
+
+    if (!isChanged([targetSocketId, socketIo?.id]) || !conversationId) {
+      return;
+    }
+
+    if (!isChanged([conversationId, socketConversationId]) && receiverId) {
+      handleGetMessage(receiverId);
+      return;
+    }
+
+    handleGetAllConversations(false);
+  }, 50);
 
   const handleSendMessage = async () => {
     try {
@@ -103,6 +141,8 @@ function DetailConversation() {
         receiverId,
         keyNewMessage
       );
+
+      console.log("===>conversationId", conversationId);
 
       // Extract the new conversation ID or use the existing one
       const { _id: newConversationId } = newConversation || {};
@@ -163,7 +203,7 @@ function DetailConversation() {
 
       scrollToBottomOfElement(boxMessageId);
       setMessage("");
-      scrollIntoViewById(`conversation-${updatedConversationId}`, 400);
+      // scrollIntoViewById(`conversation-${updatedConversationId}`, 400);
 
       // Send the message
       const resSendMessage = await createMessage(optionSend);
@@ -174,6 +214,8 @@ function DetailConversation() {
           message.key === keyNewMessage ? resSendMessage : message
         ),
       }));
+
+      socketIo?.emit("sendMessage", resSendMessage);
     } catch (error) {
       console.error("===>Error handleSendMessage:", error);
       showPopupError(error);
