@@ -72,6 +72,7 @@ export const WrapControlNav = styled.div`
   backdrop-filter: blur(${(p) => (p.isTablet ? "28.5px" : "0")});
 
   .icon-nav {
+    position: relative;
     padding: ${(props) => (props.isTablet ? "20px 20px" : "20px 35px")};
     border-radius: 8px;
 

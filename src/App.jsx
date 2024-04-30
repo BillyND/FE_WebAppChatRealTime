@@ -21,9 +21,14 @@ import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
 import { getDataInfoUser } from "./services/api";
 import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
-import { socketIoSubs } from "./utils/globalStates/initGlobalState";
-import { convertToTitleCase } from "./utils/utilities";
+import {
+  conversationSubs,
+  socketIoSubs,
+} from "./utils/globalStates/initGlobalState";
+import { convertToTitleCase, debounce, isChanged } from "./utils/utilities";
 import { useNavigateCustom } from "./utils/hooks/useNavigateCustom";
+import { handleGetMessage } from "./components/Conversation/ConversationBox";
+import { handleGetAllConversations } from "./components/Conversation/ListConversations";
 
 const TriggerNavigate = () => {
   const navigate = useNavigateCustom();
@@ -51,7 +56,15 @@ const TriggerNavigate = () => {
 };
 
 const TriggerConnectSocketIo = () => {
-  const { setState } = useSubscription(socketIoSubs, ["socketIo"]);
+  const {
+    state: { socketIo },
+    setState,
+  } = useSubscription(socketIoSubs, ["socketIo"]);
+
+  const {
+    state: { conversationId },
+  } = useSubscription(conversationSubs);
+
   const {
     infoUser: { _id: userId },
     login,
@@ -69,6 +82,8 @@ const TriggerConnectSocketIo = () => {
 
   useEffect(() => {
     handleApplyNewInfoUser();
+    initFunction();
+
     const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"],
     });
@@ -81,6 +96,29 @@ const TriggerConnectSocketIo = () => {
       setState({ socketIo: null });
     };
   }, []);
+
+  useEffect(() => {
+    socketIo?.on("getMessage", handleUpdateMessageSocket);
+  }, [socketIo, conversationId]);
+
+  const handleUpdateMessageSocket = (dataMessage) => {
+    const { targetSocketId, sender } = dataMessage || {};
+
+    if (!isChanged([targetSocketId, socketIo?.id])) {
+      return;
+    }
+
+    if (window.location.search?.includes(sender)) {
+      handleGetMessage(userId);
+      return;
+    }
+
+    handleGetAllConversations(false);
+  };
+
+  const initFunction = () => {
+    handleGetAllConversations(false);
+  };
 
   return <></>;
 };

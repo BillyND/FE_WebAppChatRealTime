@@ -174,7 +174,7 @@ function ListConversations() {
         onClick={() => handleSelectConversation(receiverId, id)}
         gap={8}
       >
-        {!isRead && <div className="icon-un-read"></div>}
+        <div className={`icon-un-read ${isRead ? "" : "show"}`}></div>
 
         <UserThumbnail avaUrl={avaUrl} size={45} />
 

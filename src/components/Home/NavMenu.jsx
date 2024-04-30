@@ -24,8 +24,11 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { scrollToTopOfElement } from "@utils/utilities";
 import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
 import React, { Fragment, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { conversationSubs } from "../../utils/globalStates/initGlobalState";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import {
   WrapButtonSettings,
   WrapContentPopoverSettings,
@@ -33,7 +36,6 @@ import {
   WrapNavMenu,
 } from "./HomeStyled";
 import ModalReportProblem from "./ModalReportProblem";
-import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 const ButtonSettings = (props) => {
   const { logout } = useAuthUser();
@@ -134,16 +136,22 @@ const ButtonSettings = (props) => {
 };
 
 const ControlMenu = (props) => {
-  const { handleNavigation } = props;
-  const {
-    infoUser: { email },
-  } = useAuthUser();
-  const { pathname, search } = useLocation();
-  const pathname2 = useLocation();
   const {
     styleApp: { navMenuStyle, type },
   } = useStyleApp();
+
+  const { handleNavigation } = props;
+  const { infoUser } = useAuthUser();
+  const { _id: userId, email } = infoUser;
+
+  const { pathname, search } = useLocation();
   const { isMobile, isTablet } = useWindowSize();
+  const { state } = useSubscription(conversationSubs, ["listConversation"]);
+  const { listConversation } = state || {};
+
+  const conversationsUnread = listConversation.filter(
+    (conversation) => !conversation?.usersRead?.includes(userId)
+  )?.length;
 
   const optionIcon = [
     {
@@ -189,8 +197,17 @@ const ControlMenu = (props) => {
       <Flex align="center" justify="center" gap={1}>
         {optionIcon.map((item, index) => {
           const { key, path, iconActive, iconDeActive } = item || {};
-          const isActive =
-            (search ? `${pathname}${search}` : pathname) === path;
+          let isActive = pathname === path;
+          const isMessagePath = path === "/message";
+          const isCurrentMessagePath = pathname === "/message";
+
+          if (search) {
+            isActive = `${pathname}${search}` === path;
+          }
+
+          if (isMessagePath) {
+            isActive = pathname.includes("/message");
+          }
 
           return (
             <div
@@ -198,6 +215,18 @@ const ControlMenu = (props) => {
               className="icon-nav cursor-pointer press-active"
               onClick={() => handleNavigation(path)}
             >
+              <div
+                className={`icon-un-read ${
+                  !isCurrentMessagePath &&
+                  isMessagePath &&
+                  !!conversationsUnread
+                    ? "show"
+                    : ""
+                }`}
+              >
+                {conversationsUnread}
+              </div>
+
               {isActive ? iconActive : iconDeActive}
             </div>
           );

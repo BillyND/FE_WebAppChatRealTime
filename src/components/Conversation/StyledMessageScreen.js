@@ -124,11 +124,6 @@ export const WrapListConversation = styled.div`
     width: 10px;
     min-height: 10px;
     height: 10px;
-    border-radius: 50%;
-    background-color: #0765ff;
-    position: absolute;
-    top: 8px;
-    left: 8px;
   }
 
   .item-preview-conversation {

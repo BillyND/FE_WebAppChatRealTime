@@ -16,13 +16,13 @@ import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
-import { debounce, isChanged, showPopupError } from "../../utils/utilities";
+import { debounce, showPopupError } from "../../utils/utilities";
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 import { handleGetAllConversations } from "./ListConversations";
 
-const handleGetMessage = debounce(async (receiverId) => {
+export const handleGetMessage = debounce(async (receiverId) => {
   if (!receiverId) {
     conversationSubs.updateState({
       fetchingMessage: false,
@@ -78,10 +78,6 @@ function ConversationBox() {
   const [receiverId] = useSearchParams(["receiverId"]);
 
   useEffect(() => {
-    socketIo?.on("getMessage", handleUpdateMessageSocket);
-  }, [socketIo, conversationId]);
-
-  useEffect(() => {
     setState((prev) => ({ ...prev, fetchingMessage: true }));
     handleGetMessage(receiverId);
 
@@ -90,22 +86,6 @@ function ConversationBox() {
       setMessage("");
     };
   }, [receiverId]);
-
-  const handleUpdateMessageSocket = debounce((dataMessage) => {
-    const { conversationId: socketConversationId, targetSocketId } =
-      dataMessage || {};
-
-    if (!isChanged([targetSocketId, socketIo?.id]) || !conversationId) {
-      return;
-    }
-
-    if (!isChanged([conversationId, socketConversationId]) && receiverId) {
-      handleGetMessage(receiverId);
-      return;
-    }
-
-    handleGetAllConversations(false);
-  }, 30);
 
   const handleSendMessage = async () => {
     try {

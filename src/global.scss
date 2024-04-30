@@ -591,3 +591,25 @@ img {
   left: unset;
   right: 0;
 }
+
+.icon-un-read {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #0765ff;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  color: #fff;
+  transition: 0.2s;
+  scale: 0;
+}
+
+.icon-un-read.show {
+  scale: 1;
+}
