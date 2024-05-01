@@ -12,6 +12,7 @@ import { io } from "socket.io-client";
 import Layout from "./Layout";
 import { WrapStyledApp } from "./StyledApp";
 import PreviewImageFullScreen from "./UI/PreviewImageFullScreen";
+import messageSound from "./assets/sounds/message.mp3";
 import AuthScreen from "./components/Auth/AuthScreen";
 import { handleGetAllConversations } from "./components/Conversation/ListConversations";
 import HomeScreen from "./components/Home/HomeScreen";
@@ -22,7 +23,11 @@ import SearchScreen from "./components/Search/SearchScreen";
 import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
 import { getDataInfoUser } from "./services/api";
-import { TITLE_OF_CURRENT_SITE, boxMessageId } from "./utils/constant";
+import {
+  TIME_DELAY_FETCH_API,
+  TITLE_OF_CURRENT_SITE,
+  boxMessageId,
+} from "./utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
@@ -31,7 +36,6 @@ import { useNavigateCustom } from "./utils/hooks/useNavigateCustom";
 import {
   convertToTitleCase,
   debounce,
-  isChanged,
   scrollToBottomOfElement,
 } from "./utils/utilities";
 
@@ -93,41 +97,33 @@ const TriggerConnectSocketIo = () => {
       transports: ["websocket"],
     });
 
-    newSocket.emit("addUser", userId);
+    newSocket.emit("connectUser", userId);
     setState({ socketIo: newSocket });
 
     return () => {
       newSocket.close();
       setState({ socketIo: null });
     };
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
   }, [socketIo, conversationId]);
 
   const handleUpdateMessageSocket = debounce(async (data) => {
-    const { targetSocketId, newMessage, receiverId } = data || {};
+    const { newMessage } = data || {};
     const { sender, conversationId: conversationIdSocket } = newMessage || {};
     const { listMessages } = conversationSubs.state || {};
 
-    // If the sender is the current user (in case one account logs into multiple devices)
-    const isSenderCurrentUser = sender === userId;
-
-    if (!isChanged([targetSocketId, socketIo?.id])) {
-      return;
-    }
-
-    if (isChanged([receiverId, userId]) && !isSenderCurrentUser) {
-      return;
-    }
+    // Handle new message sound
+    const newMessageSound = new Audio(messageSound);
 
     // If in a conversation screen with the sender
     const inConversationWithSender = window.location.search?.includes(sender);
 
     // Update new messages
     if (
-      (inConversationWithSender || isSenderCurrentUser) &&
+      inConversationWithSender &&
       !isEmpty(listMessages) &&
       conversationId === conversationIdSocket
     ) {
@@ -139,6 +135,8 @@ const TriggerConnectSocketIo = () => {
     }
 
     handleGetAllConversations(false);
+
+    debounce(() => newMessageSound.play(), TIME_DELAY_FETCH_API)();
   }, 50);
 
   const initFunction = () => {

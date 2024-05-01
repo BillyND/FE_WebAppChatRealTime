@@ -21,7 +21,6 @@ import { showPopupError } from "../../utils/utilities";
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
-import { handleGetAllConversations } from "./ListConversations";
 
 export const handleGetMessage = async (receiverId) => {
   if (!receiverId) {
@@ -175,6 +174,7 @@ function ConversationBox() {
       }));
 
       socketIo?.emit("sendMessage", {
+        userId,
         newMessage: resSendMessage,
         newConversation,
         receiverId,
