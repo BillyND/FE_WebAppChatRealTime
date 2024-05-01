@@ -17,34 +17,39 @@ import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
-import { showPopupError } from "../../utils/utilities";
+import { getCurrentReceiverId, showPopupError } from "../../utils/utilities";
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 
-export const handleGetMessage = async (receiverId) => {
-  console.log("===>conversationSubs.state:", conversationSubs.state);
-  if (isEmpty(conversationSubs.state.listMessage)) {
+const cachedMessages = {};
+export const handleGetMessage = async () => {
+  const receiverId = getCurrentReceiverId();
+
+  if (cachedMessages[receiverId]) {
+    conversationSubs.updateState({ ...cachedMessages[receiverId] });
+    scrollToBottomOfElement(boxMessageId);
+  } else {
     conversationSubs.updateState({ fetchingMessage: true });
   }
 
   if (!receiverId) {
-    conversationSubs.updateState({
-      fetchingMessage: false,
-    });
+    conversationSubs.updateState({ fetchingMessage: false });
     return;
   }
 
   try {
     const resConversation = await getConversationByReceiver(receiverId);
 
-    if (!isEmpty(resConversation)) {
+    if (!isEmpty(resConversation) && receiverId === getCurrentReceiverId()) {
       conversationSubs.updateState({
         ...resConversation,
         fetchingMessage: false,
       });
       scrollToBottomOfElement(boxMessageId);
     }
+
+    cachedMessages[receiverId] = resConversation;
   } catch (error) {
     console.error("===>Error handleGetMessage:", error);
     conversationSubs.updateState({
@@ -96,7 +101,8 @@ function ConversationBox() {
       const newConversation = await processCreateNewConversation(
         conversationId,
         receiverId,
-        keyNewMessage
+        keyNewMessage,
+        message
       );
 
       // Extract the new conversation ID or use the existing one

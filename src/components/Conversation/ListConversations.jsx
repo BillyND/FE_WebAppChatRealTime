@@ -23,8 +23,8 @@ import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
 let timerGetAllConversation;
 
-export const handleGetAllConversations = async (allowFetching = true) => {
-  if (allowFetching && isEmpty(conversationSubs.state.listConversation)) {
+export const handleGetAllConversations = async () => {
+  if (isEmpty(conversationSubs.state.listConversation)) {
     conversationSubs.updateState({ fetchingConversation: true });
   }
 
@@ -153,6 +153,10 @@ function ListConversations() {
   const handleSelectConversation = (receiverId, conversationId) => {
     setSelectedConversation(conversationId);
     handleReadConversation(conversationId);
+
+    if (conversationId !== conversationSubs.state.conversationId) {
+      setState({ conversationId });
+    }
 
     if (receiverIdParams === receiverId) return;
 

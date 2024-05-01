@@ -78,7 +78,7 @@ export const scrollToBottomOfElement = (elementId) => {
       const currentScrollTop = elementHasScrollBottom.scrollTop;
 
       /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
-      const numSteps = 20;
+      const numSteps = 0;
 
       /*** Calculate the distance to move in each step ***/
       const scrollStep = (scrollHeight - currentScrollTop) / numSteps;
@@ -451,4 +451,11 @@ export const preventKeydown = (event, key, functionPrevent) => {
     event.preventDefault();
     functionPrevent();
   }
+};
+
+export const getCurrentReceiverId = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const currentReceiverId = searchParams.get("receiverId");
+
+  return currentReceiverId;
 };
