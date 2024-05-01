@@ -33,16 +33,14 @@ export const handleGetMessage = async (receiverId) => {
 
   try {
     const resConversation = await getConversationByReceiver(receiverId);
-    const { receiver, listMessages, conversationId } = resConversation || {};
 
-    conversationSubs.updateState({
-      receiver,
-      listMessages,
-      conversationId,
-      fetchingMessage: false,
-    });
-
-    scrollToBottomOfElement(boxMessageId);
+    if (!isEmpty(resConversation)) {
+      conversationSubs.updateState({
+        ...resConversation,
+        fetchingMessage: false,
+      });
+      scrollToBottomOfElement(boxMessageId);
+    }
   } catch (error) {
     console.error("===>Error handleGetMessage:", error);
     conversationSubs.updateState({
