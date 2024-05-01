@@ -6,7 +6,7 @@ import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { isEmpty, unionBy } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   createConversation,
   createMessage,
@@ -23,6 +23,11 @@ import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 
 export const handleGetMessage = async (receiverId) => {
+  console.log("===>conversationSubs.state:", conversationSubs.state);
+  if (isEmpty(conversationSubs.state.listMessage)) {
+    conversationSubs.updateState({ fetchingMessage: true });
+  }
+
   if (!receiverId) {
     conversationSubs.updateState({
       fetchingMessage: false,
@@ -70,28 +75,20 @@ function ConversationBox() {
   } = state || {};
 
   const { username, email, avaUrl } = receiver || {};
-  const [message, setMessage] = useState("");
-  const trimMessage = message.trim();
-  const isDisableButtonSend = !trimMessage || fetchingMessage;
   const [receiverId] = useSearchParams(["receiverId"]);
 
   useEffect(() => {
-    setState((prev) => ({ ...prev, fetchingMessage: true }));
     handleGetMessage(receiverId);
 
     return () => {
       setState({ receiver: null });
-      setMessage("");
     };
   }, [receiverId]);
 
   if (isMobile && !receiverId) return null;
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (message) => {
     try {
-      // If the send button is disabled, return early
-      if (isDisableButtonSend) return;
-
       // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
@@ -160,7 +157,6 @@ function ConversationBox() {
       });
 
       scrollToBottomOfElement(boxMessageId);
-      setMessage("");
       // scrollIntoViewById(`conversation-${updatedConversationId}`, 400);
 
       // Send the message
@@ -188,11 +184,10 @@ function ConversationBox() {
   const processCreateNewConversation = async (
     conversationId,
     receiverId,
-    keyNewMessage
+    keyNewMessage,
+    message
   ) => {
     try {
-      setMessage("");
-
       setState({
         listMessages: [
           ...listMessages,
@@ -244,12 +239,7 @@ function ConversationBox() {
 
       <ConversationContent avaUrl={avaUrl} username={username} email={email} />
 
-      <ConversationFooter
-        message={message}
-        setMessage={setMessage}
-        isDisableButtonSend={isDisableButtonSend}
-        handleSendMessage={handleSendMessage}
-      />
+      <ConversationFooter handleSendMessage={handleSendMessage} />
     </Flex>
   );
 }

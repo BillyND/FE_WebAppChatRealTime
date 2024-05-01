@@ -129,8 +129,8 @@ export const WrapSearchUser = styled.div`
 
   .suffix-input-search {
     position: absolute;
-    right: 24px;
-    top: 26px;
+    right: 16px;
+    top: 19px;
     width: 20px;
     height: 20px;
     background-color: #b8b8b8;

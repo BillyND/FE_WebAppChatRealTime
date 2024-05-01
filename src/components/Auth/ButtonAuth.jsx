@@ -118,8 +118,8 @@ export const ButtonAuth = ({
   };
 
   return (
-    <button
-      className={`button-auth ${loadingAuth ? "disable-btn" : ""}`}
+    <div
+      className={`press-active button-auth ${loadingAuth ? "disable-btn" : ""}`}
       onClickCapture={isLoginPage ? handleLogin : handleRegister}
     >
       {isLoginPage ? "SIGN IN" : "SIGN UP "}
@@ -128,6 +128,6 @@ export const ButtonAuth = ({
           style={{ scale: "1.5", position: "absolute", marginLeft: "100px" }}
         />
       )}
-    </button>
+    </div>
   );
 };

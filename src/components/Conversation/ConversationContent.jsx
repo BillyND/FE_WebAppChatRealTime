@@ -34,14 +34,14 @@ const ConversationContent = ({ avaUrl, username, email }) => {
             <span className="user-email">{email}</span>
           </Flex>
 
-          <button
+          <div
             onClick={() => {
               navigate(`/user?email=${email}`);
             }}
             className="btn-view-profile press-active"
           >
             View profile
-          </button>
+          </div>
         </Flex>
 
         <MessageList listMessages={listMessages} userId={userId} />

@@ -23,8 +23,10 @@ import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
 let timerGetAllConversation;
 
-export const handleGetAllConversations = async (fetching = true) => {
-  fetching && conversationSubs.updateState({ fetchingConversation: true });
+export const handleGetAllConversations = async (allowFetching = true) => {
+  if (allowFetching && isEmpty(conversationSubs.state.listConversation)) {
+    conversationSubs.updateState({ fetchingConversation: true });
+  }
 
   clearTimeout(timerGetAllConversation);
 

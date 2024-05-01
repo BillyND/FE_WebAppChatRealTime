@@ -1,15 +1,22 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { preventKeydown } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
-function ConversationFooter({
-  message,
-  setMessage,
-  isDisableButtonSend,
-  handleSendMessage,
-}) {
+function ConversationFooter({ handleSendMessage }) {
+  const [message, setMessage] = useState("");
+  const isDisableButtonSend = !message?.trim();
+
+  const handleSendLocalMessage = () => {
+    if (isDisableButtonSend) {
+      return;
+    }
+
+    handleSendMessage(message);
+    setMessage("");
+  };
+
   return (
     <Flex className="footer-conversation" justify="start" vertical>
       <hr className="gray width-100-per" />
@@ -21,7 +28,7 @@ function ConversationFooter({
           maxLength={8000}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => preventKeydown(e, "Enter", handleSendMessage)}
+          onKeyDown={(e) => preventKeydown(e, "Enter", handleSendLocalMessage)}
           rows={1}
           placeholder="Type a message..."
           className={`input-comment ${message.length > 100 ? "full" : "mini"}`}
@@ -32,7 +39,7 @@ function ConversationFooter({
 
         <div className={`${isDisableButtonSend ? "" : "press-active"}`}>
           <ButtonSend
-            onClick={handleSendMessage}
+            onClick={handleSendLocalMessage}
             disabled={isDisableButtonSend}
           />
         </div>

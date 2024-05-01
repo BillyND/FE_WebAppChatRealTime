@@ -36,6 +36,7 @@ import { useNavigateCustom } from "./utils/hooks/useNavigateCustom";
 import {
   convertToTitleCase,
   debounce,
+  isChanged,
   scrollToBottomOfElement,
 } from "./utils/utilities";
 
@@ -111,7 +112,7 @@ const TriggerConnectSocketIo = () => {
   }, [socketIo, conversationId]);
 
   const handleUpdateMessageSocket = debounce(async (data) => {
-    const { newMessage } = data || {};
+    const { newMessage, targetSocketId } = data || {};
     const { sender, conversationId: conversationIdSocket } = newMessage || {};
     const { listMessages } = conversationSubs.state || {};
 
@@ -120,6 +121,10 @@ const TriggerConnectSocketIo = () => {
 
     // If in a conversation screen with the sender
     const inConversationWithSender = window.location.search?.includes(sender);
+
+    if (targetSocketId === socketIo?.id) {
+      return;
+    }
 
     // Update new messages
     if (
@@ -135,8 +140,7 @@ const TriggerConnectSocketIo = () => {
     }
 
     handleGetAllConversations(false);
-
-    debounce(() => newMessageSound.play(), TIME_DELAY_FETCH_API)();
+    debounce(() => newMessageSound.play(), 1000)();
   }, 50);
 
   const initFunction = () => {
