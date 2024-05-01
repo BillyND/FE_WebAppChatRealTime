@@ -40,6 +40,11 @@ export const WrapMessageScreen = styled.div`
       height: 100%;
       max-height: 100%;
       overflow-x: scroll;
+
+      .last-time-message {
+        font-size: 12px;
+        color: gray;
+      }
     }
 
     .icon-back-conversation {

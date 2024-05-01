@@ -22,6 +22,7 @@ import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
 let timerGetAllConversation;
+
 export const handleGetAllConversations = async (fetching = true) => {
   fetching && conversationSubs.updateState({ fetchingConversation: true });
 
@@ -72,7 +73,7 @@ function ListConversations() {
     applyInitDataConversation();
   }, [JSON.stringify(listConversation), receiverIdParams]);
 
-  const handleReadConversation = async (conversationId) => {
+  const handleReadConversation = debounce(async (conversationId) => {
     const resUpdated = await updateUsersReadConversation(conversationId);
 
     if (isEmpty(resUpdated)) return;
@@ -87,7 +88,7 @@ function ListConversations() {
     if (isChanged([listConversation, newList])) {
       setState({ listConversation: newList });
     }
-  };
+  }, 10);
 
   const applyInitDataConversation = () => {
     if (!listConversation?.length) return;

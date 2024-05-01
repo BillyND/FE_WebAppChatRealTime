@@ -156,30 +156,54 @@ export const scrollToTopOfElement = (elementId) => {
 };
 
 export const formatTimeAgo = (time) => {
-  const now = Date.now();
-  let formattedTime = time;
+  const now = new Date();
+  const formattedTime = new Date(time);
 
-  try {
-    formattedTime = Number(new Date(time));
-  } catch (error) {
-    console.error("===> Error formatTimeAgo:", error);
+  const sameDay =
+    now.getDate() === formattedTime.getDate() &&
+    now.getMonth() === formattedTime.getMonth() &&
+    now.getFullYear() === formattedTime.getFullYear();
+
+  const sameWeek =
+    now.getFullYear() === formattedTime.getFullYear() &&
+    Math.abs(now - formattedTime) <= 6 * 24 * 60 * 60 * 1000 &&
+    now.getDay() > formattedTime.getDay();
+
+  const sameYear = now.getFullYear() === formattedTime.getFullYear();
+
+  const options = { hour: "2-digit", minute: "2-digit", hour12: false };
+
+  if (sameDay) {
+    return formattedTime.toLocaleTimeString([], options);
   }
 
-  const timeDiff = now - formattedTime;
-  const minutes = Math.floor(timeDiff / (1000 * 60));
-  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-  const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+  if (sameWeek) {
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  if (minutes < 60) {
-    return `${minutes || 1} minute${minutes > 1 ? "s" : ""}`;
-  } else if (hours < 24) {
-    return `${hours} hour${hours > 1 ? "s" : ""}`;
-  } else if (days < 7) {
-    return `${days} day${days > 1 ? "s" : ""}`;
-  } else {
-    return `${weeks} week${weeks > 1 ? "s" : ""}`;
+    return `${formattedTime.toLocaleTimeString([], options)}, ${
+      daysOfWeek[formattedTime.getDay()]
+    }`;
   }
+
+  if (sameYear) {
+    return `${formattedTime.toLocaleTimeString(
+      [],
+      options
+    )}, ${formattedTime.getDate()}-${
+      formattedTime.getMonth() + 1 < 10
+        ? "0" + (formattedTime.getMonth() + 1)
+        : formattedTime.getMonth() + 1
+    }`;
+  }
+
+  return `${formattedTime.toLocaleTimeString(
+    [],
+    options
+  )} ${formattedTime.getDate()}-${
+    formattedTime.getMonth() + 1 < 10
+      ? "0" + (formattedTime.getMonth() + 1)
+      : formattedTime.getMonth() + 1
+  }-${formattedTime.getFullYear()}`;
 };
 
 export const showPopupError = (error) => {

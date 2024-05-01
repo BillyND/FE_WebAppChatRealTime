@@ -220,7 +220,7 @@ function ConversationBox() {
       <Flex
         align="center"
         justify="center"
-        style={{ color: "gray", width: "100vw" }}
+        style={{ color: "gray", width: isMobile ? "100vw" : "100%" }}
       >
         <SpinnerLoading />
       </Flex>
