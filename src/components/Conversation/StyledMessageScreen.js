@@ -91,6 +91,7 @@ export const WrapMessageScreen = styled.div`
     overflow-wrap: break-word;
 
     &.sender {
+      background-color: #3797f0;
       color: #fff;
     }
   }
