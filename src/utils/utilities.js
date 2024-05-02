@@ -70,12 +70,17 @@ export const scrollToBottomOfElement = (elementId) => {
   setTimeout(() => {
     /*** Get the element with the provided ID ***/
     const elementHasScrollBottom = document?.getElementById(elementId);
+    const scrollHeight = elementHasScrollBottom?.scrollHeight;
 
     /*** Get the total height of the content at the bottom of the scrollable area ***/
-    const scrollHeight = elementHasScrollBottom?.scrollHeight;
     try {
       /*** Get the current scroll position ***/
       const currentScrollTop = elementHasScrollBottom.scrollTop;
+
+      if (elementHasScrollBottom) {
+        elementHasScrollBottom.scrollTop = scrollHeight;
+        return;
+      }
 
       /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
       const numSteps = 0;
@@ -110,7 +115,7 @@ export const scrollToBottomOfElement = (elementId) => {
         elementHasScrollBottom.scrollTop = scrollHeight;
       }
     }
-  }, 50);
+  }, 0);
 };
 
 /**

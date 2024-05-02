@@ -633,3 +633,13 @@ img {
 .icon-un-read.show {
   scale: 1;
 }
+
+.scroller-bottom * {
+  overflow-anchor: none;
+  scroll-behavior: smooth;
+}
+
+.anchor-scroll-bottom {
+  overflow-anchor: auto;
+  height: 1px;
+}

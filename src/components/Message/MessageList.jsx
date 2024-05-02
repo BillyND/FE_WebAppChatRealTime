@@ -13,7 +13,7 @@ function MessageList({ listMessages }) {
   if (!listMessages?.length) return null;
 
   return (
-    <Flex vertical gap={4}>
+    <Flex vertical gap={4} className="scroller-bottom">
       {listMessages.map((message, index) => {
         const { sender } = message || {};
         const { sender: endSender } = listMessages[index - 1] || {};
@@ -27,6 +27,8 @@ function MessageList({ listMessages }) {
           />
         );
       })}
+
+      <div className="anchor-scroll-bottom" />
     </Flex>
   );
 }

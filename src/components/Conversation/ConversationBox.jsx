@@ -2,7 +2,6 @@ import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { scrollToBottomOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { isEmpty, unionBy } from "lodash";
@@ -12,15 +11,19 @@ import {
   createMessage,
   getConversationByReceiver,
 } from "../../services/api";
-import { boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
-import { getCurrentReceiverId, showPopupError } from "../../utils/utilities";
+import {
+  getCurrentReceiverId,
+  scrollToBottomOfElement,
+  showPopupError,
+} from "../../utils/utilities";
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
+import { boxMessageId } from "../../utils/constant";
 
 const cachedMessages = {};
 export const handleGetMessage = async () => {
@@ -161,9 +164,6 @@ function ConversationBox() {
           ],
         }),
       });
-
-      scrollToBottomOfElement(boxMessageId);
-      // scrollIntoViewById(`conversation-${updatedConversationId}`, 400);
 
       // Send the message
       const resSendMessage = await createMessage(optionSend);

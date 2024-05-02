@@ -23,22 +23,13 @@ import SearchScreen from "./components/Search/SearchScreen";
 import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
 import { getDataInfoUser } from "./services/api";
-import {
-  TIME_DELAY_FETCH_API,
-  TITLE_OF_CURRENT_SITE,
-  boxMessageId,
-} from "./utils/constant";
+import { TITLE_OF_CURRENT_SITE } from "./utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "./utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "./utils/hooks/useNavigateCustom";
-import {
-  convertToTitleCase,
-  debounce,
-  isChanged,
-  scrollToBottomOfElement,
-} from "./utils/utilities";
+import { convertToTitleCase } from "./utils/utilities";
 
 const TriggerNavigate = () => {
   const navigate = useNavigateCustom();
@@ -80,6 +71,9 @@ const TriggerConnectSocketIo = () => {
     login,
   } = useAuthUser();
 
+  // Handle new message sound
+  const newMessageSound = new Audio(messageSound);
+
   const handleApplyNewInfoUser = async () => {
     const resInfoUser = await getDataInfoUser();
 
@@ -111,13 +105,10 @@ const TriggerConnectSocketIo = () => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
   }, [socketIo, conversationId]);
 
-  const handleUpdateMessageSocket = debounce(async (data) => {
+  const handleUpdateMessageSocket = async (data) => {
     const { newMessage, targetSocketId } = data || {};
     const { sender, conversationId: conversationIdSocket } = newMessage || {};
     const { listMessages } = conversationSubs.state || {};
-
-    // Handle new message sound
-    const newMessageSound = new Audio(messageSound);
 
     // If in a conversation screen with the sender
     const inConversationWithSender = window.location.search?.includes(sender);
@@ -133,15 +124,13 @@ const TriggerConnectSocketIo = () => {
       conversationId === conversationIdSocket
     ) {
       conversationSubs.updateState({
-        listMessages: [...listMessages, newMessage],
+        listMessages: [...conversationSubs.state.listMessages, newMessage],
       });
-
-      scrollToBottomOfElement(boxMessageId);
     }
 
+    newMessageSound.play();
     handleGetAllConversations(false);
-    debounce(() => newMessageSound.play(), 1000)();
-  }, 50);
+  };
 
   const initFunction = () => {
     handleGetAllConversations(false);
