@@ -115,7 +115,7 @@ export const scrollToBottomOfElement = (elementId) => {
         elementHasScrollBottom.scrollTop = scrollHeight;
       }
     }
-  }, 0);
+  }, 10);
 };
 
 /**

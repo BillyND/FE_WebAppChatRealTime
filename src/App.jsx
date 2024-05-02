@@ -103,6 +103,11 @@ const TriggerConnectSocketIo = () => {
 
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
+
+    // Return a cleanup function
+    return () => {
+      socketIo?.off("getMessage", handleUpdateMessageSocket);
+    };
   }, [socketIo, conversationId]);
 
   const handleUpdateMessageSocket = async (data) => {
