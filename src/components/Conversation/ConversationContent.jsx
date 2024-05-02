@@ -2,10 +2,10 @@ import { UserThumbnail } from "@UI/UserThumbnail";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
+import { boxMessageId } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import MessageList from "../Message/MessageList";
-import { boxMessageId } from "../../utils/constant";
 
 const ConversationContent = ({ avaUrl, username, email }) => {
   const {

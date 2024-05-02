@@ -63,3 +63,59 @@ export const FILL_COLOR_ICON = {
 export const TITLE_OF_CURRENT_SITE = "Social Media";
 
 export const boxMessageId = "box-list-message";
+
+export const styleDark = {
+  backgroundModalColor: "#181818",
+  backgroundColor: "#101010",
+  color: "#f3f5f7",
+  subColor: "#99999A",
+  type: TYPE_STYLE_APP.DARK,
+  STROKE_COLOR_ICON: {
+    ACTIVE: "#fff",
+    DE_ACTIVE: "#4D4D4D",
+  },
+  FILL_COLOR_ICON: {
+    ACTIVE: "#fff",
+    DE_ACTIVE: "#00000000",
+  },
+  navMenuStyle: {
+    backgroundColor: "#101010d9",
+    color: "#f3f5f7",
+  },
+  popoverSettings: {
+    backgroundColor: "#181818",
+    color: "#f3f5f7",
+  },
+  inputSearch: {
+    backgroundColor: "#0A0A0A",
+    color: "#EBEEF0",
+  },
+};
+
+export const styleLight = {
+  backgroundModalColor: "#fff",
+  backgroundColor: "#FFFFFF",
+  color: "#000000",
+  subColor: "#99999A",
+  type: TYPE_STYLE_APP.LIGHT,
+  STROKE_COLOR_ICON: {
+    ACTIVE: "black",
+    DE_ACTIVE: "#B8B8B8",
+  },
+  FILL_COLOR_ICON: {
+    ACTIVE: "black",
+    DE_ACTIVE: "#00000000",
+  },
+  navMenuStyle: {
+    backgroundColor: "#fff",
+    color: "#000000",
+  },
+  popoverSettings: {
+    backgroundColor: "#fff",
+    color: "black",
+  },
+  inputSearch: {
+    backgroundColor: "#FAFAFA",
+    color: "#000000",
+  },
+};

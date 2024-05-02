@@ -82,6 +82,29 @@ export const WrapMessageScreen = styled.div`
     }
   }
 
+  .sender {
+    .time-message {
+      left: -55px !important;
+    }
+  }
+
+  .time-message {
+    color: #fff;
+    position: absolute;
+    right: -55px;
+    width: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 8px;
+    padding: 4px;
+    transition: 0.5s;
+    opacity: 0;
+    pointer-events: none;
+    font-size: 12px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    text-align: center;
+  }
+
   .wrap-message {
     background-color: ${(p) => (p.isDark ? "#262626" : "#efefef")};
     padding: 6px 12px;
@@ -94,21 +117,6 @@ export const WrapMessageScreen = styled.div`
     &.sender {
       background-color: #3797f0;
       color: #fff;
-    }
-
-    .time-message {
-      position: absolute;
-      left: -55px;
-      width: 50px;
-      top: 50%;
-      transform: translateY(-50%);
-      border-radius: 8px;
-      padding: 4px;
-      transition: 0.5s;
-      opacity: 0;
-      pointer-events: none;
-      font-size: 12px;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     }
 
     &:hover {

@@ -1,20 +1,24 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { preventKeydown } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
 function ConversationFooter({ handleSendMessage }) {
   const [message, setMessage] = useState("");
   const isDisableButtonSend = !message?.trim();
+  const refInput = useRef(null);
 
   const handleSendLocalMessage = () => {
     if (isDisableButtonSend) {
       return;
     }
+    refInput.current.value = "22";
 
     handleSendMessage(message);
     setMessage("");
+
+    console.log("===>refInput.current:", refInput.current.value);
   };
 
   return (
@@ -25,6 +29,7 @@ function ConversationFooter({ handleSendMessage }) {
         <PlusCircleOutlined className="icon-show-more-option" />
 
         <textarea
+          ref={refInput}
           maxLength={8000}
           value={message}
           onChange={(e) => setMessage(e.target.value)}

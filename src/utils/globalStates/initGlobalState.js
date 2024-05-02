@@ -1,6 +1,5 @@
 import { createSubscription } from "global-state-hook";
-import { initInfoUser } from "../constant";
-import { styleDark } from "../hooks/useStyleApp";
+import { initInfoUser, styleDark } from "../constant";
 
 export const infoUserSubscription = createSubscription(initInfoUser);
 
