@@ -17,8 +17,6 @@ function ConversationFooter({ handleSendMessage }) {
 
     handleSendMessage(message);
     setMessage("");
-
-    console.log("===>refInput.current:", refInput.current.value);
   };
 
   return (
