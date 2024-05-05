@@ -77,10 +77,8 @@ export const SocketIoHandler = () => {
         conversationId === conversationIdSocket
       ) {
         conversationSubs.updateState({
-          listMessages: [...listMessages, newMessage],
+          listMessages: [newMessage, ...listMessages],
         });
-
-        isMobile && scrollToBottomOfElement(boxMessageId);
       }
 
       newMessageSound.play();

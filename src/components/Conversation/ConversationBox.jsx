@@ -18,7 +18,6 @@ import {
 } from "../../utils/globalStates/initGlobalState";
 import {
   getCurrentReceiverId,
-  isChanged,
   scrollToTopOfElement,
   showPopupError,
 } from "../../utils/utilities";
@@ -26,40 +25,37 @@ import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 
-const cachedMessages = {};
 export const handleGetMessage = async ({
   page = 1,
   limit = 20,
   allowFetching = true,
 }) => {
-  const receiverId = getCurrentReceiverId();
   allowFetching && conversationSubs.updateState({ fetchingMessage: true });
 
-  if (allowFetching && cachedMessages[receiverId]) {
-    conversationSubs.updateState({ ...cachedMessages[receiverId] });
-  }
-
-  if (!receiverId) {
+  if (!getCurrentReceiverId()) {
     conversationSubs.updateState({ fetchingMessage: false });
     return;
   }
 
   try {
     const resConversation = await getConversationByReceiver(
-      receiverId,
+      getCurrentReceiverId(),
       page,
       limit
     );
 
-    const mergeMessage = conversationSubs.state.listMessages
-      ? uniqBy(
-          [
-            ...conversationSubs.state.listMessages,
-            ...resConversation.listMessages,
-          ],
-          "_id"
-        )
-      : resConversation?.listMessages;
+    console.log("===>conversationSubs.state:", conversationSubs.state);
+
+    const mergeMessage =
+      !allowFetching && conversationSubs.state.listMessages
+        ? uniqBy(
+            [
+              ...conversationSubs.state.listMessages,
+              ...resConversation.listMessages,
+            ],
+            "_id"
+          )
+        : resConversation.listMessages;
 
     conversationSubs.updateState({
       ...resConversation,
@@ -67,15 +63,8 @@ export const handleGetMessage = async ({
       fetchingMessage: false,
     });
 
-    if (
-      isChanged([resConversation, cachedMessages[getCurrentReceiverId()]]) &&
-      allowFetching
-    ) {
+    if (allowFetching) {
       scrollToTopOfElement(boxMessageId);
-    }
-
-    if (!cachedMessages[receiverId]) {
-      cachedMessages[receiverId] = resConversation;
     }
   } catch (error) {
     console.error("===>Error handleGetMessage:", error);

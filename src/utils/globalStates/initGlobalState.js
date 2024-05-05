@@ -32,7 +32,7 @@ export const initConversationSubs = {
   fetchingMessage: false,
   isSending: false,
   listConversation: [],
-  listMessage: [],
+  listMessages: [],
   receiver: null,
 };
 export const conversationSubs = createSubscription(initConversationSubs);
