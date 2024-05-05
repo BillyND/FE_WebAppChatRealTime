@@ -37,9 +37,11 @@ export const WrapMessageScreen = styled.div`
     }
 
     .content-conversation {
-      height: 100%;
-      max-height: 100%;
-      overflow-x: scroll;
+      height: 500px !important;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 50px;
+      overflow-y: scroll;
 
       .last-time-message {
         font-size: 12px;

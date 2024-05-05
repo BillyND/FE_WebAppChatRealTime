@@ -152,8 +152,12 @@ export const getConversations = () => {
   return axios.get(`conversation/${currentUserId}`, tokenHeaders());
 };
 
-export const getConversationByReceiver = (receiverId) => {
-  return axios.get(`conversation/receiver/${receiverId}`, tokenHeaders());
+export const getConversationByReceiver = (receiverId, page, limit) => {
+  console.log("===>page", page);
+  return axios.get(
+    `conversation/receiver/${receiverId}?page=${page}&limit=${limit}`,
+    tokenHeaders()
+  );
 };
 
 export const updateUsersReadConversation = (conversationId) => {

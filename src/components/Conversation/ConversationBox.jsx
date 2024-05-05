@@ -4,36 +4,39 @@ import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { isEmpty, unionBy } from "lodash";
+import { isEmpty, unionBy, uniqBy } from "lodash";
 import React, { useEffect } from "react";
 import {
   createConversation,
   createMessage,
   getConversationByReceiver,
 } from "../../services/api";
+import { boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import {
   getCurrentReceiverId,
-  scrollToBottomOfElement,
+  isChanged,
+  scrollToTopOfElement,
   showPopupError,
 } from "../../utils/utilities";
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
-import { boxMessageId } from "../../utils/constant";
 
 const cachedMessages = {};
-export const handleGetMessage = async () => {
+export const handleGetMessage = async ({
+  page = 1,
+  limit = 20,
+  allowFetching = true,
+}) => {
   const receiverId = getCurrentReceiverId();
+  allowFetching && conversationSubs.updateState({ fetchingMessage: true });
 
-  if (cachedMessages[receiverId]) {
+  if (allowFetching && cachedMessages[receiverId]) {
     conversationSubs.updateState({ ...cachedMessages[receiverId] });
-    scrollToBottomOfElement(boxMessageId);
-  } else {
-    conversationSubs.updateState({ fetchingMessage: true });
   }
 
   if (!receiverId) {
@@ -42,17 +45,38 @@ export const handleGetMessage = async () => {
   }
 
   try {
-    const resConversation = await getConversationByReceiver(receiverId);
+    const resConversation = await getConversationByReceiver(
+      receiverId,
+      page,
+      limit
+    );
 
-    if (!isEmpty(resConversation) && receiverId === getCurrentReceiverId()) {
-      conversationSubs.updateState({
-        ...resConversation,
-        fetchingMessage: false,
-      });
-      scrollToBottomOfElement(boxMessageId);
+    const mergeMessage = conversationSubs.state.listMessages
+      ? uniqBy(
+          [
+            ...conversationSubs.state.listMessages,
+            ...resConversation.listMessages,
+          ],
+          "_id"
+        )
+      : resConversation?.listMessages;
+
+    conversationSubs.updateState({
+      ...resConversation,
+      listMessages: mergeMessage,
+      fetchingMessage: false,
+    });
+
+    if (
+      isChanged([resConversation, cachedMessages[getCurrentReceiverId()]]) &&
+      allowFetching
+    ) {
+      scrollToTopOfElement(boxMessageId);
     }
 
-    cachedMessages[receiverId] = resConversation;
+    if (!cachedMessages[receiverId]) {
+      cachedMessages[receiverId] = resConversation;
+    }
   } catch (error) {
     console.error("===>Error handleGetMessage:", error);
     conversationSubs.updateState({
@@ -86,7 +110,7 @@ function ConversationBox() {
   const [receiverId] = useSearchParams(["receiverId"]);
 
   useEffect(() => {
-    handleGetMessage(receiverId);
+    handleGetMessage({});
 
     return () => {
       setState({ receiver: null });
@@ -100,7 +124,7 @@ function ConversationBox() {
       // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
-      isMobile && scrollToBottomOfElement(boxMessageId);
+      scrollToTopOfElement(boxMessageId);
 
       // Process creating a new conversation asynchronously
       const newConversation = await processCreateNewConversation(
@@ -161,8 +185,8 @@ function ConversationBox() {
         // If it's not a new conversation, add the message to the list of messages
         ...(!newConversation && {
           listMessages: [
-            ...listMessages,
             { ...optionSend, key: keyNewMessage, isSending: true },
+            ...listMessages.slice(0, 20),
           ],
         }),
       });
