@@ -198,11 +198,11 @@ function ListConversations() {
         <UserThumbnail avaUrl={avaUrl} size={45} />
 
         <Flex vertical gap={2} className="width-100-per none-copy">
-          <b>{username}</b>
+          <span className={isRead ? "read" : "un-read"}>{username}</span>
 
           <Flex justify="space-between" className="info-last-message">
             <span
-              className={`content-last-message ${isRead ? "read" : ""}`}
+              className={`content-last-message ${isRead ? "read" : "un-read"}`}
             >{`${isSender ? "Me: " : ""}${text}`}</span>
             <span>{formattedTime}</span>
           </Flex>

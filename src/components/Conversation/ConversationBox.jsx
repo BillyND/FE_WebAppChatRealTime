@@ -44,8 +44,6 @@ export const handleGetMessage = async ({
       limit
     );
 
-    console.log("===>conversationSubs.state:", conversationSubs.state);
-
     const mergeMessage =
       !allowFetching && conversationSubs.state.listMessages
         ? uniqBy(

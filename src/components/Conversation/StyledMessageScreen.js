@@ -206,6 +206,15 @@ export const WrapListConversation = styled.div`
       color: gray;
     }
 
+    .un-read {
+      font-weight: 700;
+    }
+
+    .read {
+      color: gray !important;
+      font-weight: 400 !important;
+    }
+
     .content-last-message {
       overflow: hidden;
       white-space: nowrap;
@@ -213,10 +222,7 @@ export const WrapListConversation = styled.div`
       max-width: 160px;
       color: ${(p) => (p.isDark ? "#DADDE1" : "#464646")};
       font-size: 13px;
-
-      &.read {
-        color: gray;
-      }
+      font-weight: 700;
     }
   }
 
