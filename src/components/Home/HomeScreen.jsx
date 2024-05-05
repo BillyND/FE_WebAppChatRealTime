@@ -19,14 +19,14 @@ export default function HomeScreen() {
   const {
     state: { listPost, loading, next },
     setState: setStateListPost,
-  } = useSubscription(listPostSubs, ["listPost", "loading"]);
+  } = useSubscription(listPostSubs, ["listPost", "loading", "next"]);
 
   useEffect(() => {
     next && isBottom && handleFetchNewPost();
   }, [isBottom]);
 
   useEffect(() => {
-    next && listPost.length < 1 && handleGetListPost({ page: 1, limit: 5 });
+    !listPost.length && handleGetListPost(next || { page: 1, limit: 5 });
   }, []);
 
   const handleFetchNewPost = debounce(async () => {

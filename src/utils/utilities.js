@@ -1,6 +1,6 @@
 import { getPost } from "@services/api";
 import { message } from "antd";
-import { cloneDeep, unionBy } from "lodash";
+import { cloneDeep, uniqBy } from "lodash";
 import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
 
 /**
@@ -18,10 +18,10 @@ export const handleGetListPost = async ({ page, limit, email }) => {
     // Fetch posts from the API
     const resListPost = await getPost(page, limit, email);
 
-    const { results = [] } = resListPost;
+    const { results = [] } = resListPost || {};
 
     // Combine the existing list of posts with the newly fetched posts, removing duplicates, and sort by createdAt
-    const newListPost = unionBy(
+    const newListPost = uniqBy(
       [...(email ? listPostByUser : listPost), ...results],
       "_id"
     ).sort((item1, item2) => {
@@ -464,3 +464,7 @@ export const getCurrentReceiverId = () => {
 
   return currentReceiverId;
 };
+
+export function firstCharToLowerCase(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}

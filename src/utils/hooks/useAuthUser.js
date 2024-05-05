@@ -11,12 +11,12 @@ export const useAuthUser = () => {
   ]);
 
   const login = (payload) => {
-    setState({
+    passLocalStorage?.setItem(KEY_INFO_USER, {
       ...state,
       ...payload,
     });
 
-    passLocalStorage?.setItem(KEY_INFO_USER, {
+    setState({
       ...state,
       ...payload,
     });

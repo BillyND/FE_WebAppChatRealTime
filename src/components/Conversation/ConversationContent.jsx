@@ -30,10 +30,6 @@ const ConversationContent = ({ avaUrl, username, email }) => {
   return (
     <div
       className="content-conversation"
-      style={{
-        height: "100vh",
-        overflow: "scroll",
-      }}
       id={boxMessageId}
       ref={boxMessageElement}
     >

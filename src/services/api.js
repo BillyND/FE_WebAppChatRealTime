@@ -2,6 +2,7 @@ import { KEY_INFO_USER, initInfoUser } from "@utils/constant";
 import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
 import { passLocalStorage } from "@utils/passLocalStorage";
 import axios, { getInfoUserLocal } from "./customAxios";
+import { firstCharToLowerCase } from "../utils/utilities";
 
 // <=====Trigger header token=====> //
 export const getTriggerToken = async () => {
@@ -20,14 +21,17 @@ const tokenHeaders = () => {
 // <=====Auth=====> //
 export const postRegister = ({ email, username, password }) => {
   return axios.post("auth/register", {
-    email,
+    email: firstCharToLowerCase(email),
     username,
     password,
   });
 };
 
 export const postLogin = ({ email, password }) => {
-  return axios.post("auth/login", { email, password });
+  return axios.post("auth/login", {
+    email: firstCharToLowerCase(email),
+    password,
+  });
 };
 
 export const getDataInfoUser = () => {
@@ -59,6 +63,7 @@ export const updatePost = (dataPost) => {
 };
 
 export const getPost = (page = 1, limit = 5, email) => {
+  console.log("===>here");
   if (["undefined", "null"].includes(email)) {
     window.location.href = "/";
     return;

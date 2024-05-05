@@ -98,7 +98,8 @@ body {
   margin: 0 !important;
   border-top: 0.5px #7777774f solid !important;
 
-  button2 {
+  .btn-cancel,
+  .btn-ok {
     cursor: pointer;
     overflow: hidden !important;
     width: 70px;

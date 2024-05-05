@@ -51,8 +51,8 @@ export const ButtonAuth = ({
       const resLogin = await postLogin(infoUserInput);
 
       if (resLogin?.EC === 0) {
-        message.success(resLogin?.message);
         login(resLogin?.data);
+        message.success(resLogin?.message);
         navigate("/");
       } else {
         message.error(resLogin?.message);

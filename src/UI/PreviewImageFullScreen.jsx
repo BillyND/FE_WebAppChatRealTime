@@ -44,7 +44,7 @@ const WrapPreviewImage = styled.div`
   z-index: 9999;
 
   .img-preview-full-screen {
-    max-height: 100vh;
+    max-height: 100dvh;
     max-width: 100vw;
     height: 100%;
     width: 100%;

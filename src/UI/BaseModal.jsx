@@ -29,14 +29,14 @@ function BaseModal(props) {
       footer={
         footer || (
           <Flex justify="end" gap={8} className="none-copy">
-            <button2
+            <div
               className="btn-cancel press-active"
               type="primary"
               onClick={onCancel}
             >
               Cancel
-            </button2>
-            <button2
+            </div>
+            <div
               className="btn-ok press-active"
               onClick={onOk}
               style={{
@@ -45,7 +45,7 @@ function BaseModal(props) {
             >
               {loadingFooter && <LoadingOutlined className="spinner-ok" />}
               Ok
-            </button2>
+            </div>
           </Flex>
         )
       }
@@ -60,10 +60,10 @@ function BaseModal(props) {
         style={{
           overflowY: "scroll",
           overflowX: "hidden",
-          maxHeight: "calc(100vh - 250px)",
+          maxHeight: "calc(100dvh - 250px)",
         }}
       >
-        <PerfectScrollbar> {content || children}</PerfectScrollbar>
+        {content || children}
       </div>
     </Modal>
   );

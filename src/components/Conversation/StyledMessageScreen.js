@@ -42,6 +42,8 @@ export const WrapMessageScreen = styled.div`
       flex-direction: column-reverse;
       gap: 50px;
       overflow-y: scroll;
+      overflow-x: hidden;
+      height: 100dvh;
 
       .last-time-message {
         font-size: 12px;
@@ -126,11 +128,6 @@ export const WrapMessageScreen = styled.div`
         opacity: 1;
       }
     }
-  }
-
-  #box-list-message {
-    height: ${(p) => (p.isMobile ? "100%" : "calc(100vh - 222px)")};
-    overflow-y: scroll;
   }
 
   .icon-load-send-message {
