@@ -3,11 +3,13 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
 }
 
-input {
+input,
+textarea {
   font-size: 16px;
 }
 
-input ::placeholder {
+input ::placeholder,
+textarea::placeholder {
   font-size: 14px;
 }
 

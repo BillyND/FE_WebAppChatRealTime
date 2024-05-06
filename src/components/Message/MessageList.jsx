@@ -67,7 +67,7 @@ export function MessageItem({
           style={{
             backgroundColor: isSender ? conversationColor : undefined,
           }}
-          className={`${isSender ? "sender" : ""} wrap-message`}
+          className={`wrap-message ${isSender ? "sender" : "receiver"}`}
         >
           {parse(formattedText)}
 

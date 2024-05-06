@@ -120,6 +120,11 @@ export const WrapMessageScreen = styled.div`
     &.sender {
       background-color: #3797f0;
       color: #fff;
+      border-bottom-right-radius: 0;
+    }
+
+    &.receiver {
+      border-top-left-radius: 0;
     }
 
     &:hover {
