@@ -37,7 +37,6 @@ export const WrapMessageScreen = styled.div`
     }
 
     .content-conversation {
-      height: 500px !important;
       display: flex;
       flex-direction: column-reverse;
       gap: 50px;
