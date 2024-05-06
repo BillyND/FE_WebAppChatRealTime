@@ -65,8 +65,8 @@ export default function ListAllUsers(props) {
   };
 
   return (
-    <PerfectScrollbar
-      containerRef={(el) => (scrollContainerRef.current = el)}
+    <div
+      ref={scrollContainerRef}
       className={`wrap-list-all-user px-2 ${next && "pb-3"}`}
       id="list-all-user"
     >
@@ -83,6 +83,6 @@ export default function ListAllUsers(props) {
           <SpinnerLoading style={{ opacity: loadingFetch ? "1" : "0" }} />
         )}
       </Flex>
-    </PerfectScrollbar>
+    </div>
   );
 }

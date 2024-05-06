@@ -73,6 +73,7 @@ export const WrapSearchScreen = styled.div`
   .wrap-list-all-user {
     height: ${(p) =>
       p.isMobile ? "calc(100dvh - 200px)" : "calc(100vh - 160px)"};
+    overflow-y: scroll;
   }
 
   .user-namer {

@@ -23,8 +23,7 @@ function MessageList({ listMessages }) {
           new Date(listMessages[index]?.updatedAt) -
           new Date(listMessages[index + 1]?.updatedAt);
 
-        const isMessageTimeGapBig =
-          index > 1 && messageTimeGap > 1 * 60 * 60 * 1000;
+        const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
 
         return (
           <MessageItem
@@ -107,6 +106,7 @@ export function MessageItem({
           </Flex>
         </div>
       </Flex>
+
       <Flex className="mx-3" justify={isSender ? "end" : "start"}>
         {isShowTimeMessage && (
           <span className={`last-time-message`}>

@@ -178,6 +178,8 @@ export const formatTimeAgo = (time) => {
 
   const options = { hour: "2-digit", minute: "2-digit", hour12: false };
 
+  const addLeadingZero = (number) => (number < 10 ? "0" + number : number);
+
   if (sameDay) {
     return formattedTime.toLocaleTimeString([], options);
   }
@@ -191,24 +193,17 @@ export const formatTimeAgo = (time) => {
   }
 
   if (sameYear) {
-    return `${formattedTime.toLocaleTimeString(
-      [],
-      options
-    )}, ${formattedTime.getDate()}-${
-      formattedTime.getMonth() + 1 < 10
-        ? "0" + (formattedTime.getMonth() + 1)
-        : formattedTime.getMonth() + 1
-    }`;
+    const month = addLeadingZero(formattedTime.getMonth() + 1);
+    const day = addLeadingZero(formattedTime.getDate());
+    return `${formattedTime.toLocaleTimeString([], options)}, ${day}-${month}`;
   }
 
+  const month = addLeadingZero(formattedTime.getMonth() + 1);
+  const day = addLeadingZero(formattedTime.getDate());
   return `${formattedTime.toLocaleTimeString(
     [],
     options
-  )} ${formattedTime.getDate()}-${
-    formattedTime.getMonth() + 1 < 10
-      ? "0" + (formattedTime.getMonth() + 1)
-      : formattedTime.getMonth() + 1
-  }-${formattedTime.getFullYear()}`;
+  )} ${day}-${month}-${formattedTime.getFullYear()}`;
 };
 
 export const showPopupError = (error) => {
