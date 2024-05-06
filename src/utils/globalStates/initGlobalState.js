@@ -31,7 +31,7 @@ export const initConversationSubs = {
   fetchingConversation: false,
   fetchingMessage: false,
   isSending: false,
-  listConversation: [],
+  listConversations: [],
   listMessages: [],
   receiver: null,
 };

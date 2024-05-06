@@ -140,18 +140,21 @@ const ControlMenu = (props) => {
     styleApp: { navMenuStyle, type },
   } = useStyleApp();
 
-  const { handleNavigation } = props;
   const { infoUser } = useAuthUser();
-  const { _id: userId, email } = infoUser;
-
   const { pathname, search } = useLocation();
   const { isMobile, isTablet } = useWindowSize();
-  const { state } = useSubscription(conversationSubs, ["listConversation"]);
-  const { listConversation } = state || {};
 
-  const conversationsUnread = listConversation.filter(
+  const { state } = useSubscription(conversationSubs, ["listConversations"]);
+  const { listConversations } = state || {};
+
+  const { _id: userId, email } = infoUser;
+
+  const unreadCount = listConversations.filter(
     (conversation) => !conversation?.usersRead?.includes(userId)
   )?.length;
+
+  // Props của component
+  const { handleNavigation } = props;
 
   const optionIcon = [
     {
@@ -186,6 +189,18 @@ const ControlMenu = (props) => {
     },
   ];
 
+  const isActivePath = (path) => {
+    if (path === "/message") {
+      return pathname.includes("/message");
+    }
+
+    if (search) {
+      return `${pathname}${search}` === path;
+    }
+
+    return pathname === path;
+  };
+
   return (
     <WrapControlNav
       isDark={type === TYPE_STYLE_APP.DARK}
@@ -197,17 +212,7 @@ const ControlMenu = (props) => {
       <Flex align="center" justify="center" gap={1}>
         {optionIcon.map((item, index) => {
           const { key, path, iconActive, iconDeActive } = item || {};
-          let isActive = pathname === path;
-          const isMessagePath = path === "/message";
-          const isCurrentMessagePath = pathname === "/message";
-
-          if (search) {
-            isActive = `${pathname}${search}` === path;
-          }
-
-          if (isMessagePath) {
-            isActive = pathname.includes("/message");
-          }
+          const isActive = isActivePath(path);
 
           return (
             <div
@@ -217,14 +222,10 @@ const ControlMenu = (props) => {
             >
               <div
                 className={`icon-un-read ${
-                  !isCurrentMessagePath &&
-                  isMessagePath &&
-                  !!conversationsUnread
-                    ? "show"
-                    : ""
+                  path === "/message" && !!unreadCount ? "show" : ""
                 }`}
               >
-                {conversationsUnread}
+                {unreadCount}
               </div>
 
               {isActive ? iconActive : iconDeActive}

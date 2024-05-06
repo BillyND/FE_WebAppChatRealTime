@@ -44,6 +44,10 @@ export const handleGetMessage = async ({
       limit
     );
 
+    if (resConversation.success === 0) {
+      window.location.href = "/message";
+    }
+
     const mergeMessage =
       !allowFetching && conversationSubs.state.listMessages
         ? uniqBy(
@@ -76,6 +80,7 @@ export const handleGetMessage = async ({
 function ConversationBox() {
   const {
     infoUser: { _id: userId },
+    infoUser,
   } = useAuthUser();
 
   const {
@@ -90,7 +95,7 @@ function ConversationBox() {
     listMessages,
     conversationId,
     fetchingMessage,
-    listConversation,
+    listConversations,
   } = state || {};
 
   const { username, email, avaUrl } = receiver || {};
@@ -136,7 +141,7 @@ function ConversationBox() {
       };
 
       // Create a copy of the list of conversations
-      let updatedListConversation = [...listConversation];
+      let updatedListConversation = [...listConversations];
 
       // If a new conversation was created, add it to the beginning of the list
       if (newConversation) {
@@ -168,7 +173,7 @@ function ConversationBox() {
       // Update the component state with the updated conversation ID and list
       setState({
         conversationId: updatedConversationId,
-        listConversation: updatedListConversation,
+        listConversations: updatedListConversation,
         // If it's not a new conversation, add the message to the list of messages
         ...(!newConversation && {
           listMessages: [
@@ -188,10 +193,22 @@ function ConversationBox() {
         ),
       }));
 
+      const conversation = conversationSubs.state.listConversations.find(
+        (item) => item._id === resSendMessage?.conversationId
+      );
+
       socketIo?.emit("sendMessage", {
         userId,
-        newMessage: resSendMessage,
-        newConversation,
+        message: resSendMessage,
+        conversation: {
+          ...conversation,
+          receiver: {
+            _id: infoUser._id,
+            username: infoUser.username,
+            avaUrl: infoUser.avaUrl,
+            email: infoUser.email,
+          },
+        },
         receiverId,
       });
     } catch (error) {

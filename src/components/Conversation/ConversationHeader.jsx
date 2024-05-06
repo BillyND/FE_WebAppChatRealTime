@@ -13,18 +13,24 @@ function ConversationHeader({ username, avaUrl, email }) {
   const { isMobile } = useWindowSize();
   const { infoUser } = useAuthUser();
 
+  // Destructure infoUser to get userId
   const { _id: userId } = infoUser;
-  const { state } = useSubscription(conversationSubs, ["listConversation"]);
-  const { listConversation } = state || {};
 
-  const conversationsUnread = listConversation.filter(
+  // Subscribe to conversation updates
+  const { state } = useSubscription(conversationSubs, ["listConversations"]);
+  const { listConversations } = state || {};
+
+  // Calculate unread conversations
+  const conversationsUnread = listConversations.filter(
     (conversation) => !conversation?.usersRead?.includes(userId)
   )?.length;
 
+  // Function to navigate to user profile
   const goToProfileUser = () => {
     navigate(`/user?email=${email}`);
   };
 
+  // Function to navigate back to conversation list
   const backToScreenListConversation = () => {
     navigate(`/message`);
   };
@@ -39,6 +45,7 @@ function ConversationHeader({ username, avaUrl, email }) {
       >
         {isMobile && (
           <div>
+            {/* Render unread count if conversationsUnread > 0 */}
             <div
               className={`icon-un-read ${conversationsUnread ? "show" : ""}`}
             >
@@ -59,6 +66,7 @@ function ConversationHeader({ username, avaUrl, email }) {
           <UserThumbnail avaUrl={avaUrl} size={35} />
         </div>
 
+        {/* Render username as a clickable link */}
         <b className="cursor-pointer" onClick={goToProfileUser}>
           {username}
         </b>

@@ -24,7 +24,7 @@ import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 let timerGetAllConversation;
 
 export const handleGetAllConversations = async () => {
-  if (isEmpty(conversationSubs.state.listConversation)) {
+  if (isEmpty(conversationSubs.state.listConversations)) {
     conversationSubs.updateState({ fetchingConversation: true });
   }
 
@@ -35,7 +35,7 @@ export const handleGetAllConversations = async () => {
       const resConversation = await getConversations();
 
       if (typeof resConversation === "object" && resConversation.length) {
-        conversationSubs.updateState({ listConversation: resConversation });
+        conversationSubs.updateState({ listConversations: resConversation });
       }
     } catch (error) {
       showPopupError(error);
@@ -47,13 +47,13 @@ export const handleGetAllConversations = async () => {
 
 function ListConversations() {
   const { state, setState } = useSubscription(conversationSubs, [
-    "listConversation",
+    "listConversations",
     "fetchingConversation",
   ]);
 
   const [selectedConversation, setSelectedConversation] = useState(-1);
   const { isMobile } = useWindowSize();
-  const { listConversation, fetchingConversation } = state || {};
+  const { listConversations, fetchingConversation } = state || {};
   const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;
@@ -73,29 +73,29 @@ function ListConversations() {
 
   useEffect(() => {
     applyInitDataConversation();
-  }, [JSON.stringify(listConversation), receiverIdParams]);
+  }, [JSON.stringify(listConversations), receiverIdParams]);
 
   const handleReadConversation = debounce(async (conversationId) => {
     const resUpdated = await updateUsersReadConversation(conversationId);
 
     if (isEmpty(resUpdated)) return;
 
-    const newList = listConversation.map((conversation) =>
+    const newList = listConversations.map((conversation) =>
       conversation._id === resUpdated._id &&
       isChanged([conversation.usersRead, resUpdated.usersRead])
         ? { ...conversation, usersRead: resUpdated.usersRead }
         : conversation
     );
 
-    if (isChanged([listConversation, newList])) {
-      setState({ listConversation: newList });
+    if (isChanged([listConversations, newList])) {
+      setState({ listConversations: newList });
     }
   }, 10);
 
   const applyInitDataConversation = () => {
-    if (!listConversation?.length) return;
+    if (!listConversations?.length) return;
 
-    const existConversation = listConversation.find(
+    const existConversation = listConversations.find(
       (conversation) => receiverIdParams === conversation?.receiver?._id
     );
 
@@ -111,11 +111,11 @@ function ListConversations() {
       return;
     }
 
-    const firstReceiver = listConversation[0]?.receiver;
+    const firstReceiver = listConversations[0]?.receiver;
     const { _id: receiverId } = firstReceiver || {};
 
     navigate(`/message?receiverId=${receiverId}`);
-    setSelectedConversation(listConversation[0]?._id || -1);
+    setSelectedConversation(listConversations[0]?._id || -1);
   };
 
   const debounceQueryUser = debounce(async (propValue) => {
@@ -233,7 +233,7 @@ function ListConversations() {
   };
 
   const EmptyConversation = () => {
-    if (listUser.length || listConversation.length || trimValueSearch) {
+    if (listUser.length || listConversations.length || trimValueSearch) {
       return null;
     }
 
@@ -302,7 +302,7 @@ function ListConversations() {
               <>
                 <EmptyUser />
                 {!listUser?.length &&
-                  listConversation.map(renderConversationItem)}
+                  listConversations.map(renderConversationItem)}
 
                 <Flex vertical gap={12}>
                   {listUser?.map(renderUserItem)}

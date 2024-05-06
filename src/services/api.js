@@ -158,7 +158,6 @@ export const getConversations = () => {
 };
 
 export const getConversationByReceiver = (receiverId, page, limit) => {
-  console.log("===>page", page);
   return axios.get(
     `conversation/receiver/${receiverId}?page=${page}&limit=${limit}`,
     tokenHeaders()

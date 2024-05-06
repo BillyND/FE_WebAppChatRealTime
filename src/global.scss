@@ -3,6 +3,14 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
 }
 
+input {
+  font-size: 16px;
+}
+
+input ::placeholder {
+  font-size: 14px;
+}
+
 body {
   overflow: hidden;
 }

@@ -1,7 +1,7 @@
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { useSubscription } from "global-state-hook";
-import { isEmpty } from "lodash";
+import { isEmpty, uniqBy } from "lodash";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import messageSound from "../../assets/sounds/message.mp3";
@@ -25,11 +25,10 @@ export const SocketIoHandler = () => {
   } = useSubscription(conversationSubs);
 
   const {
+    infoUser,
     infoUser: { _id: userId },
     login,
   } = useAuthUser();
-
-  const { isMobile } = useWindowSize();
 
   useEffect(() => {
     const handleApplyNewInfoUser = async () => {
@@ -61,8 +60,8 @@ export const SocketIoHandler = () => {
     const newMessageSound = new Audio(messageSound);
 
     const handleUpdateMessageSocket = async (data) => {
-      const { newMessage, targetSocketId } = data || {};
-      const { sender, conversationId: conversationIdSocket } = newMessage || {};
+      const { message, targetSocketId, conversation } = data || {};
+      const { sender } = message || {};
       const { listMessages } = conversationSubs.state || {};
 
       const inConversationWithSender = window.location.search?.includes(sender);
@@ -71,18 +70,33 @@ export const SocketIoHandler = () => {
         return;
       }
 
-      if (
-        inConversationWithSender &&
-        !isEmpty(listMessages) &&
-        conversationId === conversationIdSocket
-      ) {
-        conversationSubs.updateState({
-          listMessages: [newMessage, ...listMessages],
-        });
-      }
+      console.log("===>infoUser", infoUser);
+      console.log("===>conversation.receiver ", conversation.receiver);
+
+      const usersRead = inConversationWithSender ? [userId] : [sender];
+
+      const dataUpdated = {
+        listConversations: uniqBy(
+          [conversation, ...conversationSubs.state.listConversations].map(
+            (item) => {
+              if (item?._id === conversation?._id) {
+                return {
+                  ...conversation,
+                  usersRead,
+                };
+              }
+              return item;
+            }
+          ),
+          "_id"
+        ),
+
+        listMessages: [message, ...listMessages],
+      };
+
+      conversationSubs.updateState(dataUpdated);
 
       newMessageSound.play();
-      handleGetAllConversations(false);
     };
 
     socketIo?.on("getMessage", handleUpdateMessageSocket);
