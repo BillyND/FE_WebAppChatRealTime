@@ -1,22 +1,62 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
+import { useSubscription } from "global-state-hook";
 import React, { useRef, useState } from "react";
-import { preventKeydown } from "../../utils/utilities";
+import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
+import {
+  debounce,
+  getCurrentReceiverId,
+  preventKeydown,
+} from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
 
 function ConversationFooter({ handleSendMessage }) {
   const [message, setMessage] = useState("");
   const isDisableButtonSend = !message?.trim();
   const refInput = useRef(null);
 
+  const {
+    infoUser: { _id: userId },
+  } = useAuthUser();
+
+  const {
+    state: { socketIo },
+  } = useSubscription(socketIoSubs, ["socketIo"]);
+
+  const handleChangeMessage = (message) => {
+    setMessage(message);
+
+    socketIo?.emit("userTyping", {
+      receiverId: getCurrentReceiverId(),
+      userId,
+      start: true,
+    });
+
+    debounce(
+      () => {
+        socketIo?.emit("userTyping", {
+          receiverId: getCurrentReceiverId(),
+          userId,
+          start: false,
+        });
+      },
+      message ? 3000 : 0
+    )();
+  };
+
   const handleSendLocalMessage = () => {
     if (isDisableButtonSend) {
       return;
     }
-    refInput.current.value = "22";
 
     handleSendMessage(message);
     setMessage("");
+
+    socketIo?.emit("userTyping", {
+      receiverId: getCurrentReceiverId(),
+      start: false,
+    });
   };
 
   return (
@@ -30,7 +70,7 @@ function ConversationFooter({ handleSendMessage }) {
           ref={refInput}
           maxLength={8000}
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => handleChangeMessage(e.target.value)}
           onKeyDown={(e) => preventKeydown(e, "Enter", handleSendLocalMessage)}
           rows={1}
           placeholder="Type a message..."

@@ -3,7 +3,7 @@ import { UserThumbnail } from "@UI/UserThumbnail";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { boxMessageId } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
@@ -22,8 +22,12 @@ const ConversationContent = ({ avaUrl, username, email }) => {
     infoUser: { _id: userId },
   } = useAuthUser();
 
+  useEffect(() => {
+    loadMore && setLoadMore(false);
+  }, [listMessages]);
+
   const handleScrollToTop = () => {
-    setLoadMore(true);
+    !loadMore && setLoadMore(true);
     next && handleGetMessage({ ...next, allowFetching: false });
   };
 
@@ -39,11 +43,7 @@ const ConversationContent = ({ avaUrl, username, email }) => {
         inverse={true}
         next={handleScrollToTop}
         hasMore={true}
-        loader={
-          <SpinnerLoading
-            style={{ visibility: loadMore && next ? "visible" : "hidden" }}
-          />
-        }
+        loader={loadMore && next && <SpinnerLoading />}
         scrollableTarget={"box-list-message"}
       >
         <MessageList listMessages={listMessages} userId={userId} />

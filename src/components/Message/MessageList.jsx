@@ -4,27 +4,34 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import parse from "html-react-parser";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TYPE_STYLE_APP } from "../../utils/constant";
-import { conversationSubs } from "../../utils/globalStates/initGlobalState";
-import { formatTimeAgo } from "../../utils/utilities";
-import { isEmpty } from "lodash";
+import {
+  conversationSubs,
+  socketIoSubs,
+} from "../../utils/globalStates/initGlobalState";
+import { formatTimeAgo, getCurrentReceiverId } from "../../utils/utilities";
 
 function MessageList({ listMessages }) {
   return (
     <>
       {listMessages.map((message, index) => {
         const { sender } = message || {};
-        const { sender: endSender } = listMessages[index - 1] || {};
-        const isStartSectionSender = endSender ? endSender !== sender : false;
         const isShowTimeMessage = index === 0 && sender;
+
+        const messageTimeGap =
+          new Date(listMessages[index]?.updatedAt) -
+          new Date(listMessages[index + 1]?.updatedAt);
+
+        const isMessageTimeGapBig =
+          index > 1 && messageTimeGap > 1 * 60 * 60 * 1000;
 
         return (
           <MessageItem
             key={index}
             index={index}
-            isStartSectionSender={isStartSectionSender}
             isShowTimeMessage={isShowTimeMessage}
+            isMessageTimeGapBig={isMessageTimeGapBig}
             message={message}
           />
         );
@@ -35,9 +42,10 @@ function MessageList({ listMessages }) {
 
 export function MessageItem({
   isShowTimeMessage,
-  isStartSectionSender,
+  isMessageTimeGapBig,
   message,
 }) {
+  const [isTyping, setIsTyping] = useState(false);
   const { state } = useSubscription(conversationSubs, ["conversationColor"]);
 
   const {
@@ -52,10 +60,28 @@ export function MessageItem({
   const formattedText = text?.replaceAll("\n", "<br/>") || "";
   const isSender = sender === userId;
 
+  const {
+    state: { socketIo },
+  } = useSubscription(socketIoSubs, ["socketIo"]);
+
+  useEffect(() => {
+    socketIo?.on("receiveUserTyping", (data) => {
+      setIsTyping(data?.start && data?.userId === getCurrentReceiverId());
+    });
+  }, [socketIo]);
+
   return (
     <Flex vertical>
+      <Flex justify="center" className="m-2">
+        {isMessageTimeGapBig && (
+          <span className={`last-time-message mt-4`}>
+            {formatTimeAgo(updatedAt || Date.now())}
+          </span>
+        )}
+      </Flex>
+
       <Flex
-        className={`mx-2 mt-1 px-1 ${isStartSectionSender ? "pb-4" : ""}`}
+        className={`mx-2 mt-1 px-1`}
         justify={isSender ? "end" : "start"}
         align="center"
         gap={6}
@@ -88,6 +114,23 @@ export function MessageItem({
           </span>
         )}
       </Flex>
+
+      {isShowTimeMessage && (
+        <Flex
+          justify="center"
+          align="center"
+          className={`user-typing wrap-message m-3 wrap-message-typing receiver ${
+            isTyping ? "typing" : "not-typing"
+          }`}
+        >
+          <span className="dot-typing"></span>
+          <span className="dot-typing"></span>
+          <span className="dot-typing"></span>
+          <span className="dot-typing"></span>
+          <span className="dot-typing"></span>
+          <span className="dot-typing"></span>
+        </Flex>
+      )}
     </Flex>
   );
 }

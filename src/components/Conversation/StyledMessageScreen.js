@@ -134,6 +134,23 @@ export const WrapMessageScreen = styled.div`
     }
   }
 
+  .wrap-message-typing {
+    width: fit-content;
+    transition: 0.3s;
+
+    &.not-typing {
+      padding: 0;
+      margin: 0 !important;
+      height: 0;
+      opacity: 0;
+    }
+
+    &.typing {
+      height: 35px;
+      opacity: 1;
+    }
+  }
+
   .icon-load-send-message {
     height: 20px;
     .icon-loading {

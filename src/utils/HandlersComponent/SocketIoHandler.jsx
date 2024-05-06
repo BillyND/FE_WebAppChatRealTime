@@ -1,18 +1,16 @@
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { useSubscription } from "global-state-hook";
-import { isEmpty, uniqBy } from "lodash";
+import { uniqBy } from "lodash";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import messageSound from "../../assets/sounds/message.mp3";
 import { handleGetAllConversations } from "../../components/Conversation/ListConversations";
 import { getDataInfoUser } from "../../services/api";
-import { boxMessageId } from "../constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "../globalStates/initGlobalState";
-import { scrollToBottomOfElement } from "../utilities";
+import { getCurrentReceiverId } from "../utilities";
 
 export const SocketIoHandler = () => {
   const {
@@ -45,6 +43,7 @@ export const SocketIoHandler = () => {
     const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ["websocket"],
     });
+
     newSocket.emit("connectUser", userId);
     setState({ socketIo: newSocket });
     handleApplyNewInfoUser();
@@ -104,7 +103,11 @@ export const SocketIoHandler = () => {
     };
 
     const updateMessages = (newMessage, existingMessages) => {
-      return [newMessage, ...existingMessages];
+      if (newMessage?.sender === getCurrentReceiverId()) {
+        return [newMessage, ...existingMessages];
+      }
+
+      return existingMessages;
     };
 
     socketIo?.on("getMessage", handleUpdateMessageSocket);

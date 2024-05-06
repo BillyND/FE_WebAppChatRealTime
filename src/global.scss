@@ -647,3 +647,50 @@ img {
 .icon-un-read.show {
   scale: 1;
 }
+
+// Style icon user-typing
+.user-typing {
+  display: flex;
+  align-items: center;
+}
+
+.dot-typing {
+  width: 5px;
+  height: 5px;
+  background-color: #898989;
+  border-radius: 50%;
+  margin-right: 4px;
+  animation: dot-blink 0.8s infinite ease-in-out;
+}
+
+.dot-typing:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.dot-typing:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.dot-typing:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.dot-typing:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.dot-typing:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+@keyframes dot-blink {
+  0%,
+  20%,
+  80%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.5);
+  }
+}
