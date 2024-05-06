@@ -60,43 +60,51 @@ export const SocketIoHandler = () => {
     const newMessageSound = new Audio(messageSound);
 
     const handleUpdateMessageSocket = async (data) => {
-      const { message, targetSocketId, conversation } = data || {};
-      const { sender } = message || {};
-      const { listMessages } = conversationSubs.state || {};
+      if (!data || !data.message || !data.conversation) {
+        console.error("Invalid data provided");
+        return;
+      }
 
-      const inConversationWithSender = window.location.search?.includes(sender);
+      const { message, targetSocketId, conversation } = data;
+
+      const { sender } = message;
+      const { listMessages } = conversationSubs.state || {};
 
       if (targetSocketId === socketIo?.id) {
         return;
       }
 
-      console.log("===>infoUser", infoUser);
-      console.log("===>conversation.receiver ", conversation.receiver);
-
+      const inConversationWithSender = window.location.search?.includes(sender);
       const usersRead = inConversationWithSender ? [userId] : [sender];
 
-      const dataUpdated = {
-        listConversations: uniqBy(
-          [conversation, ...conversationSubs.state.listConversations].map(
-            (item) => {
-              if (item?._id === conversation?._id) {
-                return {
-                  ...conversation,
-                  usersRead,
-                };
-              }
-              return item;
-            }
-          ),
-          "_id"
-        ),
+      const updatedConversations = updateConversations(conversation, usersRead);
+      const updatedMessages = updateMessages(message, listMessages);
 
-        listMessages: [message, ...listMessages],
+      const dataUpdated = {
+        listConversations: updatedConversations,
+        listMessages: updatedMessages,
+        receiver: conversation.receiver,
       };
 
       conversationSubs.updateState(dataUpdated);
 
       newMessageSound.play();
+    };
+
+    const updateConversations = (updatedConversation, usersRead) => {
+      const { listConversations } = conversationSubs.state || {};
+      return uniqBy(
+        [updatedConversation, ...listConversations].map((item) => {
+          return item?._id === updatedConversation?._id
+            ? { ...updatedConversation, usersRead }
+            : item;
+        }),
+        "_id"
+      );
+    };
+
+    const updateMessages = (newMessage, existingMessages) => {
+      return [newMessage, ...existingMessages];
     };
 
     socketIo?.on("getMessage", handleUpdateMessageSocket);

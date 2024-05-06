@@ -2,7 +2,7 @@ import asyncWait from "./asyncWait";
 
 export const readFileAsDataURL = (file) => {
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => reject(new Error("File reading timed out")), 3000);
+    setTimeout(() => reject(new Error("File reading timed out")), 5000);
   });
 
   const fileReaderPromise = new Promise((resolve, reject) => {
@@ -70,5 +70,5 @@ export const resizeImage = (file) => {
     reader.readAsDataURL(file);
   });
 
-  return Promise.race([asyncWait(3000), fileResized]);
+  return Promise.race([asyncWait(5000), fileResized]);
 };

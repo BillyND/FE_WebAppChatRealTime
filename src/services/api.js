@@ -63,7 +63,6 @@ export const updatePost = (dataPost) => {
 };
 
 export const getPost = (page = 1, limit = 5, email) => {
-  console.log("===>here");
   if (["undefined", "null"].includes(email)) {
     window.location.href = "/";
     return;

@@ -208,6 +208,7 @@ function ConversationBox() {
             avaUrl: infoUser.avaUrl,
             email: infoUser.email,
           },
+          messageCount: conversation.messageCount + 1,
         },
         receiverId,
       });

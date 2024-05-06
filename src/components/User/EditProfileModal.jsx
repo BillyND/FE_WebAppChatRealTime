@@ -143,16 +143,6 @@ function EditProfileModal() {
     try {
       const resizedFile = await resizeImage(selectedFile);
 
-      // if (resizedFile.size > 500 * 1024) {
-      //   showPopupError("Please select an image smaller than 500KB");
-      //   setInfoUser({
-      //     ...infoUser,
-      //     avaUrl: avaUrl,
-      //   });
-      //   setInfoUser({ ...infoUser, loadingParseImage: false });
-      //   return;
-      // }
-
       const dataURL = await readFileAsDataURL(resizedFile);
 
       setNewAvaUrl(dataURL);
@@ -194,7 +184,7 @@ function EditProfileModal() {
             </Flex>
 
             <label
-              htmlFor="fileInput"
+              htmlFor="fileInputAvaUrl"
               className="press-active label-input-avatar"
             >
               <UserThumbnail avaUrl={newAvaUrl} size={55} />
@@ -202,7 +192,7 @@ function EditProfileModal() {
 
             <input
               type="file"
-              id="fileInput"
+              id="fileInputAvaUrl"
               style={{ display: "none" }}
               onChange={handleFileChange}
             />

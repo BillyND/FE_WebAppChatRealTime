@@ -175,14 +175,15 @@ function ModalNewPost({ placeHolderInputPost }) {
     try {
       const resizedFile = await resizeImage(selectedFile);
 
-      // if (resizedFile.size > 500 * 1024) {
-      //   message.error("Please select an image smaller than 500KB");
-      //   setSelectedImage(null);
-      //   setLoadings({ parseFile: false, createPost: false });
-      //   return;
-      // }
+      if (resizedFile.size > 5 * 1024 * 1024) {
+        message.error("Please select an image smaller than 5MB");
+        setSelectedImage(null);
+        setLoadings({ parseFile: false, createPost: false });
+        return;
+      }
 
       const dataURL = await readFileAsDataURL(resizedFile);
+
       setSelectedImage(dataURL);
     } catch (error) {
       console.error(error);
@@ -245,7 +246,7 @@ function ModalNewPost({ placeHolderInputPost }) {
               />
             </>
           ) : (
-            <label htmlFor="fileInput" className="container-upload-image">
+            <label htmlFor="fileInputPost" className="container-upload-image">
               <div className="upload-image"></div>
               <span>Add image</span>
             </label>
@@ -259,7 +260,7 @@ function ModalNewPost({ placeHolderInputPost }) {
 
         <input
           type="file"
-          id="fileInput"
+          id="fileInputPost"
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
