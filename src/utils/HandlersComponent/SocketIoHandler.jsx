@@ -23,7 +23,6 @@ export const SocketIoHandler = () => {
   } = useSubscription(conversationSubs);
 
   const {
-    infoUser,
     infoUser: { _id: userId },
     login,
   } = useAuthUser();
@@ -49,8 +48,18 @@ export const SocketIoHandler = () => {
     handleApplyNewInfoUser();
     initFunction();
 
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        console.log("===> Tab is visible");
+        newSocket.emit("connectUser", userId);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       newSocket.close();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       setState({ socketIo: null });
     };
   }, [userId]);
