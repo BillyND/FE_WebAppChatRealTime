@@ -74,7 +74,7 @@ export function MessageItem({
   const formattedText = text?.replaceAll("\n", "<br/>") || "";
   const isSender = sender === userId;
 
-  const showIconRead = messageRead?.[getCurrentReceiverId()] === _id;
+  const showIconRead = _id && messageRead?.[getCurrentReceiverId()] === _id;
 
   const {
     state: { socketIo },

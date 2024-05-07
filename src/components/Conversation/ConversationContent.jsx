@@ -21,6 +21,7 @@ import {
 } from "../../utils/utilities";
 import { updateUsersReadConversation } from "../../services/api";
 
+let cachedLastMessageId;
 const ConversationContent = ({ avaUrl, username, email }) => {
   const { state } = useSubscription(conversationSubs, ["listMessages", "next"]);
   let { listMessages, next } = state || {};
@@ -50,7 +51,9 @@ const ConversationContent = ({ avaUrl, username, email }) => {
     const lastMessageId = conversationSubs.state.listMessages?.[0]?._id;
     const conversationId = conversationSubs.state.conversationId;
 
-    if (!lastMessageId) return;
+    if (!lastMessageId || cachedLastMessageId === lastMessageId) return;
+
+    cachedLastMessageId = lastMessageId;
 
     socketIo?.emit("readMessage", {
       conversationId,

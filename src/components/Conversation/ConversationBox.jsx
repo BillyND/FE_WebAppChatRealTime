@@ -14,6 +14,7 @@ import {
 import { boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
+  initConversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import {
@@ -26,7 +27,6 @@ import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
 
 export const handleGetMessage = async ({
-  page = 1,
   limit = 20,
   allowFetching = true,
 }) => {
@@ -36,6 +36,9 @@ export const handleGetMessage = async ({
     conversationSubs.updateState({ fetchingMessage: false });
     return;
   }
+
+  const page =
+    parseInt(conversationSubs?.state?.listMessages.length / limit) + 1;
 
   try {
     const resConversation = await getConversationByReceiver(
@@ -105,7 +108,10 @@ function ConversationBox() {
     handleGetMessage({});
 
     return () => {
-      setState({ receiver: null });
+      conversationSubs.state = {
+        ...initConversationSubs,
+        listConversations: conversationSubs.state.listConversations,
+      };
     };
   }, [receiverId]);
 
@@ -178,7 +184,9 @@ function ConversationBox() {
         ...(!newConversation && {
           listMessages: [
             { ...optionSend, key: keyNewMessage, isSending: true },
-            ...listMessages.slice(0, 20),
+            ...(conversationSubs?.state?.next
+              ? listMessages.slice(0, 20)
+              : listMessages),
           ],
         }),
       });
@@ -187,11 +195,11 @@ function ConversationBox() {
       const resSendMessage = await createMessage(optionSend);
 
       // Update the list of messages with the sent message
-      setState((prevState) => ({
-        listMessages: prevState.listMessages.map((message) =>
+      setState({
+        listMessages: conversationSubs?.state?.listMessages.map((message) =>
           message.key === keyNewMessage ? resSendMessage : message
         ),
-      }));
+      });
 
       const conversation = conversationSubs.state.listConversations.find(
         (item) => item._id === resSendMessage?.conversationId
@@ -227,13 +235,13 @@ function ConversationBox() {
     try {
       setState({
         listMessages: [
-          ...listMessages,
           {
             text: message,
             sender: userId,
             key: keyNewMessage,
             isSending: true,
           },
+          ...conversationSubs.state.listMessages,
         ],
       });
 

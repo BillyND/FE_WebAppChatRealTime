@@ -135,6 +135,10 @@ export const SocketIoHandler = () => {
       return [newMessage, ...existingMessages];
     }
 
+    if (!getCurrentReceiverId()) {
+      return [];
+    }
+
     return existingMessages;
   };
 
