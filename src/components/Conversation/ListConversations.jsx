@@ -75,23 +75,6 @@ function ListConversations() {
     applyInitDataConversation();
   }, [JSON.stringify(listConversations), receiverIdParams]);
 
-  const handleReadConversation = debounce(async (conversationId) => {
-    const resUpdated = await updateUsersReadConversation(conversationId);
-
-    if (isEmpty(resUpdated)) return;
-
-    const newList = listConversations.map((conversation) =>
-      conversation._id === resUpdated._id &&
-      isChanged([conversation.usersRead, resUpdated.usersRead])
-        ? { ...conversation, usersRead: resUpdated.usersRead }
-        : conversation
-    );
-
-    if (isChanged([listConversations, newList])) {
-      setState({ listConversations: newList });
-    }
-  }, 10);
-
   const applyInitDataConversation = () => {
     if (!listConversations?.length) return;
 
@@ -152,7 +135,6 @@ function ListConversations() {
 
   const handleSelectConversation = (receiverId, conversationId) => {
     setSelectedConversation(conversationId);
-    handleReadConversation(conversationId);
 
     if (conversationId !== conversationSubs.state.conversationId) {
       setState({ conversationId });
@@ -187,7 +169,7 @@ function ListConversations() {
       <Flex
         id={`conversation-${id}`}
         key={`${id}-${index}`}
-        className={`item-preview-conversation p-3 pr-3 ${
+        className={`item-preview-conversation p-2 pr-3 ${
           isSelected ? "selected" : ""
         }`}
         onClick={() => handleSelectConversation(receiverId, id)}
@@ -259,7 +241,7 @@ function ListConversations() {
         justify="center"
         className="warning-no-conversation mt-4"
       >
-        User not found.
+        No results found.
       </Flex>
     );
   };
@@ -301,7 +283,8 @@ function ListConversations() {
             {!loadingSearch && (
               <>
                 <EmptyUser />
-                {!listUser?.length &&
+
+                {!trimValueSearch &&
                   listConversations.map(renderConversationItem)}
 
                 <Flex vertical gap={12}>

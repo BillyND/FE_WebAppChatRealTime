@@ -1,8 +1,8 @@
 import { KEY_INFO_USER, initInfoUser } from "@utils/constant";
 import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
 import { passLocalStorage } from "@utils/passLocalStorage";
-import axios, { getInfoUserLocal } from "./customAxios";
 import { firstCharToLowerCase } from "../utils/utilities";
+import axios, { getInfoUserLocal } from "./customAxios";
 
 // <=====Trigger header token=====> //
 export const getTriggerToken = async () => {
@@ -163,10 +163,6 @@ export const getConversationByReceiver = (receiverId, page, limit) => {
   );
 };
 
-export const updateUsersReadConversation = (conversationId) => {
-  return axios.put(
-    `conversation/users-read`,
-    { conversationId },
-    tokenHeaders()
-  );
+export const updateUsersReadConversation = (conversationId, messageId) => {
+  return axios.put(`conversation/users-read`, { conversationId, messageId });
 };

@@ -1,4 +1,5 @@
 import { SpinnerLoading } from "@UI/SpinnerLoading";
+import { UserThumbnail } from "@UI/UserThumbnail";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { Flex } from "antd";
@@ -13,6 +14,16 @@ import {
 import { formatTimeAgo, getCurrentReceiverId } from "../../utils/utilities";
 
 function MessageList({ listMessages }) {
+  const { state } = useSubscription(conversationSubs, [
+    "listConversations",
+    "conversationId",
+  ]);
+
+  const { listConversations, conversationId } = state || {};
+  const currentConversation = listConversations.find(
+    (item) => item?._id === conversationId
+  );
+
   return (
     <>
       {listMessages.map((message, index) => {
@@ -32,6 +43,7 @@ function MessageList({ listMessages }) {
             isShowTimeMessage={isShowTimeMessage}
             isMessageTimeGapBig={isMessageTimeGapBig}
             message={message}
+            currentConversation={currentConversation}
           />
         );
       })}
@@ -43,6 +55,7 @@ export function MessageItem({
   isShowTimeMessage,
   isMessageTimeGapBig,
   message,
+  currentConversation,
 }) {
   const [isTyping, setIsTyping] = useState(false);
   const { state } = useSubscription(conversationSubs, ["conversationColor"]);
@@ -53,11 +66,15 @@ export function MessageItem({
 
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
-
-  const { conversationColor } = state || {};
   const { _id, text, sender, isSending, updatedAt } = message || {};
+
+  const { messageRead } = currentConversation || {};
+  const { conversationColor, receiver } = state || {};
+  const { avaUrl } = receiver || {};
   const formattedText = text?.replaceAll("\n", "<br/>") || "";
   const isSender = sender === userId;
+
+  const showIconRead = messageRead?.[getCurrentReceiverId()] === _id;
 
   const {
     state: { socketIo },
@@ -107,13 +124,11 @@ export function MessageItem({
         </div>
       </Flex>
 
-      <Flex className="mx-3" justify={isSender ? "end" : "start"}>
-        {isShowTimeMessage && (
-          <span className={`last-time-message`}>
-            {formatTimeAgo(updatedAt || Date.now())}
-          </span>
-        )}
-      </Flex>
+      {showIconRead && (
+        <Flex className="mx-2 px-1 mt-1" justify={"end"}>
+          <UserThumbnail avaUrl={avaUrl} size={16} />
+        </Flex>
+      )}
 
       {isShowTimeMessage && (
         <Flex
@@ -123,9 +138,6 @@ export function MessageItem({
             isTyping ? "typing" : "not-typing"
           }`}
         >
-          <span className="dot-typing"></span>
-          <span className="dot-typing"></span>
-          <span className="dot-typing"></span>
           <span className="dot-typing"></span>
           <span className="dot-typing"></span>
           <span className="dot-typing"></span>

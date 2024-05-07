@@ -1,4 +1,4 @@
-export const UserThumbnail = ({ avaUrl, size = 36 }) => {
+export const UserThumbnail = ({ avaUrl, size = 36, ...props }) => {
   return (
     <div
       className="avatar"
@@ -11,6 +11,7 @@ export const UserThumbnail = ({ avaUrl, size = 36 }) => {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
+      {...props}
     />
   );
 };

@@ -55,6 +55,7 @@ function ConversationFooter({ handleSendMessage }) {
 
     socketIo?.emit("userTyping", {
       receiverId: getCurrentReceiverId(),
+      userId,
       start: false,
     });
   };
