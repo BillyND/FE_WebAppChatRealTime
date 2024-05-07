@@ -109,7 +109,7 @@ export const WrapMessageScreen = styled.div`
   }
 
   .wrap-message {
-    background-color: ${(p) => (p.isDark ? "#262626" : "#efefef")};
+    background-color: ${(p) => (p.isDark ? "#2d2d2d" : "#efefef")};
     padding: 6px 12px;
     border-radius: 18px;
     max-width: 70%;

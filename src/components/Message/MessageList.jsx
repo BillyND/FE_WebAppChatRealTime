@@ -15,16 +15,13 @@ import { formatTimeAgo, getCurrentReceiverId } from "../../utils/utilities";
 
 function MessageList({ listMessages }) {
   const receiverId = getCurrentReceiverId();
-
   const { state } = useSubscription(conversationSubs, [
     "listConversations",
     "conversationId",
   ]);
-
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
-
   const { listConversations, conversationId } = state || {};
   const currentConversation = listConversations.find(
     (item) => item?._id === conversationId
@@ -32,92 +29,81 @@ function MessageList({ listMessages }) {
 
   return (
     <>
-      {listMessages.map((message, index) => {
-        const { sender } = message || {};
-        const isShowTimeMessage = index === 0 && sender;
-
-        const messageTimeGap =
-          new Date(listMessages[index]?.updatedAt) -
-          new Date(listMessages[index + 1]?.updatedAt);
-
-        const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
-
-        const isSender = sender === userId;
-        const isStart =
-          (listMessages[index].sender === userId &&
-            listMessages[index - 1]?.sender !== userId) ||
-          (listMessages[index].sender === receiverId &&
-            listMessages[index - 1]?.sender !== receiverId);
-
-        const isEnd =
-          (listMessages[index].sender === userId &&
-            listMessages[index + 1]?.sender !== userId) ||
-          (listMessages[index].sender === receiverId &&
-            listMessages[index + 1]?.sender !== receiverId);
-
-        console.log("===>message", index, message.text);
-
-        return (
-          <MessageItem
-            key={index}
-            index={index}
-            isShowTimeMessage={isShowTimeMessage}
-            isMessageTimeGapBig={isMessageTimeGapBig}
-            message={message}
-            currentConversation={currentConversation}
-            isSender={isSender}
-            isStart={isStart}
-            isEnd={isEnd}
-          />
-        );
-      })}
+      {listMessages.map((message, index) => (
+        <MessageItem
+          key={index}
+          message={message}
+          index={index}
+          currentConversation={currentConversation}
+          userId={userId}
+          receiverId={receiverId}
+        />
+      ))}
     </>
   );
 }
 
-export function MessageItem({
-  isShowTimeMessage,
-  isMessageTimeGapBig,
+function MessageItem({
   message,
+  index,
   currentConversation,
-  isSender,
-  isStart,
-  isEnd,
+  userId,
+  receiverId,
 }) {
-  const [isTyping, setIsTyping] = useState(false);
-  const { state } = useSubscription(conversationSubs, ["conversationColor"]);
-
-  const { styleApp } = useStyleApp();
-  const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
-  const { _id, text, isSending, updatedAt } = message || {};
-
-  const { messageRead } = currentConversation || {};
-  const { conversationColor, receiver } = state || {};
-  const { avaUrl } = receiver || {};
-  const formattedText = text?.replaceAll("\n", "<br/>") || "";
-
-  const showIconRead = _id && messageRead?.[getCurrentReceiverId()] === _id;
-
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
 
+  const [isTyping, setIsTyping] = useState(false);
+  const { state } = useSubscription(conversationSubs, ["conversationColor"]);
+  const { styleApp } = useStyleApp();
+  const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
+  const { _id, text, isSending, updatedAt } = message || {};
+  const { messageRead } = currentConversation || {};
+  const { conversationColor, receiver, listMessages } = state || {};
+  const { avaUrl } = receiver || {};
+  const formattedText = text?.replaceAll("\n", "<br/>") || "";
+  const showIconRead = _id && messageRead?.[receiverId] === _id;
+
   useEffect(() => {
-    socketIo?.on("receiveUserTyping", (data) => {
-      setIsTyping(data?.start && data?.userId === getCurrentReceiverId());
-    });
-  }, [socketIo]);
+    const handleTyping = (data) => {
+      setIsTyping(data?.start && data?.userId === receiverId);
+    };
+
+    socketIo?.on("receiveUserTyping", handleTyping);
+
+    return () => {
+      socketIo?.off("receiveUserTyping", handleTyping);
+    };
+  }, [receiverId]);
+
+  const isSender = message.sender === userId;
+  const prevMessage = listMessages[index - 1];
+  const nextMessage = listMessages[index + 1];
+
+  const isStart =
+    (message.sender === userId && prevMessage?.sender !== userId) ||
+    (message.sender === receiverId && prevMessage?.sender !== receiverId);
+
+  const isEnd =
+    (message.sender === userId && nextMessage?.sender !== userId) ||
+    (message.sender === receiverId && nextMessage?.sender !== receiverId);
+
+  const messageTimeGap = nextMessage
+    ? new Date(nextMessage.updatedAt) - new Date(updatedAt)
+    : 0;
+
+  const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
 
   return (
     <Flex vertical>
-      <Flex justify="center" className="m-2">
-        {isMessageTimeGapBig && (
+      {isMessageTimeGapBig && (
+        <Flex justify="center" className="m-2">
           <span className={`last-time-message mt-4`}>
             {formatTimeAgo(updatedAt || Date.now())}
           </span>
-        )}
-      </Flex>
-
+        </Flex>
+      )}
       <Flex
         className={`mx-2 mt-1 px-1`}
         justify={isSender ? "end" : "start"}
@@ -133,13 +119,10 @@ export function MessageItem({
           }}
           className={`wrap-message
           ${isSender ? "sender" : "receiver"}
-          
           ${isStart ? "start" : ""}
-          
           ${isEnd ? "end" : ""}`}
         >
           {parse(formattedText)}
-
           <Flex
             align="center"
             justify="center"
@@ -150,14 +133,12 @@ export function MessageItem({
           </Flex>
         </div>
       </Flex>
-
       {showIconRead && (
         <Flex className="mx-2 px-1 mt-1" justify={"end"}>
           <UserThumbnail avaUrl={avaUrl} size={16} />
         </Flex>
       )}
-
-      {isShowTimeMessage && (
+      {index === 0 && message.sender && (
         <Flex
           justify="center"
           align="center"
