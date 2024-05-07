@@ -92,10 +92,12 @@ function MessageItem({
     (message.sender === receiverId && nextMessage?.sender !== receiverId);
 
   const messageTimeGap = nextMessage
-    ? new Date(nextMessage.updatedAt) - new Date(updatedAt)
+    ? new Date(updatedAt) - new Date(nextMessage.updatedAt)
     : 0;
 
   const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
+
+  console.log("===>isMessageTimeGapBig:", isMessageTimeGapBig);
 
   return (
     <Flex vertical>
@@ -106,6 +108,7 @@ function MessageItem({
           </span>
         </Flex>
       )}
+
       <Flex
         className={`mx-2 mt-1 px-1`}
         justify={isSender ? "end" : "start"}

@@ -2,7 +2,6 @@ import { getPost } from "@services/api";
 import { message } from "antd";
 import { cloneDeep, uniqBy } from "lodash";
 import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
-import DOMPurify from "dompurify";
 
 /**
  * Fetches and handles the list of posts.
