@@ -69,15 +69,17 @@ export const SocketIoHandler = () => {
     });
   };
   const handleVisibilityChange = async () => {
-    if (!newSocket?.connected) {
-      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
-        transports: ["websocket"],
-      });
+    if (document.visibilityState === "visible") {
+      if (!newSocket?.connected) {
+        newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
+          transports: ["websocket"],
+        });
 
-      setState({ socketIo: newSocket });
+        setState({ socketIo: newSocket });
+      }
+
+      newSocket.emit("connectUser", userId);
     }
-
-    newSocket.emit("connectUser", userId);
   };
 
   const handleUpdateMessageSocket = async (data) => {
