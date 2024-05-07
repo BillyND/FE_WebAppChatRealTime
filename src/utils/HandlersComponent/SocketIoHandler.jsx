@@ -75,18 +75,16 @@ export const SocketIoHandler = () => {
   };
 
   const handleVisibilityChange = async () => {
-    if (document.visibilityState === "visible") {
-      if (newSocket) {
-        newSocket.emit("connectUser", userId);
-        return;
-      }
-
-      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
-        transports: ["websocket"],
-      });
-
+    if (newSocket) {
       newSocket.emit("connectUser", userId);
+      return;
     }
+
+    newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ["websocket"],
+    });
+
+    newSocket.emit("connectUser", userId);
   };
 
   const handleUpdateMessageSocket = async (data) => {

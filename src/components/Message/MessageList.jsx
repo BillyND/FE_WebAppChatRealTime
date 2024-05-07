@@ -97,8 +97,6 @@ function MessageItem({
 
   const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
 
-  console.log("===>isMessageTimeGapBig:", isMessageTimeGapBig);
-
   return (
     <Flex vertical>
       {isMessageTimeGapBig && (
