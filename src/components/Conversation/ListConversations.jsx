@@ -89,16 +89,13 @@ function ListConversations() {
       return;
     }
 
-    if (isMobile) {
-      setSelectedConversation(-1);
-      return;
-    }
+    setSelectedConversation(-1);
 
-    const firstReceiver = listConversations[0]?.receiver;
-    const { _id: receiverId } = firstReceiver || {};
+    // const firstReceiver = listConversations[0]?.receiver;
+    // const { _id: receiverId } = firstReceiver || {};
 
-    navigate(`/message?receiverId=${receiverId}`);
-    setSelectedConversation(listConversations[0]?._id || -1);
+    // navigate(`/message?receiverId=${receiverId}`);
+    // setSelectedConversation(listConversations[0]?._id || -1);
   };
 
   const debounceQueryUser = debounce(async (propValue) => {
