@@ -120,11 +120,29 @@ export const WrapMessageScreen = styled.div`
     &.sender {
       background-color: #3797f0;
       color: #fff;
-      border-bottom-right-radius: 0;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+
+      &.start {
+        border-bottom-right-radius: 18px;
+      }
+
+      &.end {
+        border-top-right-radius: 18px;
+      }
     }
 
     &.receiver {
-      border-top-left-radius: 0;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+
+      &.start {
+        border-bottom-left-radius: 18px;
+      }
+
+      &.end {
+        border-top-left-radius: 18px;
+      }
     }
 
     &:hover {

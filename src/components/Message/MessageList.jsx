@@ -14,10 +14,16 @@ import {
 import { formatTimeAgo, getCurrentReceiverId } from "../../utils/utilities";
 
 function MessageList({ listMessages }) {
+  const receiverId = getCurrentReceiverId();
+
   const { state } = useSubscription(conversationSubs, [
     "listConversations",
     "conversationId",
   ]);
+
+  const {
+    infoUser: { _id: userId },
+  } = useAuthUser();
 
   const { listConversations, conversationId } = state || {};
   const currentConversation = listConversations.find(
@@ -36,6 +42,21 @@ function MessageList({ listMessages }) {
 
         const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
 
+        const isSender = sender === userId;
+        const isStart =
+          (listMessages[index].sender === userId &&
+            listMessages[index - 1]?.sender !== userId) ||
+          (listMessages[index].sender === receiverId &&
+            listMessages[index - 1]?.sender !== receiverId);
+
+        const isEnd =
+          (listMessages[index].sender === userId &&
+            listMessages[index + 1]?.sender !== userId) ||
+          (listMessages[index].sender === receiverId &&
+            listMessages[index + 1]?.sender !== receiverId);
+
+        console.log("===>message", index, message.text);
+
         return (
           <MessageItem
             key={index}
@@ -44,6 +65,9 @@ function MessageList({ listMessages }) {
             isMessageTimeGapBig={isMessageTimeGapBig}
             message={message}
             currentConversation={currentConversation}
+            isSender={isSender}
+            isStart={isStart}
+            isEnd={isEnd}
           />
         );
       })}
@@ -56,23 +80,21 @@ export function MessageItem({
   isMessageTimeGapBig,
   message,
   currentConversation,
+  isSender,
+  isStart,
+  isEnd,
 }) {
   const [isTyping, setIsTyping] = useState(false);
   const { state } = useSubscription(conversationSubs, ["conversationColor"]);
 
-  const {
-    infoUser: { _id: userId },
-  } = useAuthUser();
-
   const { styleApp } = useStyleApp();
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
-  const { _id, text, sender, isSending, updatedAt } = message || {};
+  const { _id, text, isSending, updatedAt } = message || {};
 
   const { messageRead } = currentConversation || {};
   const { conversationColor, receiver } = state || {};
   const { avaUrl } = receiver || {};
   const formattedText = text?.replaceAll("\n", "<br/>") || "";
-  const isSender = sender === userId;
 
   const showIconRead = _id && messageRead?.[getCurrentReceiverId()] === _id;
 
@@ -109,7 +131,12 @@ export function MessageItem({
           style={{
             backgroundColor: isSender ? conversationColor : undefined,
           }}
-          className={`wrap-message ${isSender ? "sender" : "receiver"}`}
+          className={`wrap-message
+          ${isSender ? "sender" : "receiver"}
+          
+          ${isStart ? "start" : ""}
+          
+          ${isEnd ? "end" : ""}`}
         >
           {parse(formattedText)}
 
