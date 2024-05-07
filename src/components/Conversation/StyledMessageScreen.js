@@ -168,6 +168,7 @@ export const WrapMessageScreen = styled.div`
   .wrap-message-typing {
     width: fit-content;
     transition: 0.3s;
+    border-radius: 18px !important;
 
     &.not-typing {
       padding: 0;

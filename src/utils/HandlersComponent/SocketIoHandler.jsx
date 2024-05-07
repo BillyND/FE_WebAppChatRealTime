@@ -68,6 +68,7 @@ export const SocketIoHandler = () => {
       ),
     });
   };
+
   const handleVisibilityChange = async () => {
     if (document.visibilityState === "visible") {
       if (!newSocket?.connected) {
@@ -87,6 +88,9 @@ export const SocketIoHandler = () => {
       console.error("Invalid data provided");
       return;
     }
+
+    console.log("===>data:", data);
+
     const newMessageSound = new Audio(messageSound);
     const { message, targetSocketId, conversation } = data;
     const { sender } = message;
@@ -104,7 +108,9 @@ export const SocketIoHandler = () => {
     const dataUpdated = {
       listConversations: updatedConversations,
       listMessages: updatedMessages,
-      receiver: conversation.receiver,
+      ...(getCurrentReceiverId() === conversation.receiver?._id && {
+        receiver: conversation.receiver,
+      }),
     };
 
     conversationSubs.updateState(dataUpdated);
