@@ -37,7 +37,7 @@ const WrapPreviewImage = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: #000000;
+  background-color: #000000bd;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,17 +50,16 @@ const WrapPreviewImage = styled.div`
     width: 100%;
     object-fit: contain;
     min-width: 100vw;
-    padding: 20px 0;
+    padding: 40px;
   }
 
   .icon-close-preview-image {
     position: fixed;
-    top: 24px;
-    left: 24px;
-    background-color: #1e1e1e;
-    padding: 12px;
+    top: 16px;
+    right: 16px;
+    padding: 5px;
     border-radius: 50%;
-    scale: 1.1;
+    scale: 1.5;
 
     &:hover {
       transform: rotate(180deg);
@@ -68,6 +67,12 @@ const WrapPreviewImage = styled.div`
 
     svg {
       fill: #777777;
+    }
+  }
+
+  @media only screen and (max-width: 468px) {
+    .img-preview-full-screen {
+      padding: 0;
     }
   }
 `;

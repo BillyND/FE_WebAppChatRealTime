@@ -82,7 +82,7 @@ const DetailPost = (props) => {
     updateCurrentPost({ ...post, likerIds: updatedLikerIds });
 
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
-    debounceUpdateLikes(postId, updatedLikerIds);
+    await updateLikeOfPost(postId);
 
     socketIo.emit("updatePost", {
       ...post,
@@ -90,10 +90,6 @@ const DetailPost = (props) => {
       userId,
     });
   };
-
-  const debounceUpdateLikes = debounce(async (postId) => {
-    await updateLikeOfPost(postId);
-  }, TIME_DELAY_FETCH_API);
 
   const dataMenuDetailPost = [
     {

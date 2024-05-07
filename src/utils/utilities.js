@@ -448,10 +448,12 @@ export const scrollIntoViewById = (elementId, time) => {
 };
 
 export const preventKeydown = (event, key, functionPrevent) => {
-  if (event.key === key) {
+  if (event.key === key && !isMobileDevice()) {
     event.preventDefault();
     functionPrevent();
+    return;
   }
+  3;
 };
 
 export const getCurrentReceiverId = () => {
@@ -486,4 +488,14 @@ export function formatHtmlToText(text) {
 
   // Return the formatted message
   return formatText(text);
+}
+
+export function isMobileDevice() {
+  try {
+    const mobileRegex =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+    return navigator.userAgent.match(mobileRegex);
+  } catch (error) {
+    return false;
+  }
 }

@@ -25,7 +25,7 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { scrollToTopOfElement } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
@@ -152,6 +152,18 @@ const ControlMenu = (props) => {
   const unreadCount = listConversations.filter(
     (conversation) => !conversation?.usersRead?.includes(userId)
   )?.length;
+
+  useEffect(() => {
+    updateTitle(unreadCount);
+  }, [unreadCount, pathname]);
+
+  const updateTitle = (unreadCount) => {
+    document.title = document.title.replace(/\(\d+\)/g, "");
+
+    if (unreadCount) {
+      document.title = `(${unreadCount}) ${document.title}`;
+    }
+  };
 
   // Props của component
   const { handleNavigation } = props;
