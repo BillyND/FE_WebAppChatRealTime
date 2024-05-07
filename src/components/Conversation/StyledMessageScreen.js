@@ -64,6 +64,19 @@ export const WrapMessageScreen = styled.div`
   }
 
   .footer-conversation {
+    position: relative;
+
+    .icon-back-first-message {
+      top: -40px;
+      font-size: 25px;
+      position: absolute;
+      border-radius: 50%;
+      backdrop-filter: blur(5px);
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      left: calc(50% - 12.5px);
+      padding: 2px;
+    }
+
     .icon-show-more-option {
       scale: 1.6;
       padding: 8px;

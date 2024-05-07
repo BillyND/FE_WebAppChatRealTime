@@ -122,8 +122,6 @@ function ConversationBox() {
       // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
-      scrollToTopOfElement(boxMessageId);
-
       // Process creating a new conversation asynchronously
       const newConversation = await processCreateNewConversation(
         conversationId,

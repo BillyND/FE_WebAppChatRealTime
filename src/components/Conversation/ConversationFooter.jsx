@@ -1,17 +1,20 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { DownCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
 import {
   debounce,
   getCurrentReceiverId,
   preventKeydown,
+  scrollToTopOfElement,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
-import { useAuthUser } from "@utils/hooks/useAuthUser";
+import { boxMessageId } from "../../utils/constant";
 
 function ConversationFooter({ handleSendMessage }) {
+  const [canBackFirstMessage, setBackFirstMessage] = useState(false);
   const [message, setMessage] = useState("");
   const isDisableButtonSend = !message?.trim();
   const refInput = useRef(null);
@@ -23,6 +26,23 @@ function ConversationFooter({ handleSendMessage }) {
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
+  const boxMessage = document.getElementById(boxMessageId);
+
+  useEffect(() => {
+    boxMessage?.addEventListener("scroll", handleScrollBoxMessage);
+
+    return () => {
+      boxMessage?.removeEventListener("scroll", handleScrollBoxMessage);
+    };
+  }, [boxMessage]);
+
+  const handleScrollBoxMessage = () => {
+    setBackFirstMessage(Math.abs(boxMessage?.scrollTop) > 100);
+  };
+
+  const handleScrollToFirstMessage = () => {
+    scrollToTopOfElement(boxMessageId);
+  };
 
   const handleChangeMessage = (message) => {
     setMessage(message);
@@ -62,6 +82,12 @@ function ConversationFooter({ handleSendMessage }) {
 
   return (
     <Flex className="footer-conversation" justify="start" vertical>
+      <DownCircleOutlined
+        style={{ scale: canBackFirstMessage ? "1" : "0" }}
+        onClick={handleScrollToFirstMessage}
+        className="icon-back-first-message press-active"
+      />
+
       <hr className="gray width-100-per" />
 
       <Flex className={`px-3 pt-2 pb-3 mt-1 `} gap={12} align="center">
