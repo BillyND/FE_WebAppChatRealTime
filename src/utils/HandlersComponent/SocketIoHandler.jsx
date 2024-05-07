@@ -30,14 +30,9 @@ export const SocketIoHandler = () => {
   let newSocket;
 
   useEffect(() => {
-    newSocket = io(import.meta.env.VITE_SOCKET_URL, {
-      transports: ["websocket"],
-    });
-
-    newSocket.emit("connectUser", userId);
-    setState({ socketIo: newSocket });
     handleApplyNewInfoUser();
     initFunction();
+    handleVisibilityChange();
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
@@ -73,16 +68,14 @@ export const SocketIoHandler = () => {
       ),
     });
   };
-
   const handleVisibilityChange = async () => {
-    if (newSocket) {
-      newSocket.emit("connectUser", userId);
-      return;
-    }
+    if (!newSocket?.connected) {
+      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
+        transports: ["websocket"],
+      });
 
-    newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
-      transports: ["websocket"],
-    });
+      setState({ socketIo: newSocket });
+    }
 
     newSocket.emit("connectUser", userId);
   };
