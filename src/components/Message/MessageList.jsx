@@ -4,14 +4,17 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import parse from "html-react-parser";
 import React, { useEffect, useState } from "react";
 import { TYPE_STYLE_APP } from "../../utils/constant";
 import {
   conversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
-import { formatTimeAgo, getCurrentReceiverId } from "../../utils/utilities";
+import {
+  formatHtmlToText,
+  formatTimeAgo,
+  getCurrentReceiverId,
+} from "../../utils/utilities";
 
 function MessageList({ listMessages }) {
   const receiverId = getCurrentReceiverId();
@@ -62,7 +65,6 @@ function MessageItem({
   const { messageRead } = currentConversation || {};
   const { conversationColor, receiver, listMessages } = state || {};
   const { avaUrl } = receiver || {};
-  const formattedText = text?.replaceAll("\n", "<br/>") || "";
   const showIconRead = _id && messageRead?.[receiverId] === _id;
 
   useEffect(() => {
@@ -122,7 +124,8 @@ function MessageItem({
           ${isStart ? "start" : ""}
           ${isEnd ? "end" : ""}`}
         >
-          {parse(formattedText)}
+          <span dangerouslySetInnerHTML={{ __html: formatHtmlToText(text) }} />
+
           <Flex
             align="center"
             justify="center"

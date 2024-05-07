@@ -2,6 +2,7 @@ import { getPost } from "@services/api";
 import { message } from "antd";
 import { cloneDeep, uniqBy } from "lodash";
 import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
+import DOMPurify from "dompurify";
 
 /**
  * Fetches and handles the list of posts.
@@ -462,4 +463,27 @@ export const getCurrentReceiverId = () => {
 
 export function firstCharToLowerCase(str) {
   return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+export function formatHtmlToText(text) {
+  // Function to escape HTML tags
+  const escapeHTMLTags = (input) =>
+    input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // Function to add link tags to URLs
+  const addLinkTags = (input) =>
+    input.replace(
+      /(https?:\/\/[^\s]+)/g,
+      '<u><a style="color:#fff" href="$1" target="_blank">$1</a></u>'
+    );
+
+  // Function to replace newline characters with <br/>
+  const replaceNewlines = (input) => input.replace(/\n/g, "<br/>");
+
+  // Format the message by applying all formatting functions
+  const formatText = (text) =>
+    replaceNewlines(addLinkTags(escapeHTMLTags(text)));
+
+  // Return the formatted message
+  return formatText(text);
 }

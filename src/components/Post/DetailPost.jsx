@@ -26,11 +26,11 @@ import {
 } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
+import { debounce, formatHtmlToText } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
-import { debounce } from "../../utils/utilities";
-import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
@@ -184,7 +184,7 @@ const DetailPost = (props) => {
           <div
             className="description"
             dangerouslySetInnerHTML={{
-              __html: description.replace(/\n/g, "<br/>"),
+              __html: formatHtmlToText(description),
             }}
           />
 

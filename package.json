@@ -15,7 +15,6 @@
     "antd": "^5.11.1",
     "axios": "^1.6.1",
     "global-state-hook": "^3.1.0",
-    "html-react-parser": "^5.1.10",
     "lodash": "^4.17.21",
     "node-sass": "^9.0.0",
     "react": "^18.2.0",

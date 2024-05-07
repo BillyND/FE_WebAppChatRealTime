@@ -18,6 +18,7 @@ import {
 import { InputComment } from "./FooterComment";
 import ModalDeleteComment from "./ModalDeleteComment";
 import { UserThumbnail } from "@UI/UserThumbnail";
+import { formatHtmlToText } from "../../utils/utilities";
 
 let timerQueryWithModal;
 
@@ -159,10 +160,11 @@ export const DetailComment = (props) => {
                 />
               ) : (
                 <>
-                  <span className="owner-name">{username}</span>
+                  <p className="owner-name">{username}</p>
                   <div
+                    style={{ fontWeight: "300" }}
                     dangerouslySetInnerHTML={{
-                      __html: content.replace(/\n/g, "<br/>"),
+                      __html: formatHtmlToText(content),
                     }}
                   />
                 </>
