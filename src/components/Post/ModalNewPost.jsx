@@ -48,6 +48,8 @@ function ModalNewPost({ placeHolderInputPost }) {
     loadings.createPost ||
     (!isChanged([imageUrl, selectedImage]) &&
       !isChanged([description.trim(), valueInputPost.trim()]));
+  const refInputImage = useRef(null);
+
   const debounceDataUpdate = useDebounce(
     JSON.stringify(postHasUpdate),
     TIME_DELAY_SEARCH_INPUT
@@ -97,6 +99,7 @@ function ModalNewPost({ placeHolderInputPost }) {
       showPopupError();
     } finally {
       setLoadings({ parseFile: false, createPost: false });
+      handleClearAllDataPost();
     }
   };
 
@@ -135,6 +138,7 @@ function ModalNewPost({ placeHolderInputPost }) {
       showPopupError();
     } finally {
       setLoadings({ parseFile: false, createPost: false });
+      handleClearAllDataPost();
     }
   };
 
@@ -148,17 +152,23 @@ function ModalNewPost({ placeHolderInputPost }) {
   };
 
   const handleClearImage = () => {
-    setSelectedImage("");
+    setSelectedImage(null);
+
+    if (refInputImage.current) {
+      refInputImage.current.value = null;
+    }
   };
 
   const handleClearAllDataPost = () => {
     setValueInputPost("");
-    setSelectedImage(null);
+    handleClearImage();
   };
 
   const handleFileChange = async (event) => {
     setLoadings({ ...loadings, parseFile: true });
     const selectedFile = event.target.files[0];
+
+    console.log("===>selectedFile:", selectedFile);
 
     if (!selectedFile) {
       setLoadings({ ...loadings, parseFile: false });
@@ -259,6 +269,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         </div>
 
         <input
+          ref={refInputImage}
           type="file"
           id="fileInputPost"
           style={{ display: "none" }}

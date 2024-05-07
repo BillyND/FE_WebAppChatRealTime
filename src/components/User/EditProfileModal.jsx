@@ -7,7 +7,7 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import SeparatingLine from "../../UI/SeparatingLine";
 import { saveProfileUser } from "../../services/api";
 import { TYPE_STYLE_APP } from "../../utils/constant";
@@ -49,6 +49,7 @@ function EditProfileModal() {
   });
 
   const [newAvaUrl, setNewAvaUrl] = useState(avaUrl);
+  const refInputImage = useRef(null);
 
   const handleClosePreview = () => {
     listPostSubs.updateState({
@@ -60,6 +61,10 @@ function EditProfileModal() {
     handleClosePreview();
     setInfoUser({ username: username, about: about });
     setNewAvaUrl(avaUrl);
+
+    if (refInputImage.current) {
+      refInputImage.current.value = null;
+    }
   };
 
   const handleSaveProfile = async () => {
@@ -191,6 +196,7 @@ function EditProfileModal() {
             </label>
 
             <input
+              ref={refInputImage}
               type="file"
               id="fileInputAvaUrl"
               style={{ display: "none" }}
