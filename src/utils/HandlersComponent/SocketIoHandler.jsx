@@ -43,7 +43,7 @@ export const SocketIoHandler = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       setState({ socketIo: null });
     };
-  }, [userId]);
+  }, [userId, socketIo]);
 
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
@@ -68,11 +68,6 @@ export const SocketIoHandler = () => {
         console.log("===>infoUserOnline", formatInfoUserOnline);
       }
     });
-
-    return () => {
-      socketIo?.off("getMessage", handleUpdateMessageSocket);
-      socketIo?.off("receiveReadMessage", handleUpdateMessageRead);
-    };
   }, [socketIo, conversationId]);
 
   const handleVisibilityChange = async () => {
