@@ -51,11 +51,19 @@ export const SocketIoHandler = () => {
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
     socketIo?.on("receiveConnect", () => clearTimeout(timerForceReload));
     socketIo?.on("usersOnline", (data) => {
-      const { usersOnline, infoUserOnline } = data;
+      const { usersOnline, infoUserOnline = {} } = data;
       conversationSubs.updateState({ usersOnline });
 
-      if (email?.toLowerCase()?.includes("billy")) {
-        console.log("===>infoUserOnline", infoUserOnline);
+      if (email === import.meta.env.EMAIL_ADMIN) {
+        const formatInfoUserOnline = Object.keys(infoUserOnline).reduce(
+          (acc, key) => {
+            acc[infoUserOnline[key].email] = infoUserOnline[key];
+            return acc;
+          },
+          {}
+        );
+
+        console.log("===>infoUserOnline", formatInfoUserOnline);
       }
     });
 
