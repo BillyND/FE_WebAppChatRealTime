@@ -96,7 +96,7 @@ export const SocketIoHandler = () => {
       setState({ socketIo: newSocket });
 
       newSocket.emit("connectUser", userId);
-    }, 1000);
+    }, 3000);
   };
 
   const handleUpdateMessageRead = (data) => {
