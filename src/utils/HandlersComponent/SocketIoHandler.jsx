@@ -25,7 +25,7 @@ export const SocketIoHandler = () => {
   } = useSubscription(conversationSubs);
 
   const {
-    infoUser: { _id: userId },
+    infoUser: { _id: userId, username, email },
     login,
   } = useAuthUser();
 
@@ -51,8 +51,12 @@ export const SocketIoHandler = () => {
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
     socketIo?.on("receiveConnect", () => clearTimeout(timerForceReload));
     socketIo?.on("usersOnline", (data) => {
-      console.log("===?>herer");
-      conversationSubs.updateState({ usersOnline: data });
+      const { usersOnline, infoUserOnline } = data;
+      conversationSubs.updateState({ usersOnline });
+
+      if (email?.toLowerCase()?.includes("billy")) {
+        console.log("===>infoUserOnline", infoUserOnline);
+      }
     });
 
     return () => {
@@ -71,7 +75,7 @@ export const SocketIoHandler = () => {
 
       setState({ socketIo: newSocket });
 
-      newSocket.emit("connectUser", userId);
+      newSocket.emit("connectUser", { userId, username, email });
     }
 
     newSocket?.emit("checkConnect", userId);
