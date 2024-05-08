@@ -20,6 +20,7 @@ export const WrapNavMenu = styled.div`
   height: 70px;
   position: fixed;
   top: 0;
+  z-index: 1;
 
   .group-nav-menu {
     display: ${(props) => (props.isMobile ? "flex" : "grid")};
@@ -70,6 +71,7 @@ export const WrapControlNav = styled.div`
   width: 100%;
   text-align: center;
   backdrop-filter: blur(${(p) => (p.isTablet ? "28.5px" : "0")});
+  z-index: 1;
 
   .icon-nav {
     position: relative;
