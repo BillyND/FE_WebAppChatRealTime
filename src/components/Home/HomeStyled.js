@@ -37,7 +37,7 @@ export const WrapNavMenu = styled.div`
   }
 
   .icon-logo {
-    z-index: 1;
+    z-index: 2;
     position: ${(p) => (p.isMobile ? "" : "fixed")};
     left: 8%;
     svg {
@@ -93,6 +93,7 @@ export const WrapButtonSettings = styled.div`
   align-items: center;
   right: ${(p) => (p.isMobile ? "10px" : "8%")};
   top: 10px;
+  z-index: 2;
 `;
 
 export const WrapContentPopoverSettings = styled.div`
