@@ -49,8 +49,10 @@ export const SocketIoHandler = () => {
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
-    socketIo?.on("receiveConnect", (data) => {
-      clearTimeout(timerForceReload);
+    socketIo?.on("receiveConnect", () => clearTimeout(timerForceReload));
+    socketIo?.on("usersOnline", (data) => {
+      console.log("===?>herer");
+      conversationSubs.updateState({ usersOnline: data });
     });
 
     return () => {

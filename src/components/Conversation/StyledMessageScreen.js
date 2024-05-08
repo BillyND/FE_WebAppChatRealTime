@@ -43,11 +43,6 @@ export const WrapMessageScreen = styled.div`
       overflow-y: scroll;
       overflow-x: hidden;
       height: 100dvh;
-
-      .last-time-message {
-        font-size: 12px;
-        color: gray;
-      }
     }
 
     .icon-back-conversation {
@@ -67,14 +62,21 @@ export const WrapMessageScreen = styled.div`
     position: relative;
 
     .icon-back-first-message {
-      top: -40px;
-      font-size: 25px;
+      top: -60px;
+      font-size: 30px;
       position: absolute;
       border-radius: 50%;
       backdrop-filter: blur(5px);
       box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
       left: calc(50% - 12.5px);
       padding: 2px;
+      scale: 0;
+      opacity: 0;
+
+      &.show-back-first {
+        opacity: 1;
+        scale: 1;
+      }
     }
 
     .icon-show-more-option {

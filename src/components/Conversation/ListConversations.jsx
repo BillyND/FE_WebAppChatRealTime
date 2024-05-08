@@ -45,11 +45,12 @@ function ListConversations() {
   const { state, setState } = useSubscription(conversationSubs, [
     "listConversations",
     "fetchingConversation",
+    "usersOnline",
   ]);
 
   const [selectedConversation, setSelectedConversation] = useState(-1);
   const { isMobile } = useWindowSize();
-  const { listConversations, fetchingConversation } = state || {};
+  const { listConversations, fetchingConversation, usersOnline } = state || {};
   const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;
@@ -152,6 +153,8 @@ function ListConversations() {
     const isSender = sender === userId;
     const isRead = usersRead?.includes(userId);
 
+    const isOnline = usersOnline?.[receiverId];
+
     return (
       <Flex
         id={`conversation-${id}`}
@@ -164,7 +167,10 @@ function ListConversations() {
       >
         <div className={`icon-un-read ${isRead ? "" : "show"}`}></div>
 
-        <UserThumbnail avaUrl={avaUrl} size={45} />
+        <div className="ava-user-conversation">
+          <UserThumbnail avaUrl={avaUrl} size={45} />
+          {isOnline && <span className="icon-online"></span>}
+        </div>
 
         <Flex vertical gap={2} className="width-100-per none-copy">
           <span className={isRead ? "read" : "un-read"}>{username}</span>

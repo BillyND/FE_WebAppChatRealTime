@@ -8,7 +8,7 @@ import React from "react";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 
-function ConversationHeader({ username, avaUrl, email }) {
+function ConversationHeader({ username, avaUrl, email, receiverIdChat }) {
   const navigate = useNavigateCustom();
   const { isMobile } = useWindowSize();
   const { infoUser } = useAuthUser();
@@ -17,8 +17,14 @@ function ConversationHeader({ username, avaUrl, email }) {
   const { _id: userId } = infoUser;
 
   // Subscribe to conversation updates
-  const { state } = useSubscription(conversationSubs, ["listConversations"]);
-  const { listConversations } = state || {};
+  const { state } = useSubscription(conversationSubs, [
+    "listConversations",
+    "usersOnline",
+  ]);
+
+  const { listConversations, usersOnline } = state || {};
+
+  const isOnline = usersOnline?.[receiverIdChat];
 
   // Calculate unread conversations
   const conversationsUnread = listConversations.filter(
@@ -62,14 +68,21 @@ function ConversationHeader({ username, avaUrl, email }) {
           </div>
         )}
 
-        <div className="cursor-pointer" onClick={goToProfileUser}>
+        <div
+          className="ava-user-conversation cursor-pointer"
+          onClick={goToProfileUser}
+        >
           <UserThumbnail avaUrl={avaUrl} size={35} />
+          {isOnline && <span className="icon-online"></span>}
         </div>
 
         {/* Render username as a clickable link */}
-        <b className="cursor-pointer" onClick={goToProfileUser}>
-          {username}
-        </b>
+        <Flex vertical>
+          <b className="cursor-pointer" onClick={goToProfileUser}>
+            {username}
+          </b>
+          {isOnline && <span className="user-active-state">Active now</span>}
+        </Flex>
       </Flex>
       <hr className="width-100-per gray" />
     </Flex>

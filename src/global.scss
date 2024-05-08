@@ -688,3 +688,28 @@ img {
 .infinite-scroll-component {
   overflow: hidden !important;
 }
+
+.ava-user-conversation {
+  position: relative;
+}
+
+.icon-online {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: rgb(110, 240, 164);
+  border-radius: 50%;
+}
+
+.last-time-message {
+  font-size: 12px;
+  color: gray;
+}
+
+.user-active-state {
+  font-size: 12px;
+  color: gray;
+}

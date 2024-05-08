@@ -31,6 +31,7 @@ import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { debounce, formatHtmlToText } from "../../utils/utilities";
 import ModalCommentPost from "./ModalCommentPost";
 import { StyledMenuDetailPost, WrapDetailPost } from "./StyledPost";
+import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 
 const DetailPost = (props) => {
   const { postId, loop, isAuthorOfPost } = props;
@@ -49,6 +50,7 @@ const DetailPost = (props) => {
     countComment,
     createdAt,
     userEmail,
+    userId: authorPostId,
   } = post;
   const [openComment, setOpenComment] = useState(false);
   const {
@@ -59,6 +61,10 @@ const DetailPost = (props) => {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
   const navigate = useNavigateCustom();
+
+  const { state } = useSubscription(conversationSubs, ["usersOnline"]);
+  const { usersOnline } = state || {};
+  const isOnline = usersOnline?.[authorPostId] && authorPostId !== userId;
 
   useEffect(() => {
     socketIo.on("getPost", (post) => {
@@ -154,7 +160,10 @@ const DetailPost = (props) => {
           className="cursor-pointer"
           onClick={() => navigate(`/user?email=${userEmail}`)}
         >
-          <UserThumbnail avaUrl={avaUrl} />
+          <div className="ava-user-conversation">
+            <UserThumbnail avaUrl={avaUrl} />
+            {isOnline && <span className="icon-online"></span>}
+          </div>
           <div className="name">{username}</div>
         </Flex>
 

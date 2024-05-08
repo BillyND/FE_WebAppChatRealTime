@@ -101,7 +101,7 @@ function ConversationBox() {
     listConversations,
   } = state || {};
 
-  const { username, email, avaUrl } = receiver || {};
+  const { username, email, avaUrl, _id: receiverIdChat } = receiver || {};
   const [receiverId] = useSearchParams(["receiverId"]);
 
   useEffect(() => {
@@ -111,6 +111,7 @@ function ConversationBox() {
       conversationSubs.state = {
         ...initConversationSubs,
         listConversations: conversationSubs.state.listConversations,
+        usersOnline: conversationSubs.state.usersOnline,
       };
     };
   }, [receiverId]);
@@ -278,7 +279,12 @@ function ConversationBox() {
 
   return (
     <Flex vertical className="wrap-detail-conversation">
-      <ConversationHeader username={username} avaUrl={avaUrl} email={email} />
+      <ConversationHeader
+        username={username}
+        avaUrl={avaUrl}
+        email={email}
+        receiverIdChat={receiverIdChat}
+      />
 
       <ConversationContent avaUrl={avaUrl} username={username} email={email} />
 

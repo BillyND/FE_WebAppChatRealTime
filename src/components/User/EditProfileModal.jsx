@@ -198,6 +198,7 @@ function EditProfileModal() {
             <input
               ref={refInputImage}
               type="file"
+              accept="image/*"
               id="fileInputAvaUrl"
               style={{ display: "none" }}
               onChange={handleFileChange}

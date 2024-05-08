@@ -271,6 +271,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         <input
           ref={refInputImage}
           type="file"
+          accept="image/*"
           id="fileInputPost"
           style={{ display: "none" }}
           onChange={handleFileChange}

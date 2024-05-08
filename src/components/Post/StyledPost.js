@@ -115,7 +115,7 @@ export const WrapCreateNewPost = styled.div`
     padding: 6px 16px;
     border-radius: 250px;
     font-weight: 500;
-    background-color: #5858587d;
+    background-color: #9191912b;
     color: ${(props) => props.backgroundColor};
   }
 

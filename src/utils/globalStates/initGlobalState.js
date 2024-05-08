@@ -34,5 +34,6 @@ export const initConversationSubs = {
   listConversations: [],
   listMessages: [],
   receiver: null,
+  usersOnline: {},
 };
 export const conversationSubs = createSubscription(initConversationSubs);

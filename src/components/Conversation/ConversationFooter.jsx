@@ -83,9 +83,10 @@ function ConversationFooter({ handleSendMessage }) {
   return (
     <Flex className="footer-conversation" justify="start" vertical>
       <DownCircleOutlined
-        style={{ scale: canBackFirstMessage ? "1" : "0" }}
         onClick={handleScrollToFirstMessage}
-        className="icon-back-first-message press-active"
+        className={`icon-back-first-message press-active ${
+          canBackFirstMessage ? "show-back-first" : ""
+        }`}
       />
 
       <hr className="gray width-100-per" />
