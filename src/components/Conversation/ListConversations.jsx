@@ -10,15 +10,11 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
-import {
-  getConversations,
-  searchUserByName,
-  updateUsersReadConversation,
-} from "../../services/api";
+import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
-import { debounce, isChanged, showPopupError } from "../../utils/utilities";
+import { debounce, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
 let timerGetAllConversation;

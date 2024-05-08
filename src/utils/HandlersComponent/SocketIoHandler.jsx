@@ -11,6 +11,7 @@ import {
   socketIoSubs,
 } from "../globalStates/initGlobalState";
 import { getCurrentReceiverId } from "../utilities";
+import { handleReadConversation } from "../../components/Conversation/ConversationContent";
 
 let timerForceReload;
 export const SocketIoHandler = () => {
@@ -38,6 +39,7 @@ export const SocketIoHandler = () => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      socketIo?.emit("disconnect");
       newSocket.close();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       setState({ socketIo: null });
@@ -48,7 +50,6 @@ export const SocketIoHandler = () => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
     socketIo?.on("receiveConnect", (data) => {
-      console.log("===>Is online socket:", data);
       clearTimeout(timerForceReload);
     });
 
@@ -59,6 +60,8 @@ export const SocketIoHandler = () => {
   }, [socketIo, conversationId]);
 
   const handleVisibilityChange = async () => {
+    handleReadConversation();
+
     if (!newSocket?.connected) {
       newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
         transports: ["websocket"],
@@ -73,8 +76,14 @@ export const SocketIoHandler = () => {
 
     clearTimeout(timerForceReload);
 
-    timerForceReload = setTimeout(() => {
-      window.location.reload();
+    timerForceReload = setTimeout(async () => {
+      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
+        transports: ["websocket"],
+      });
+
+      setState({ socketIo: newSocket });
+
+      newSocket.emit("connectUser", userId);
     }, 1000);
   };
 

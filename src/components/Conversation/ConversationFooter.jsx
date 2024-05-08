@@ -3,6 +3,7 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
+import { boxMessageId } from "../../utils/constant";
 import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
 import {
   debounce,
@@ -11,7 +12,6 @@ import {
   scrollToTopOfElement,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
-import { boxMessageId } from "../../utils/constant";
 
 function ConversationFooter({ handleSendMessage }) {
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);

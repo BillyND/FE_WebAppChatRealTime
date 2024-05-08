@@ -95,10 +95,7 @@ function MessageItem({
     ? new Date(updatedAt) - new Date(nextMessage.updatedAt)
     : 0;
 
-  const isMessageTimeGapBig =
-    messageTimeGap > 1 * 60 * 60 * 1000 ||
-    (!nextMessage && !next) ||
-    !prevMessage;
+  const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
 
   return (
     <Flex vertical>

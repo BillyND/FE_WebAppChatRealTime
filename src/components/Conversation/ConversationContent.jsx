@@ -5,9 +5,10 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { boxMessageId } from "../../utils/constant";
+import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
+  infoUserSubscription,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
@@ -21,7 +22,39 @@ import {
 } from "../../utils/utilities";
 import { updateUsersReadConversation } from "../../services/api";
 
-let cachedLastMessageId;
+export const handleReadConversation = debounce(async (isChangedListMessage) => {
+  const lastMessageId = conversationSubs.state.listMessages?.[0]?._id;
+  const conversationId = conversationSubs.state.conversationId;
+
+  if (!conversationId) {
+    return;
+  }
+
+  socketIoSubs.state.socketIo?.emit("readMessage", {
+    conversationId,
+    messageRead: { [infoUserSubscription.state.infoUser._id]: lastMessageId },
+    receiverId: getCurrentReceiverId(),
+  });
+
+  const resUpdated = await updateUsersReadConversation(
+    conversationId,
+    lastMessageId
+  );
+
+  if (isEmpty(resUpdated)) return;
+
+  const newList = conversationSubs.state.listConversations.map((conversation) =>
+    conversation._id === resUpdated._id &&
+    isChanged([conversation.usersRead, resUpdated.usersRead])
+      ? { ...conversation, usersRead: resUpdated.usersRead }
+      : conversation
+  );
+
+  if (isChanged([conversationSubs.state.listConversations, newList])) {
+    conversationSubs.updateState({ listConversations: newList });
+  }
+}, 100);
+
 const ConversationContent = ({ avaUrl, username, email }) => {
   const { state } = useSubscription(conversationSubs, ["listMessages", "next"]);
   let { listMessages, next } = state || {};
@@ -33,53 +66,15 @@ const ConversationContent = ({ avaUrl, username, email }) => {
     infoUser: { _id: userId },
   } = useAuthUser();
 
-  const {
-    state: { socketIo },
-  } = useSubscription(socketIoSubs, ["socketIo"]);
-
   useEffect(() => {
     loadMore && setLoadMore(false);
-    handleReadConversation();
+    handleReadConversation(true);
   }, [listMessages]);
 
   const handleScrollToTop = () => {
     !loadMore && setLoadMore(true);
     next && handleGetMessage({ ...next, allowFetching: false });
   };
-
-  const handleReadConversation = debounce(async () => {
-    const lastMessageId = conversationSubs.state.listMessages?.[0]?._id;
-    const conversationId = conversationSubs.state.conversationId;
-
-    if (!lastMessageId || cachedLastMessageId === lastMessageId) return;
-
-    cachedLastMessageId = lastMessageId;
-
-    socketIo?.emit("readMessage", {
-      conversationId,
-      messageRead: { [userId]: lastMessageId },
-      receiverId: getCurrentReceiverId(),
-    });
-
-    const resUpdated = await updateUsersReadConversation(
-      conversationId,
-      lastMessageId
-    );
-
-    if (isEmpty(resUpdated)) return;
-
-    const newList = conversationSubs.state.listConversations.map(
-      (conversation) =>
-        conversation._id === resUpdated._id &&
-        isChanged([conversation.usersRead, resUpdated.usersRead])
-          ? { ...conversation, usersRead: resUpdated.usersRead }
-          : conversation
-    );
-
-    if (isChanged([conversationSubs.state.listConversations, newList])) {
-      conversationSubs.updateState({ listConversations: newList });
-    }
-  }, 10);
 
   return (
     <div
