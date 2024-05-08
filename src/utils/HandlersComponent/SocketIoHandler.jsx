@@ -54,7 +54,7 @@ export const SocketIoHandler = () => {
       const { usersOnline, infoUserOnline = {} } = data;
       conversationSubs.updateState({ usersOnline });
 
-      if (email === import.meta.env.EMAIL_ADMIN) {
+      if (email === import.meta.env.VITE_EMAIL_ADMIN) {
         const formatInfoUserOnline = Object.keys(infoUserOnline).reduce(
           (acc, key) => {
             acc[infoUserOnline[key].email] = infoUserOnline[key];
