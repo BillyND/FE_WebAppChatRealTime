@@ -198,7 +198,7 @@ const DetailPost = (props) => {
               <img
                 draggable={false}
                 src={imageUrl}
-                className="img-post cursor-pointer transition-02"
+                className="img-post cursor-pointer transition-02 press-active"
                 onClick={() =>
                   previewImageFullScreenSubs.updateState({ imgSrc: imageUrl })
                 }
