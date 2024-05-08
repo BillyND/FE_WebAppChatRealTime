@@ -38,12 +38,12 @@ export const SocketIoHandler = () => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      socketIo?.emit("disconnect");
-      newSocket.close();
+      socketIo?.emit("disconnectUser");
+      socketIo?.close();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       setState({ socketIo: null });
     };
-  }, [userId, socketIo]);
+  }, [userId]);
 
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
