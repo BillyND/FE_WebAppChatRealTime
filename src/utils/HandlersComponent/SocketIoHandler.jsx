@@ -74,8 +74,6 @@ export const SocketIoHandler = () => {
   }, [socketIo, conversationId]);
 
   const handleVisibilityChange = async () => {
-    handleReadConversation();
-
     if (!newSocket?.connected) {
       newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
         transports: ["websocket"],
