@@ -8,16 +8,10 @@ import React, { Fragment } from "react";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import DetailPost from "./DetailPost";
 import { WrapListPost } from "./StyledPost";
+import { handleGetListPost } from "../../utils/utilities";
 
 const ModalDeletePost = (props) => {
-  const {
-    email,
-    loading,
-    listPost,
-    setStateListPost,
-    handleGetListPost,
-    keyListPost,
-  } = props;
+  const { email, loading, listPost, setStateListPost, keyListPost } = props;
   const { state: modalState, closeModal } = useModal(["CONFIRM_DELETE_POST"]);
   const {
     state: { postIdDelete },

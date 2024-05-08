@@ -12,6 +12,7 @@ import {
 } from "../globalStates/initGlobalState";
 import { getCurrentReceiverId } from "../utilities";
 
+let timerForceReload;
 export const SocketIoHandler = () => {
   const {
     state: { socketIo },
@@ -32,7 +33,7 @@ export const SocketIoHandler = () => {
   useEffect(() => {
     handleApplyNewInfoUser();
     initFunction();
-    handleVisibilityChange();
+    handleVisibilityChange(false);
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
@@ -46,12 +47,36 @@ export const SocketIoHandler = () => {
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
+    socketIo?.on("receiveConnect", (data) => {
+      console.log("===>Is online socket:", data);
+      clearTimeout(timerForceReload);
+    });
 
     return () => {
       socketIo?.off("getMessage", handleUpdateMessageSocket);
       socketIo?.off("receiveReadMessage", handleUpdateMessageRead);
     };
   }, [socketIo, conversationId]);
+
+  const handleVisibilityChange = async () => {
+    if (!newSocket?.connected) {
+      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
+        transports: ["websocket"],
+      });
+
+      setState({ socketIo: newSocket });
+
+      newSocket.emit("connectUser", userId);
+    }
+
+    newSocket?.emit("checkConnect", userId);
+
+    clearTimeout(timerForceReload);
+
+    timerForceReload = setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
 
   const handleUpdateMessageRead = (data) => {
     const { conversationId, messageRead } = data || {};
@@ -69,27 +94,11 @@ export const SocketIoHandler = () => {
     });
   };
 
-  const handleVisibilityChange = async () => {
-    if (document.visibilityState === "visible") {
-      if (!newSocket?.connected) {
-        newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
-          transports: ["websocket"],
-        });
-
-        setState({ socketIo: newSocket });
-      }
-
-      newSocket.emit("connectUser", userId);
-    }
-  };
-
   const handleUpdateMessageSocket = async (data) => {
     if (!data || !data.message || !data.conversation) {
       console.error("Invalid data provided");
       return;
     }
-
-    console.log("===>data:", data);
 
     const newMessageSound = new Audio(messageSound);
     const { message, targetSocketId, conversation } = data;

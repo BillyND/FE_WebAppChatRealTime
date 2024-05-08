@@ -55,7 +55,7 @@ export const DetailComment = (props) => {
         commentId
       );
     });
-  }, []);
+  }, [socketIo]);
 
   useEffect(() => {
     clearTimeout(timerQueryWithModal);

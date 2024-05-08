@@ -1,12 +1,10 @@
 import { SpinnerLoading } from "@UI/SpinnerLoading";
-import { TIME_DELAY_SEARCH_INPUT } from "@utils/constant";
 import { listPostSubs } from "@utils/globalStates/initGlobalState";
 import { useScrollToBottom } from "@utils/hooks/useScrollBottom";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { handleGetListPost } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { debounce } from "lodash";
 import React, { useEffect, useRef } from "react";
 import ListPost from "../Post/ListPost";
 import NewPost from "../Post/NewPost";
@@ -26,10 +24,10 @@ export default function HomeScreen() {
   }, [isBottom]);
 
   useEffect(() => {
-    !listPost.length && handleGetListPost(next || { page: 1, limit: 5 });
+    handleGetListPost({ page: 1, limit: 5 });
   }, []);
 
-  const handleFetchNewPost = debounce(async () => {
+  const handleFetchNewPost = async () => {
     setStateListPost({
       loading: true,
     });
@@ -38,7 +36,7 @@ export default function HomeScreen() {
     setStateListPost({
       loading: false,
     });
-  }, TIME_DELAY_SEARCH_INPUT);
+  };
 
   return (
     <WrapHomeScreen
@@ -53,7 +51,6 @@ export default function HomeScreen() {
           loading={loading}
           listPost={listPost}
           setStateListPost={setStateListPost}
-          handleGetListPost={handleGetListPost}
           keyListPost="listPost"
         />
         <SpinnerLoading style={{ opacity: loading ? "1" : "0" }} />

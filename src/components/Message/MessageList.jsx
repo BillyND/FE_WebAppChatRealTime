@@ -63,7 +63,7 @@ function MessageItem({
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
   const { _id, text, isSending, updatedAt } = message || {};
   const { messageRead } = currentConversation || {};
-  const { conversationColor, receiver, listMessages } = state || {};
+  const { conversationColor, receiver, listMessages, next } = state || {};
   const { avaUrl } = receiver || {};
   const showIconRead = _id && messageRead?.[receiverId] === _id;
 
@@ -77,7 +77,7 @@ function MessageItem({
     return () => {
       socketIo?.off("receiveUserTyping", handleTyping);
     };
-  }, [receiverId]);
+  }, [receiverId, socketIo]);
 
   const isSender = message.sender === userId;
   const prevMessage = listMessages[index - 1];
@@ -95,13 +95,16 @@ function MessageItem({
     ? new Date(updatedAt) - new Date(nextMessage.updatedAt)
     : 0;
 
-  const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
+  const isMessageTimeGapBig =
+    messageTimeGap > 1 * 60 * 60 * 1000 ||
+    (!nextMessage && !next) ||
+    !prevMessage;
 
   return (
     <Flex vertical>
       {isMessageTimeGapBig && (
         <Flex justify="center" className="m-2">
-          <span className={`last-time-message mt-4`}>
+          <span className={`last-time-message mt-2`}>
             {formatTimeAgo(updatedAt || Date.now())}
           </span>
         </Flex>

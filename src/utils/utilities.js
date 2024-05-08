@@ -452,7 +452,6 @@ export const preventKeydown = (event, key, functionPrevent) => {
     functionPrevent();
     return;
   }
-  3;
 };
 
 export const getCurrentReceiverId = () => {
