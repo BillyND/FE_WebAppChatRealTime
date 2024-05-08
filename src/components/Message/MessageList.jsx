@@ -15,6 +15,7 @@ import {
   formatTimeAgo,
   getCurrentReceiverId,
 } from "../../utils/utilities";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 function MessageList({ listMessages }) {
   const receiverId = getCurrentReceiverId();
@@ -56,10 +57,11 @@ function MessageItem({
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
-
+  const { isMobile } = useWindowSize();
   const [isTyping, setIsTyping] = useState(false);
   const { state } = useSubscription(conversationSubs, ["conversationColor"]);
   const { styleApp } = useStyleApp();
+
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
   const { _id, text, isSending, updatedAt } = message || {};
   const { messageRead } = currentConversation || {};
@@ -108,7 +110,7 @@ function MessageItem({
       )}
 
       <Flex
-        className={`mx-2 mt-1 px-1`}
+        className={`${isMobile ? "mx-2" : "ml-2 "} ${isEnd ? "mt-3" : "mt-1"}`}
         justify={isSender ? "end" : "start"}
         align="center"
         gap={6}
@@ -138,7 +140,10 @@ function MessageItem({
         </div>
       </Flex>
       {showIconRead && (
-        <Flex className="mx-2 px-1 mt-1" justify={"end"}>
+        <Flex
+          className={`${isMobile ? "mx-2" : "ml-2"} px-1 mt-1`}
+          justify={"end"}
+        >
           <UserThumbnail avaUrl={avaUrl} size={16} />
         </Flex>
       )}
@@ -146,7 +151,7 @@ function MessageItem({
         <Flex
           justify="center"
           align="center"
-          className={`user-typing wrap-message m-3 wrap-message-typing receiver ${
+          className={`user-typing wrap-message m-2 wrap-message-typing receiver ${
             isTyping ? "typing" : "not-typing"
           }`}
         >

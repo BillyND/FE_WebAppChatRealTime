@@ -67,7 +67,7 @@ export default function ListAllUsers(props) {
   return (
     <div
       ref={scrollContainerRef}
-      className={`wrap-list-all-user px-2 ${next && "pb-3"}`}
+      className={`wrap-list-all-user pl-2 ${next && "pb-3"}`}
       id="list-all-user"
     >
       <Flex vertical gap={16}>

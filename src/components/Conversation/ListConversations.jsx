@@ -86,12 +86,6 @@ function ListConversations() {
     }
 
     setSelectedConversation(-1);
-
-    // const firstReceiver = listConversations[0]?.receiver;
-    // const { _id: receiverId } = firstReceiver || {};
-
-    // navigate(`/message?receiverId=${receiverId}`);
-    // setSelectedConversation(listConversations[0]?._id || -1);
   };
 
   const debounceQueryUser = debounce(async (propValue) => {
@@ -266,7 +260,10 @@ function ListConversations() {
         )}
       </WrapSearchUser>
 
-      <WrapListConversation isDark={isDark} className="px-2 pb-2">
+      <WrapListConversation
+        isDark={isDark}
+        className={`${isMobile ? "px-2" : "pl-2"} pb-2`}
+      >
         {(loadingSearch || fetchingConversation) && <SpinnerLoading />}
 
         {!fetchingConversation && (

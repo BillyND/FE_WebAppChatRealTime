@@ -226,7 +226,7 @@ img {
   }
 
   &.mini {
-    height: 42px;
+    height: 44px;
   }
 
   &::placeholder {
@@ -347,37 +347,27 @@ img {
 }
 
 // Custom scrollbar
-// @media only screen and (min-width: 768px) {
-//   /* For WebKit browsers (Safari, Chrome, etc.) */
-//   ::-webkit-scrollbar {
-//     width: 10px;
-//   }
+@media only screen and (min-width: 700px) {
+  /* For WebKit browsers (Safari, Chrome, etc.) */
+  :not(.ant-modal)::-webkit-scrollbar {
+    width: 17px;
+  }
 
-//   ::-webkit-scrollbar-track {
-//     background-color: transparent;
-//   }
+  :not(.ant-modal)::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 
-//   ::-webkit-scrollbar-thumb {
-//     background-color: #959595;
-//     border-radius: 200px;
-//   }
+  :not(.ant-modal)::-webkit-scrollbar-thumb {
+    background-color: #9595957f;
+    border-radius: 20px;
+    border: 5px solid transparent;
+    background-clip: content-box;
+  }
 
-//   ::-webkit-scrollbar-thumb:hover {
-//     background-color: rgba(91, 91, 91, 0.84);
-//   }
-
-//   /* For Firefox */
-//   html {
-//     scrollbar-width: thin; /* width of the entire scrollbar */
-//     scrollbar-color: transparent transparent; /* color of the scroll thumb and track */
-//   }
-
-//   /* For Edge and IE */
-//   body {
-//     scrollbar-width: thin; /* width of the entire scrollbar */
-//     scrollbar-color: transparent transparent; /* color of the scroll thumb and track */
-//   }
-// }
+  :not(.ant-modal)::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(130, 130, 130, 0.939);
+  }
+}
 
 .avatar {
   border-radius: 50%;

@@ -5,26 +5,26 @@ import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
+import { updateUsersReadConversation } from "../../services/api";
+import { boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
   infoUserSubscription,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
-import MessageList from "../Message/MessageList";
-import { handleGetMessage } from "./ConversationBox";
-import { isEmpty } from "lodash";
 import {
   debounce,
   getCurrentReceiverId,
   isChanged,
 } from "../../utils/utilities";
-import { updateUsersReadConversation } from "../../services/api";
+import MessageList from "../Message/MessageList";
+import { handleGetMessage } from "./ConversationBox";
 
 export const handleReadConversation = debounce(async (isChangedListMessage) => {
   const lastMessageId = conversationSubs.state.listMessages?.[0]?._id;
   const conversationId = conversationSubs.state.conversationId;
+  const userId = infoUserSubscription.state.infoUser._id;
 
   if (!conversationId) {
     return;
@@ -32,27 +32,21 @@ export const handleReadConversation = debounce(async (isChangedListMessage) => {
 
   socketIoSubs.state.socketIo?.emit("readMessage", {
     conversationId,
-    messageRead: { [infoUserSubscription.state.infoUser._id]: lastMessageId },
+    messageRead: { [userId]: lastMessageId },
     receiverId: getCurrentReceiverId(),
   });
 
-  const resUpdated = await updateUsersReadConversation(
-    conversationId,
-    lastMessageId
-  );
-
-  if (isEmpty(resUpdated)) return;
-
   const newList = conversationSubs.state.listConversations.map((conversation) =>
-    conversation._id === resUpdated._id &&
-    isChanged([conversation.usersRead, resUpdated.usersRead])
-      ? { ...conversation, usersRead: resUpdated.usersRead }
+    conversation._id === conversationId
+      ? { ...conversation, usersRead: [userId] }
       : conversation
   );
 
   if (isChanged([conversationSubs.state.listConversations, newList])) {
     conversationSubs.updateState({ listConversations: newList });
   }
+
+  updateUsersReadConversation(conversationId, lastMessageId);
 }, 100);
 
 const ConversationContent = ({ avaUrl, username, email }) => {
