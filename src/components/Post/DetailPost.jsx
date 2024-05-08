@@ -64,7 +64,7 @@ const DetailPost = (props) => {
 
   const { state } = useSubscription(conversationSubs, ["usersOnline"]);
   const { usersOnline } = state || {};
-  const isOnline = usersOnline?.[authorPostId] && authorPostId !== userId;
+  const isOnline = usersOnline?.[authorPostId];
 
   useEffect(() => {
     socketIo.on("getPost", (post) => {
