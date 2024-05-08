@@ -10,7 +10,7 @@ import {
   conversationSubs,
   socketIoSubs,
 } from "../globalStates/initGlobalState";
-import { getCurrentReceiverId } from "../utilities";
+import { getCurrentReceiverId, isChanged } from "../utilities";
 import { handleReadConversation } from "../../components/Conversation/ConversationContent";
 
 let timerForceReload;
@@ -52,7 +52,10 @@ export const SocketIoHandler = () => {
     socketIo?.on("receiveConnect", () => clearTimeout(timerForceReload));
     socketIo?.on("usersOnline", (data) => {
       const { usersOnline, infoUserOnline = {} } = data;
-      conversationSubs.updateState({ usersOnline });
+
+      if (isChanged([conversationSubs.state.usersOnline, usersOnline])) {
+        conversationSubs.updateState({ usersOnline });
+      }
 
       if (email === import.meta.env.VITE_EMAIL_ADMIN) {
         const formatInfoUserOnline = Object.keys(infoUserOnline).reduce(
@@ -82,6 +85,8 @@ export const SocketIoHandler = () => {
       setState({ socketIo: newSocket });
 
       newSocket.emit("connectUser", { userId, username, email });
+
+      return;
     }
 
     newSocket?.emit("checkConnect", userId);
@@ -94,8 +99,9 @@ export const SocketIoHandler = () => {
       });
 
       setState({ socketIo: newSocket });
+      console.log("===>here out");
 
-      newSocket.emit("connectUser", userId);
+      newSocket.emit("connectUser", { userId, username, email });
     }, 3000);
   };
 

@@ -179,7 +179,7 @@ function ListConversations() {
             <span
               className={`content-last-message ${isRead ? "read" : "un-read"}`}
             >{`${isSender ? "Me: " : ""}${text}`}</span>
-            <span>{formattedTime}</span>
+            <span className="font-size-14">{formattedTime}</span>
           </Flex>
         </Flex>
       </Flex>
