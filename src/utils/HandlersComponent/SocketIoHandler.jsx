@@ -11,7 +11,6 @@ import {
   socketIoSubs,
 } from "../globalStates/initGlobalState";
 import { getCurrentReceiverId, isChanged } from "../utilities";
-import { handleReadConversation } from "../../components/Conversation/ConversationContent";
 
 let timerForceReload;
 export const SocketIoHandler = () => {
