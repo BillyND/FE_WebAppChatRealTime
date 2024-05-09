@@ -130,14 +130,22 @@ export const SocketIoHandler = () => {
       return;
     }
 
-    const inConversationWithSender = window.location.search?.includes(sender);
+    const inConversationWithSender = getCurrentReceiverId() === sender;
     const usersRead = inConversationWithSender ? [userId] : [sender];
+
     const updatedConversations = updateConversations(conversation, usersRead);
     const updatedMessages = updateMessages(message, listMessages);
 
     const dataUpdated = {
-      listConversations: updatedConversations,
-      listMessages: updatedMessages,
+      ...(isChanged([
+        conversationSubs.state.listConversations,
+        updatedConversations,
+      ]) && { listConversations: updatedConversations }),
+
+      ...(isChanged([conversationSubs.state.listMessages, updatedMessages]) && {
+        listMessages: updatedMessages,
+      }),
+
       ...(getCurrentReceiverId() === conversation.receiver?._id && {
         receiver: conversation.receiver,
       }),
@@ -147,29 +155,26 @@ export const SocketIoHandler = () => {
     newMessageSound.play();
   };
 
-  const updateConversations = (updatedConversation, usersRead) => {
+  function updateConversations(updatedConversation, usersRead) {
     const { listConversations } = conversationSubs.state || {};
+
     return uniqBy(
-      [updatedConversation, ...listConversations].map((item) => {
-        return item?._id === updatedConversation?._id
+      [updatedConversation, ...listConversations].map((item) =>
+        item?._id === updatedConversation?._id
           ? { ...updatedConversation, usersRead }
-          : item;
-      }),
+          : item
+      ),
       "_id"
     );
-  };
+  }
 
-  const updateMessages = (newMessage, existingMessages) => {
+  function updateMessages(newMessage, existingMessages) {
     if (newMessage?.sender === getCurrentReceiverId()) {
-      return [newMessage, ...existingMessages];
+      return uniqBy([newMessage, ...existingMessages], "_id");
     }
 
-    if (!getCurrentReceiverId()) {
-      return [];
-    }
-
-    return existingMessages;
-  };
+    return getCurrentReceiverId() ? existingMessages : [];
+  }
 
   const handleApplyNewInfoUser = async () => {
     const resInfoUser = await getDataInfoUser();
