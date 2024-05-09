@@ -77,7 +77,6 @@ export const SocketIoHandler = () => {
       });
 
       setState({ socketIo: newSocket });
-
       newSocket.emit("connectUser", { userId, username, email });
 
       return;
@@ -88,13 +87,15 @@ export const SocketIoHandler = () => {
     clearTimeout(timerForceReload);
 
     timerForceReload = setTimeout(async () => {
+      console.log("===>here out");
+
+      newSocket?.emit("disconnectUser");
+
       newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
         transports: ["websocket"],
       });
 
       setState({ socketIo: newSocket });
-      console.log("===>here out");
-
       newSocket.emit("connectUser", { userId, username, email });
     }, 3000);
   };
