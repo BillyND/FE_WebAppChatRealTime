@@ -1,7 +1,13 @@
 import { getPost } from "@services/api";
 import { message } from "antd";
 import { cloneDeep, uniqBy } from "lodash";
-import { detailPostSubs, listPostSubs } from "./globalStates/initGlobalState";
+import { io } from "socket.io-client";
+import {
+  detailPostSubs,
+  infoUserSubscription,
+  listPostSubs,
+  socketIoSubs,
+} from "./globalStates/initGlobalState";
 
 /**
  * Fetches and handles the list of posts.
@@ -497,3 +503,20 @@ export function isMobileDevice() {
     return false;
   }
 }
+
+export const connectUserToSocket = async () => {
+  console.log("===> Connect user to socket");
+
+  const { infoUser } = infoUserSubscription.state || {};
+  const { userId, username, email } = infoUser || {};
+  let newSocket;
+
+  await socketIoSubs.state.socketIo?.disconnect();
+
+  newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+    transports: ["websocket"],
+  });
+
+  socketIoSubs.updateState({ socketIo: newSocket });
+  newSocket?.emit("connectUser", { userId, username, email });
+};

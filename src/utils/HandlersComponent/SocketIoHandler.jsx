@@ -2,7 +2,6 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSubscription } from "global-state-hook";
 import { uniqBy } from "lodash";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
 import messageSound from "../../assets/sounds/message.mp3";
 import { handleGetAllConversations } from "../../components/Conversation/ListConversations";
 import { getDataInfoUser } from "../../services/api";
@@ -10,9 +9,13 @@ import {
   conversationSubs,
   socketIoSubs,
 } from "../globalStates/initGlobalState";
-import { getCurrentReceiverId, isChanged } from "../utilities";
+import {
+  connectUserToSocket,
+  getCurrentReceiverId,
+  isChanged,
+} from "../utilities";
 
-let timerForceReload;
+let timerForceConnectSocket;
 export const SocketIoHandler = () => {
   const {
     state: { socketIo },
@@ -24,21 +27,41 @@ export const SocketIoHandler = () => {
   } = useSubscription(conversationSubs);
 
   const {
-    infoUser: { _id: userId, username, email },
+    infoUser: { _id: userId, email },
     login,
   } = useAuthUser();
 
-  let newSocket;
-
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      const isVisibleTab = document.visibilityState === "visible";
+
+      if (!socketIo?.connected) {
+        initFunction();
+        handleApplyNewInfoUser();
+        connectUserToSocket();
+
+        return;
+      }
+
+      if (isVisibleTab) {
+        socketIo?.emit("checkConnect", userId);
+      }
+
+      clearTimeout(timerForceConnectSocket);
+
+      timerForceConnectSocket = setTimeout(async () => {
+        connectUserToSocket();
+      }, 1000);
+    };
+
     handleApplyNewInfoUser();
     initFunction();
-    handleVisibilityChange(false);
+    handleVisibilityChange();
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      socketIo?.emit("disconnectUser");
+      socketIo?.disconnect();
       socketIo?.close();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       setState({ socketIo: null });
@@ -48,7 +71,7 @@ export const SocketIoHandler = () => {
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
-    socketIo?.on("receiveConnect", () => clearTimeout(timerForceReload));
+    socketIo?.on("receiveConnect", () => clearTimeout(timerForceConnectSocket));
     socketIo?.on("usersOnline", (data) => {
       const { usersOnline, infoUserOnline = {} } = data;
 
@@ -69,36 +92,6 @@ export const SocketIoHandler = () => {
       }
     });
   }, [socketIo, conversationId]);
-
-  const handleVisibilityChange = async () => {
-    if (!newSocket?.connected) {
-      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
-        transports: ["websocket"],
-      });
-
-      setState({ socketIo: newSocket });
-      newSocket.emit("connectUser", { userId, username, email });
-
-      return;
-    }
-
-    newSocket?.emit("checkConnect", userId);
-
-    clearTimeout(timerForceReload);
-
-    timerForceReload = setTimeout(async () => {
-      console.log("===>here out");
-
-      newSocket?.emit("disconnectUser");
-
-      newSocket = await io(import.meta.env.VITE_SOCKET_URL, {
-        transports: ["websocket"],
-      });
-
-      setState({ socketIo: newSocket });
-      newSocket.emit("connectUser", { userId, username, email });
-    }, 3000);
-  };
 
   const handleUpdateMessageRead = (data) => {
     const { conversationId, messageRead } = data || {};
@@ -188,5 +181,5 @@ export const SocketIoHandler = () => {
     handleGetAllConversations(false);
   };
 
-  return <></>;
+  return null;
 };
