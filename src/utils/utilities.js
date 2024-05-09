@@ -505,18 +505,16 @@ export function isMobileDevice() {
 }
 
 let newSocket;
-export const connectUserToSocket = async () => {
-  console.log("===> Connect user to socket");
+export const connectUserToSocket = async (force) => {
+  if (!newSocket?.connected || force) {
+    const { infoUser } = infoUserSubscription.state || {};
+    const { _id: userId, username, email } = infoUser || {};
 
-  const { infoUser } = infoUserSubscription.state || {};
-  const { _id: userId, username, email } = infoUser || {};
+    newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ["websocket"],
+    });
 
-  console.log("===>infoUser:", infoUser);
-
-  newSocket = io(import.meta.env.VITE_SOCKET_URL, {
-    transports: ["websocket"],
-  });
-
-  socketIoSubs.updateState({ socketIo: newSocket });
-  newSocket?.emit("connectUser", { userId, username, email });
+    socketIoSubs.updateState({ socketIo: newSocket });
+    newSocket?.emit("connectUser", { userId, username, email });
+  }
 };

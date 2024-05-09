@@ -58,9 +58,7 @@ export const SocketIoHandler = () => {
 
     return () => {
       socketIo?.disconnect();
-      socketIo?.close();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      setState({ socketIo: null });
     };
   }, [userId]);
 
@@ -71,7 +69,10 @@ export const SocketIoHandler = () => {
     socketIo?.on("usersOnline", (data) => {
       const { usersOnline, infoUserOnline = {} } = data;
 
-      if (isChanged([conversationSubs.state.usersOnline, usersOnline])) {
+      if (
+        !conversationSubs.state.usersOnline ||
+        isChanged([conversationSubs.state.usersOnline, usersOnline])
+      ) {
         conversationSubs.updateState({ usersOnline });
       }
 
@@ -84,10 +85,10 @@ export const SocketIoHandler = () => {
           {}
         );
 
-        console.log("===>infoUserOnline", formatInfoUserOnline);
+        console.log("===>infoUserOnline", usersOnline);
       }
     });
-  }, [socketIo, conversationId]);
+  }, [conversationId, socketIo]);
 
   const handleUpdateMessageRead = (data) => {
     const { conversationId, messageRead } = data || {};
