@@ -19,8 +19,7 @@ let timerForceConnectSocket;
 export const SocketIoHandler = () => {
   const {
     state: { socketIo },
-    setState,
-  } = useSubscription(socketIoSubs, ["socketIo"]);
+  } = useSubscription(socketIoSubs);
 
   const {
     state: { conversationId },
@@ -32,32 +31,19 @@ export const SocketIoHandler = () => {
   } = useAuthUser();
 
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!socketIo?.connected) {
-        initFunction();
-        handleApplyNewInfoUser();
-        connectUserToSocket();
-
-        return;
-      }
-
-      socketIo?.emit("checkConnect", userId);
-
-      clearTimeout(timerForceConnectSocket);
-
-      timerForceConnectSocket = setTimeout(async () => {
-        connectUserToSocket();
-      }, 3000);
-    };
-
     handleApplyNewInfoUser();
     initFunction();
     handleVisibilityChange();
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    return () => {
+    if (!userId) {
       socketIo?.disconnect();
+    }
+
+    return () => {
+      console.log("===>disconnect");
+
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [userId]);
@@ -85,10 +71,26 @@ export const SocketIoHandler = () => {
           {}
         );
 
-        console.log("===>infoUserOnline", usersOnline);
+        console.log("===>infoUserOnline", formatInfoUserOnline);
       }
     });
   }, [conversationId, socketIo]);
+
+  const handleVisibilityChange = () => {
+    if (!socketIo?.connected) {
+      connectUserToSocket();
+
+      return;
+    }
+
+    socketIo?.emit("checkConnect", userId);
+
+    clearTimeout(timerForceConnectSocket);
+
+    timerForceConnectSocket = setTimeout(async () => {
+      connectUserToSocket();
+    }, 3000);
+  };
 
   const handleUpdateMessageRead = (data) => {
     const { conversationId, messageRead } = data || {};

@@ -1,7 +1,11 @@
 import { useSubscription } from "global-state-hook";
 import { KEY_INFO_USER } from "../constant";
-import { infoUserSubscription } from "../globalStates/initGlobalState";
+import {
+  infoUserSubscription,
+  socketIoSubs,
+} from "../globalStates/initGlobalState";
 import { passLocalStorage } from "../passLocalStorage";
+import { history } from "../HandlersComponent/NavigationHandler";
 
 export const useAuthUser = () => {
   const { state, setState } = useSubscription(infoUserSubscription, [
@@ -24,7 +28,8 @@ export const useAuthUser = () => {
 
   const logout = () => {
     passLocalStorage?.removeItem(KEY_INFO_USER);
-    window.location.href = "/login";
+    // window.location.href = "/login";
+    history.navigate("/login");
   };
 
   const { infoUser = {}, accessToken = {}, refreshToken = {} } = state;

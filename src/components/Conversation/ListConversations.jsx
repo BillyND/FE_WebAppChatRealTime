@@ -46,11 +46,13 @@ function ListConversations() {
     "listConversations",
     "fetchingConversation",
     "usersOnline",
+    "receiver",
   ]);
 
   const [selectedConversation, setSelectedConversation] = useState(-1);
   const { isMobile } = useWindowSize();
-  const { listConversations, fetchingConversation, usersOnline } = state || {};
+  const { listConversations, fetchingConversation, usersOnline, receiver } =
+    state || {};
   const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;

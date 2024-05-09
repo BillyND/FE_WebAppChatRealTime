@@ -25,6 +25,7 @@ import {
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
+import { history } from "../../utils/HandlersComponent/NavigationHandler";
 
 export const handleGetMessage = async ({
   limit = 20,
@@ -47,8 +48,8 @@ export const handleGetMessage = async ({
       limit
     );
 
-    if (resConversation.success === 0) {
-      window.location.href = "/message";
+    if (resConversation.success === 0 || !resConversation?.receiver) {
+      history.navigate("/message");
     }
 
     const mergeMessage =

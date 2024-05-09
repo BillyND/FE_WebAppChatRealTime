@@ -3,6 +3,8 @@ import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
 import { passLocalStorage } from "@utils/passLocalStorage";
 import { firstCharToLowerCase } from "../utils/utilities";
 import axios, { getInfoUserLocal } from "./customAxios";
+import { history } from "../utils/HandlersComponent/NavigationHandler";
+import { isEmpty } from "lodash";
 
 // <=====Trigger header token=====> //
 export const getTriggerToken = async () => {
@@ -64,7 +66,7 @@ export const updatePost = (dataPost) => {
 
 export const getPost = (page = 1, limit = 5, email) => {
   if (["undefined", "null"].includes(email)) {
-    window.location.href = "/";
+    history.navigate("/");
     return;
   }
 
