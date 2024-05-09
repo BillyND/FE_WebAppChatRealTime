@@ -231,7 +231,7 @@ function ModalNewPost({ placeHolderInputPost }) {
         </Flex>
       }
     >
-      <WrapModalNewPost typeStyle={type}>
+      <WrapModalNewPost type-style={type}>
         {loadings.createPost && (
           <div className="loading-create-post">
             <LoadingOutlined />

@@ -169,7 +169,7 @@ function EditProfileModal() {
       footer={<></>}
       width={400}
     >
-      <WrapEditProfile isDark={typeStyle === TYPE_STYLE_APP.DARK}>
+      <WrapEditProfile is-dark={typeStyle === TYPE_STYLE_APP.DARK}>
         <Flex vertical className="pt-4 pb-4 px-2" gap={12}>
           <Flex justify="space-between" gap={16} className="width-100-per">
             <Flex vertical gap={12} className="width-100-per">

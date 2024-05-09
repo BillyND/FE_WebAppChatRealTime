@@ -14,7 +14,8 @@ export const WrapSearchScreen = styled.div`
     width: 100%;
     width: 100%;
     border: 1px solid
-      ${(p) => (p.typeStyle === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9")};
+      ${(p) =>
+        p?.["type-style"] === TYPE_STYLE_APP.DARK ? "#323233" : "#D9D9D9"};
     display: flex;
     align-items: center;
     border-radius: 16px;
@@ -24,7 +25,7 @@ export const WrapSearchScreen = styled.div`
     .prefix-input-search {
       height: fit-content;
       width: fit-content;
-      padding: ${(p) => (p.isMobile ? "0px" : "8px")};
+      padding: ${(p) => (p?.["is-mobile"] ? "0px" : "8px")};
     }
 
     .suffix-input-search {
@@ -36,13 +37,13 @@ export const WrapSearchScreen = styled.div`
       align-items: center;
       svg {
         fill: ${(p) =>
-          p.typeStyle === TYPE_STYLE_APP.DARK ? "#000000" : "#fff"};
+          p?.["type-style"] === TYPE_STYLE_APP.DARK ? "#000000" : "#fff"};
       }
     }
 
     .input-search {
       width: 100%;
-      height: ${(p) => (p.isMobile ? "20px" : "36px")};
+      height: ${(p) => (p?.["is-mobile"] ? "20px" : "36px")};
       border: none;
       outline: none;
     }
@@ -51,7 +52,7 @@ export const WrapSearchScreen = styled.div`
   .wrap-preview-search {
     z-index: 1000 !important;
     box-shadow: ${(p) =>
-      p.isMobile
+      p?.["is-mobile"]
         ? "0"
         : "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px"};
     position: absolute;
@@ -72,7 +73,7 @@ export const WrapSearchScreen = styled.div`
 
   .wrap-list-all-user {
     height: ${(p) =>
-      p.isMobile ? "calc(100dvh - 200px)" : "calc(100vh - 160px)"};
+      p?.["is-mobile"] ? "calc(100dvh - 200px)" : "calc(100vh - 160px)"};
     overflow-y: scroll;
   }
 

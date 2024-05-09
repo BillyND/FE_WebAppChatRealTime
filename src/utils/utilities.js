@@ -504,14 +504,14 @@ export function isMobileDevice() {
   }
 }
 
+let newSocket;
 export const connectUserToSocket = async () => {
   console.log("===> Connect user to socket");
 
   const { infoUser } = infoUserSubscription.state || {};
-  const { userId, username, email } = infoUser || {};
-  let newSocket;
+  const { _id: userId, username, email } = infoUser || {};
 
-  await socketIoSubs.state.socketIo?.disconnect();
+  console.log("===>infoUser:", infoUser);
 
   newSocket = io(import.meta.env.VITE_SOCKET_URL, {
     transports: ["websocket"],

@@ -12,7 +12,10 @@ function MessageScreen() {
   const { isMobile } = useWindowSize();
 
   return (
-    <WrapMessageScreen isDark={isDark} isMobile={isMobile}>
+    <WrapMessageScreen
+      is-dark={isDark ? isDark.toString() : undefined}
+      is-mobile={isMobile ? isMobile.toString() : undefined}
+    >
       <ListConversations />
       <ConversationBox />
     </WrapMessageScreen>

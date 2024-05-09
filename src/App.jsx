@@ -29,7 +29,7 @@ function App() {
   });
 
   return (
-    <WrapStyledApp style={styleApp} className="App" typeStyle={typeStyle}>
+    <WrapStyledApp style={styleApp} className="App" type-style={typeStyle}>
       <BrowserRouter>
         {/* Component to trigger navigate */}
         <NavigationHandler />

@@ -151,7 +151,10 @@ const DetailPost = (props) => {
   );
 
   return (
-    <WrapDetailPost type={type} isMobile={isMobile}>
+    <WrapDetailPost
+      type={type}
+      is-mobile={isMobile ? isMobile.toString() : undefined}
+    >
       <div className="header">
         <Flex
           justify="space-between"

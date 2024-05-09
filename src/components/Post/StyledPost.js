@@ -23,7 +23,7 @@ export const WrapModalNewPost = styled.div`
     display: flex;
     justify-content: center;
     background-color: ${(p) =>
-      p.typeStyle === TYPE_STYLE_APP.DARK ? "#72727217" : "#e9e9e9"};
+      p?.["type-style"] === TYPE_STYLE_APP.DARK ? "#72727217" : "#e9e9e9"};
     border-radius: 8px;
     margin: auto;
     padding: 16px;
@@ -116,7 +116,7 @@ export const WrapCreateNewPost = styled.div`
     border-radius: 250px;
     font-weight: 500;
     background-color: #9191912b;
-    color: ${(props) => props.backgroundColor};
+    color: ${(props) => props?.["background-color"]};
   }
 
   .placeholder-create-post {
@@ -132,7 +132,7 @@ export const WrapDetailPost = styled.div`
   border-radius: 8px;
   gap: 8px;
   display: grid;
-  padding: ${(p) => (p.isMobile ? "0 12px" : "0")};
+  padding: ${(p) => (p?.["is-mobile"] ? "0 12px" : "0")};
 
   .header {
     display: flex;
@@ -155,7 +155,7 @@ export const WrapDetailPost = styled.div`
       border: 0.5px solid #313131;
       border-radius: 8px;
       max-width: 100%;
-      width: ${(p) => (p.isMobile ? "100%" : "70%")};
+      width: ${(p) => (p?.["is-mobile"] ? "100%" : "70%")};
     }
   }
 

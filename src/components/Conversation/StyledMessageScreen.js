@@ -1,26 +1,26 @@
 import styled from "styled-components";
 
 export const WrapMessageScreen = styled.div`
-  height: ${(p) => (p.isMobile ? "100dvh" : "100vh")};
+  height: ${(p) => (p?.["is-mobile"] ? "100dvh" : "100vh")};
   padding-top: 70px !important;
   font-weight: 400 !important;
   display: grid;
-  grid-template-columns: ${(p) => (p.isMobile ? "100%" : "350px auto")};
+  grid-template-columns: ${(p) => (p?.["is-mobile"] ? "100%" : "350px auto")};
 
   .wrap-all-conversations {
     height: ${(p) =>
-      p.isMobile ? "calc(100dvh - 136px)" : "calc(100vh - 70px)"};
-    width: ${(p) => (p.isMobile ? "100vw" : undefined)};
+      p?.["is-mobile"] ? "calc(100dvh - 136px)" : "calc(100vh - 70px)"};
+    width: ${(p) => (p?.["is-mobile"] ? "100vw" : undefined)};
     border-inline-end: 1.5px solid #80808033;
   }
 
   .wrap-detail-conversation {
-    height: ${(p) => (p.isMobile ? "100dvh" : "calc(100vh - 70px)")};
-    width: ${(p) => (p.isMobile ? "100vw" : undefined)};
+    height: ${(p) => (p?.["is-mobile"] ? "100dvh" : "calc(100vh - 70px)")};
+    width: ${(p) => (p?.["is-mobile"] ? "100vw" : undefined)};
     top: 0;
-    position: ${(p) => (p.isMobile ? "fixed" : "static")};
-    z-index: ${(p) => (p.isMobile ? "1000" : undefined)};
-    background-color: ${(p) => (p.isDark ? "#101010" : "#FFFFFF")};
+    position: ${(p) => (p?.["is-mobile"] ? "fixed" : "static")};
+    z-index: ${(p) => (p?.["is-mobile"] ? "1000" : undefined)};
+    background-color: ${(p) => (p?.["is-dark"] ? "#101010" : "#FFFFFF")};
 
     .btn-view-profile {
       border-radius: 16px;
@@ -28,7 +28,7 @@ export const WrapMessageScreen = styled.div`
       outline: none;
       padding: 6px 16px;
       font-weight: bold;
-      color: ${(p) => (p.isDark ? "#fff" : "#0000000")};
+      color: ${(p) => (p?.["is-dark"] ? "#fff" : "#0000000")};
       background-color: #88888838;
     }
 
@@ -51,6 +51,12 @@ export const WrapMessageScreen = styled.div`
       font-size: 16px;
       font-weight: 700;
       transition: 0.2s;
+      position: relative;
+
+      .icon-un-read {
+        left: -10px;
+        top: -10px;
+      }
 
       &:hover {
         background: #8080805c;
@@ -91,12 +97,13 @@ export const WrapMessageScreen = styled.div`
     }
 
     .input-comment {
-      background-color: ${(p) => (p.isDark ? "#3a3b3c" : "#adadad4f")};
-      color: ${(p) => (p.isDark ? "#fff" : "#000000")};
+      background-color: ${(p) => (p?.["is-dark"] ? "#3a3b3c" : "#adadad4f")};
+      color: ${(p) => (p?.["is-dark"] ? "#fff" : "#000000")};
     }
 
     .button-send:hover {
-      background-color: ${(p) => (p.isDark ? "rgb(56, 56, 56)" : "#3838381c")};
+      background-color: ${(p) =>
+        p?.["is-dark"] ? "rgb(56, 56, 56)" : "#3838381c"};
     }
   }
 
@@ -124,7 +131,7 @@ export const WrapMessageScreen = styled.div`
   }
 
   .wrap-message {
-    background-color: ${(p) => (p.isDark ? "#2d2d2d" : "#efefef")};
+    background-color: ${(p) => (p?.["is-dark"] ? "#2d2d2d" : "#efefef")};
     padding: 6px 12px;
     border-radius: 18px;
     max-width: 70%;
@@ -203,8 +210,9 @@ export const WrapSearchUser = styled.div`
     padding-right: 34px;
     outline: none;
     border: none;
-    color: ${(props) => (props.isDark ? "#fff" : "black")};
-    background-color: ${(props) => (props.isDark ? "#2d2d2d" : "#ededed")};
+    color: ${(props) => (props?.["is-dark"] ? "#fff" : "black")};
+    background-color: ${(props) =>
+      props?.["is-dark"] ? "#2d2d2d" : "#ededed"};
 
     &::placeholder {
       color: gray;
@@ -223,7 +231,7 @@ export const WrapSearchUser = styled.div`
     justify-content: center;
     align-items: center;
     svg {
-      fill: ${(props) => (props.isDark ? "#000000" : "#fff")};
+      fill: ${(props) => (props?.["is-dark"] ? "#000000" : "#fff")};
     }
   }
 `;
@@ -272,7 +280,7 @@ export const WrapListConversation = styled.div`
       white-space: nowrap;
       text-overflow: ellipsis;
       max-width: 160px;
-      color: ${(p) => (p.isDark ? "#DADDE1" : "#464646")};
+      color: ${(p) => (p?.["is-dark"] ? "#DADDE1" : "#464646")};
       font-size: 13px;
       font-weight: 700;
     }

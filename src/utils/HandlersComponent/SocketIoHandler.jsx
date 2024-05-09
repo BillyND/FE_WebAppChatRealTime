@@ -33,8 +33,6 @@ export const SocketIoHandler = () => {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      const isVisibleTab = document.visibilityState === "visible";
-
       if (!socketIo?.connected) {
         initFunction();
         handleApplyNewInfoUser();
@@ -43,15 +41,13 @@ export const SocketIoHandler = () => {
         return;
       }
 
-      if (isVisibleTab) {
-        socketIo?.emit("checkConnect", userId);
-      }
+      socketIo?.emit("checkConnect", userId);
 
       clearTimeout(timerForceConnectSocket);
 
       timerForceConnectSocket = setTimeout(async () => {
         connectUserToSocket();
-      }, 1000);
+      }, 3000);
     };
 
     handleApplyNewInfoUser();

@@ -60,7 +60,9 @@ export const WrapStyledApp = styled.div`
       margin: 4px 0 4px 0;
       &.gray {
         background-color: ${(p) =>
-          p.typeStyle === TYPE_STYLE_APP.DARK ? "#7777774a" : "#77777700"};
+          p?.["type-style"] === TYPE_STYLE_APP.DARK
+            ? "#7777774a"
+            : "#77777700"};
       }
       border-radius: 200px;
     }

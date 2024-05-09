@@ -13,7 +13,7 @@ export const SpinnerLoading = ({ style, className }) => {
         ...style,
       }}
       className={`transition-02 ${className}`}
-      fillIcon={FILL_COLOR_ICON}
+      fill-icon={FILL_COLOR_ICON}
     >
       <LoadingOutlined className="icon-loading" />
     </WrapSpinnerLoading>
@@ -32,7 +32,7 @@ export const WrapSpinnerLoading = styled.div`
     border-radius: 50%;
 
     svg {
-      fill: ${(props) => props.fillIcon} !important;
+      fill: ${(props) => props?.["fill-icon"]} !important;
     }
   }
 `;

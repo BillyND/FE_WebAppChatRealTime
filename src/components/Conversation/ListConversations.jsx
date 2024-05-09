@@ -245,7 +245,10 @@ function ListConversations() {
 
   return (
     <Flex vertical className="wrap-all-conversations">
-      <WrapSearchUser isDark={isDark} className="p-2 mt-1 width-100-per">
+      <WrapSearchUser
+        is-dark={isDark ? isDark.toString() : undefined}
+        className="p-2 mt-1 width-100-per"
+      >
         <input
           placeholder="Search"
           className="width-100-per search-conversation"
@@ -267,7 +270,7 @@ function ListConversations() {
       </WrapSearchUser>
 
       <WrapListConversation
-        isDark={isDark}
+        is-dark={isDark ? isDark.toString() : undefined}
         className={`${isMobile ? "px-2" : "pl-2"} pb-2`}
       >
         {(loadingSearch || fetchingConversation) && <SpinnerLoading />}

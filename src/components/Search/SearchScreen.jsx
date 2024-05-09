@@ -20,7 +20,11 @@ function SearchScreen() {
   }, []);
 
   return (
-    <WrapSearchScreen id="search-screen" isMobile={isMobile} typeStyle={type}>
+    <WrapSearchScreen
+      id="search-screen"
+      is-mobile={isMobile ? isMobile.toString() : undefined}
+      type-style={type}
+    >
       <Flex vertical gap={16}>
         <InputSearch />
         <ListAllUsers />

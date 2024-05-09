@@ -73,8 +73,8 @@ function UserScreen(props) {
     <WrapUserScreen
       id="user-screen"
       ref={scrollContainerRef}
-      isMobile={isMobile}
-      isTablet={isTablet}
+      is-mobile={isMobile ? isMobile.toString() : undefined}
+      is-tablet={isTablet ? isTablet.toString() : undefined}
     >
       <Flex vertical gap={16} className={`${isMobile ? "pb-5" : undefined}`}>
         <DetailUser />

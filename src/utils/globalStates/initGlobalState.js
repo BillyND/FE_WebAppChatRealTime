@@ -15,7 +15,7 @@ export const detailPostSubs = createSubscription({});
 
 export const styleAppSubscription = createSubscription(styleDark);
 
-export const socketIoSubs = createSubscription({});
+export const socketIoSubs = createSubscription({ socketIo: null });
 
 export const previewImageFullScreenSubs = createSubscription({ imgSrc: "" });
 

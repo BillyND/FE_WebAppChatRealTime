@@ -52,17 +52,18 @@ function ConversationHeader({ username, avaUrl, email, receiverIdChat }) {
         {isMobile && (
           <div>
             {/* Render unread count if conversationsUnread > 0 */}
-            <div
-              className={`icon-un-read ${conversationsUnread ? "show" : ""}`}
-            >
-              {conversationsUnread}
-            </div>
+
             <Flex
               onClick={backToScreenListConversation}
               align="center"
               justify="center"
               className="icon-back-conversation press-active"
             >
+              <div
+                className={`icon-un-read ${conversationsUnread ? "show" : ""}`}
+              >
+                {conversationsUnread}
+              </div>
               <LeftOutlined />
             </Flex>
           </div>

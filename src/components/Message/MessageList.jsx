@@ -85,23 +85,32 @@ function MessageItem({
   const prevMessage = listMessages[index - 1];
   const nextMessage = listMessages[index + 1];
 
-  const isStart =
-    (message.sender === userId && prevMessage?.sender !== userId) ||
-    (message.sender === receiverId && prevMessage?.sender !== receiverId);
-
-  const isEnd =
-    (message.sender === userId && nextMessage?.sender !== userId) ||
-    (message.sender === receiverId && nextMessage?.sender !== receiverId);
-
-  const messageTimeGap = nextMessage
+  const messageTimeGapCurrent = nextMessage
     ? new Date(updatedAt) - new Date(nextMessage.updatedAt)
     : 0;
 
-  const isMessageTimeGapBig = messageTimeGap > 1 * 60 * 60 * 1000;
+  const messageTimeGapPrev = prevMessage
+    ? new Date(prevMessage.updatedAt) - new Date(updatedAt)
+    : 0;
+
+  const isMessageTimeGapBigCurrent = messageTimeGapCurrent > 1 * 60 * 60 * 1000;
+  const isMessageTimeGapBigPrev = messageTimeGapPrev > 1 * 60 * 60 * 1000;
+
+  const isStart =
+    (message.sender === userId && prevMessage?.sender !== userId) ||
+    (message.sender === receiverId && prevMessage?.sender !== receiverId) ||
+    (isMessageTimeGapBigCurrent && isMessageTimeGapBigPrev) ||
+    isMessageTimeGapBigPrev;
+
+  const isEnd =
+    (message.sender === userId && nextMessage?.sender !== userId) ||
+    (message.sender === receiverId && nextMessage?.sender !== receiverId) ||
+    (isMessageTimeGapBigCurrent && isMessageTimeGapBigPrev) ||
+    isMessageTimeGapBigCurrent;
 
   return (
     <Flex vertical>
-      {isMessageTimeGapBig && (
+      {isMessageTimeGapBigCurrent && (
         <Flex justify="center" className="m-2">
           <span className={`last-time-message mt-2`}>
             {formatTimeAgo(updatedAt || Date.now())}
@@ -139,6 +148,7 @@ function MessageItem({
           </Flex>
         </div>
       </Flex>
+
       {showIconRead && (
         <Flex
           className={`${isMobile ? "mx-2" : "ml-2"} px-1 mt-1`}
@@ -147,6 +157,7 @@ function MessageItem({
           <UserThumbnail avaUrl={avaUrl} size={16} />
         </Flex>
       )}
+
       {index === 0 && message.sender && (
         <Flex
           justify="center"

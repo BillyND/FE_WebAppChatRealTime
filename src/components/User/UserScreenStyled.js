@@ -8,7 +8,7 @@ export const WrapUserScreen = styled.div`
   display: grid;
   gap: 16px;
   padding: ${(props) =>
-    props.isMobile ? "0" : props.isTablet ? "0 15%" : "0 28%"};
+    props?.["is-mobile"] ? "0" : props?.["is-tablet"] ? "0 15%" : "0 28%"};
 
   .btn-create-new-post {
     height: 30px;
@@ -36,8 +36,8 @@ export const WrapEditProfile = styled.div`
 
   .btn-done-edit {
     width: 100%;
-    background-color: ${(p) => (p.isDark ? "#fff" : "#000000")};
-    color: ${(p) => (p.isDark ? "#000000" : "#fff")};
+    background-color: ${(p) => (p?.["is-dark"] ? "#fff" : "#000000")};
+    color: ${(p) => (p?.["is-dark"] ? "#000000" : "#fff")};
     border-radius: 8px;
     height: 50px;
     overflow: hidden;
@@ -59,6 +59,6 @@ export const WrapEditProfile = styled.div`
     outline: none;
     border: none;
     background-color: transparent;
-    color: ${(p) => (p.isDark ? "#fff" : "#000000")};
+    color: ${(p) => (p?.["is-dark"] ? "#fff" : "#000000")};
   }
 `;

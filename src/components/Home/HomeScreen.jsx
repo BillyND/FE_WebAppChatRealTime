@@ -42,8 +42,8 @@ export default function HomeScreen() {
     <WrapHomeScreen
       id="home-screen"
       ref={scrollContainerRef}
-      isMobile={isMobile}
-      isTablet={isTablet}
+      is-mobile={isMobile ? isMobile.toString() : undefined}
+      is-tablet={isTablet ? isTablet.toString() : undefined}
     >
       {!isMobile && <NewPost />}
       <Flex vertical gap={20} className={`${isMobile ? "pb-5" : undefined}`}>

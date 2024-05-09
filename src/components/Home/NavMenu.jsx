@@ -123,7 +123,7 @@ const ButtonSettings = (props) => {
         placement="bottomLeft"
       >
         <WrapButtonSettings
-          isMobile={isMobile}
+          is-mobile={isMobile ? isMobile.toString() : undefined}
           className="cursor-pointer"
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
@@ -140,6 +140,7 @@ const ControlMenu = (props) => {
     styleApp: { navMenuStyle, type },
   } = useStyleApp();
 
+  const isDark = type === TYPE_STYLE_APP.DARK ? "true" : undefined;
   const { infoUser } = useAuthUser();
   const { pathname, search } = useLocation();
   const { isMobile, isTablet } = useWindowSize();
@@ -215,9 +216,9 @@ const ControlMenu = (props) => {
 
   return (
     <WrapControlNav
-      isDark={type === TYPE_STYLE_APP.DARK}
-      isTablet={isTablet}
-      isMobile={isMobile}
+      is-dark={isDark}
+      is-tablet={isTablet ? isTablet.toString() : undefined}
+      is-mobile={isMobile ? isMobile.toString() : undefined}
       style={isMobile ? navMenuStyle : undefined}
       className="group-nav"
     >
@@ -290,10 +291,10 @@ function NavMenu() {
       {isMobile && <ControlMenu handleNavigation={handleNavigation} />}
       <WrapNavMenu
         style={navMenuStyle}
-        backgroundColor={navMenuStyle.backgroundColor}
+        background-color={navMenuStyle.backgroundColor}
         color={navMenuStyle.backgroundColor}
-        isMobile={isMobile}
-        isTablet={isTablet}
+        is-mobile={isMobile ? isMobile.toString() : undefined}
+        is-tablet={isTablet ? isTablet.toString() : undefined}
         className="none-copy"
       >
         <div className="group-nav-menu">
