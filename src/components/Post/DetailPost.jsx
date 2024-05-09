@@ -67,7 +67,7 @@ const DetailPost = (props) => {
   const isOnline = usersOnline?.[authorPostId];
 
   useEffect(() => {
-    socketIo.on("getPost", (post) => {
+    socketIo?.on("getPost", (post) => {
       handleUpdatePostSocket(
         {
           ...post,
@@ -90,7 +90,7 @@ const DetailPost = (props) => {
     // Assuming `updateLikeOfPost` is a function that takes `postId` as a parameter
     await updateLikeOfPost(postId);
 
-    socketIo.emit("updatePost", {
+    socketIo?.emit("updatePost", {
       ...post,
       likerIds: updatedLikerIds,
       userId,

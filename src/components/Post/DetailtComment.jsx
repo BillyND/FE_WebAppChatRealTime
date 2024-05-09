@@ -49,7 +49,7 @@ export const DetailComment = (props) => {
   } = useSubscription(socketIoSubs, ["socketIo"]);
 
   useEffect(() => {
-    socketIo.on("getComment", (comment) => {
+    socketIo?.on("getComment", (comment) => {
       handleUpdateCommentSocket(
         { ...comment, currentSocketId: socketIo?.id },
         commentId
@@ -86,7 +86,7 @@ export const DetailComment = (props) => {
 
       const resUpdateComment = await updateCommentOfPost(updateComment);
 
-      socketIo.emit("updateComment", resUpdateComment.data);
+      socketIo?.emit("updateComment", resUpdateComment.data);
     } catch (error) {
       showPopupError();
     }
