@@ -6,7 +6,7 @@ import { useSubscription } from "global-state-hook";
 import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { updateUsersReadConversation } from "../../services/api";
-import { boxMessageId } from "../../utils/constant";
+import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
 import {
   conversationSubs,
   infoUserSubscription,
@@ -21,14 +21,12 @@ import {
 import MessageList from "../Message/MessageList";
 import { handleGetMessage } from "./ConversationBox";
 
-export const handleReadConversation = debounce(async (isChangedListMessage) => {
-  const lastMessageId = conversationSubs.state.listMessages?.[0]?._id;
-  const conversationId = conversationSubs.state.conversationId;
-  const userId = infoUserSubscription.state.infoUser._id;
+export const handleReadConversation = debounce(async () => {
+  const { listMessages, conversationId } = conversationSubs.state || {};
+  const { _id: userId } = infoUserSubscription.state.infoUser || {};
+  const lastMessageId = listMessages[0]?._id;
 
-  if (!conversationId) {
-    return;
-  }
+  if (!conversationId || !lastMessageId) return;
 
   socketIoSubs.state.socketIo?.emit("readMessage", {
     conversationId,
@@ -47,7 +45,7 @@ export const handleReadConversation = debounce(async (isChangedListMessage) => {
   }
 
   updateUsersReadConversation(conversationId, lastMessageId);
-}, 100);
+}, TIME_DELAY_FETCH_API);
 
 const ConversationContent = ({ avaUrl, username, email }) => {
   const { state } = useSubscription(conversationSubs, ["listMessages", "next"]);
