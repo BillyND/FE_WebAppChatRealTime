@@ -1,6 +1,6 @@
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSubscription } from "global-state-hook";
-import { uniqBy } from "lodash";
+import { throttle, uniqBy } from "lodash";
 import { useEffect } from "react";
 import messageSound from "../../assets/sounds/message.mp3";
 import { handleGetAllConversations } from "../../components/Conversation/ListConversations";
@@ -11,9 +11,11 @@ import {
 } from "../globalStates/initGlobalState";
 import {
   connectUserToSocket,
+  debounce,
   getCurrentReceiverId,
   isChanged,
 } from "../utilities";
+import { TIME_DELAY_FETCH_API, TIME_DELAY_SEARCH_INPUT } from "../constant";
 
 let timerForceConnectSocket;
 export const SocketIoHandler = () => {
@@ -129,7 +131,7 @@ export const SocketIoHandler = () => {
     const updatedConversations = updateConversations(conversation, usersRead);
     const updatedMessages = updateMessages(message, listMessages);
 
-    const dataUpdated = {
+    const dataUpdate = {
       ...(isChanged([
         conversationSubs.state.listConversations,
         updatedConversations,
@@ -144,8 +146,12 @@ export const SocketIoHandler = () => {
       }),
     };
 
-    conversationSubs.updateState(dataUpdated);
-    newMessageSound.play();
+    conversationSubs.state = { ...conversationSubs.state, ...dataUpdate };
+
+    debounce(() => {
+      conversationSubs.updateState(dataUpdate);
+      newMessageSound.play();
+    }, TIME_DELAY_SEARCH_INPUT)();
   };
 
   function updateConversations(updatedConversation, usersRead) {

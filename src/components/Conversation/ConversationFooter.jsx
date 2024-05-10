@@ -95,6 +95,7 @@ function ConversationFooter({ handleSendMessage }) {
         <PlusCircleOutlined className="icon-show-more-option" />
 
         <textarea
+          autoComplete="off"
           ref={refInput}
           maxLength={8000}
           value={message}

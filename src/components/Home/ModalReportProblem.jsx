@@ -48,6 +48,7 @@ function ModalReportProblem(props) {
     >
       <WrapInputProblem>
         <textarea
+          autoComplete="off"
           value={inputProblem}
           onChange={(e) => setInputProblem(e.target.value)}
           className="mt-3 input-problem"

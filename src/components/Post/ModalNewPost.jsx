@@ -238,6 +238,7 @@ function ModalNewPost({ placeHolderInputPost }) {
           </div>
         )}
         <textarea
+          autoComplete="off"
           maxLength={8000}
           ref={refInputPost}
           value={valueInputPost}

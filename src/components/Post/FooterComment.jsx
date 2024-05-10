@@ -35,6 +35,7 @@ export const InputComment = (props) => {
   return (
     <Flex style={{ width: "100%" }} align="center" gap={8}>
       <textarea
+        autoComplete="off"
         maxLength={8000}
         onFocus={onFocus}
         onBlur={onBlur}
