@@ -35,7 +35,7 @@ function MessageList({ listMessages }) {
     <>
       {listMessages.map((message, index) => (
         <MessageItem
-          key={index}
+          key={`${message?._id}-${index}`}
           message={message}
           index={index}
           currentConversation={currentConversation}

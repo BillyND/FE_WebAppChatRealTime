@@ -188,12 +188,12 @@ function ListConversations() {
     );
   };
 
-  const renderUserItem = (user) => {
+  const renderUserItem = (user, index) => {
     const { _id, username, email, avaUrl } = user || {};
 
     return (
       <Flex
-        key={_id}
+        key={`${_id}-${index}`}
         align="center"
         gap={10}
         className="item-user p-2 cursor-pointer none-copy"

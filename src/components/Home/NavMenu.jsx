@@ -92,11 +92,10 @@ const ButtonSettings = (props) => {
     <WrapContentPopoverSettings className="none-copy">
       {data.map((item, index) => {
         const { id, disabled, onAction } = item;
-        const isButtonLogout = id === "logOut" && !loadingLogout;
         const isPointer = id !== "appearance";
 
         return (
-          <Fragment key={id}>
+          <Fragment key={`${id}-${index}`}>
             {index > 0 && <hr className="boundary-line-item" />}
 
             <div
