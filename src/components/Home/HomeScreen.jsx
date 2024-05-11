@@ -24,7 +24,7 @@ export default function HomeScreen() {
   }, [isBottom]);
 
   useEffect(() => {
-    handleGetListPost({ page: 1, limit: 5 });
+    handleGetListPost({});
   }, []);
 
   const handleFetchNewPost = async () => {

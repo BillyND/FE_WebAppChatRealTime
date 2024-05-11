@@ -61,7 +61,7 @@ function ConversationFooter({ handleSendMessage }) {
           start: false,
         });
       },
-      message ? 3000 : 0
+      message ? 3000 : 500
     )();
   };
 
@@ -72,12 +72,6 @@ function ConversationFooter({ handleSendMessage }) {
 
     handleSendMessage(message);
     setMessage("");
-
-    socketIo?.emit("userTyping", {
-      receiverId: getCurrentReceiverId(),
-      userId,
-      start: false,
-    });
   };
 
   return (
@@ -96,8 +90,12 @@ function ConversationFooter({ handleSendMessage }) {
 
         <textarea
           autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          autoSave="off"
+          aria-autocomplete="none"
           ref={refInput}
-          maxLength={8000}
+          maxLength={16000}
           value={message}
           onChange={(e) => handleChangeMessage(e.target.value)}
           onKeyDown={(e) => preventKeydown(e, "Enter", handleSendLocalMessage)}

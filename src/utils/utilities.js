@@ -15,7 +15,11 @@ import { history } from "./HandlersComponent/NavigationHandler";
  *
  * @param {object} params - The parameters for the post fetching (page and limit).
  */
-export const handleGetListPost = async ({ page, limit, email }) => {
+export const handleGetListPost = async ({
+  page = 1,
+  limit = limitFetchPost,
+  email,
+}) => {
   const { listPost, listPostByUser } = listPostSubs.state || {};
   try {
     listPostSubs.updateState({
@@ -352,7 +356,7 @@ export const handleHiddenPost = (postId) => {
     listPost: newListPost,
   });
 
-  if (newListPost.length < 5 && next) {
+  if (newListPost.length < limitFetchPost && next) {
     handleGetListPost(next);
   }
 };
@@ -524,7 +528,6 @@ export const connectUserToSocket = async () => {
 
       // Emit a custom event when the client successfully reconnects
       newSocket.on("connect", () => {
-        console.log("===>Auto connect");
         newSocket.emit("connectUser", { userId, username, email });
         history.navigate(
           `${window.location.pathname}${window.location.search}`
@@ -535,3 +538,10 @@ export const connectUserToSocket = async () => {
     }
   }
 };
+
+export const limitFetchMessage = Math.max(
+  Math.floor(window.innerHeight / 35),
+  20
+);
+
+export const limitFetchPost = Math.max(Math.floor(window.innerHeight / 150), 3);

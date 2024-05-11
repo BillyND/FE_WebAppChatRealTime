@@ -8,7 +8,7 @@ import React, { Fragment } from "react";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import DetailPost from "./DetailPost";
 import { WrapListPost } from "./StyledPost";
-import { handleGetListPost } from "../../utils/utilities";
+import { handleGetListPost, limitFetchPost } from "../../utils/utilities";
 
 const ModalDeletePost = (props) => {
   const { email, loading, listPost, setStateListPost, keyListPost } = props;
@@ -36,9 +36,9 @@ const ModalDeletePost = (props) => {
           loading: false,
         });
         closeModal("CONFIRM_DELETE_POST");
-        filterDeleted.length < 5 &&
+        filterDeleted.length < limitFetchPost &&
           typeof handleGetListPost === "function" &&
-          handleGetListPost({ page: 1, limit: 5, email });
+          handleGetListPost({ email });
       });
   };
   return (

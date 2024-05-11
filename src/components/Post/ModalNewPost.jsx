@@ -84,8 +84,6 @@ function ModalNewPost({ placeHolderInputPost }) {
       const [resPost] = await Promise.all([
         await createPost(dataPost),
         handleGetListPost({
-          page: 1,
-          limit: 5,
           email: listPostSubs.state.emailParamState,
         }),
       ]);

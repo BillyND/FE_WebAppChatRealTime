@@ -47,7 +47,7 @@ function UserScreen(props) {
 
     if (shouldFetchListPost) {
       setStateListPost({ listPostByUser: [] });
-      emailParam && handleGetListPost({ page: 1, limit: 5, email: emailParam });
+      emailParam && handleGetListPost({ email: emailParam });
     }
 
     listPostSubs.state.emailParamState = emailParam;

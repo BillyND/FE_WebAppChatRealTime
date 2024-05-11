@@ -19,6 +19,7 @@ import {
 } from "../../utils/globalStates/initGlobalState";
 import {
   getCurrentReceiverId,
+  limitFetchMessage,
   scrollToTopOfElement,
   showPopupError,
 } from "../../utils/utilities";
@@ -28,7 +29,7 @@ import ConversationHeader from "./ConversationHeader";
 import { history } from "../../utils/HandlersComponent/NavigationHandler";
 
 export const handleGetMessage = async ({
-  limit = 20,
+  limit = limitFetchMessage,
   allowFetching = true,
 }) => {
   allowFetching && conversationSubs.updateState({ fetchingMessage: true });
@@ -160,6 +161,7 @@ function ConversationBox() {
           conversation._id === updatedConversationId
             ? {
                 ...conversation,
+                messageCount: conversation.messageCount + 1,
                 lastMessage: {
                   ...conversation.lastMessage,
                   ...optionSend,
@@ -185,7 +187,7 @@ function ConversationBox() {
           listMessages: [
             { ...optionSend, key: keyNewMessage, isSending: true },
             ...(conversationSubs?.state?.next
-              ? listMessages.slice(0, 20)
+              ? listMessages.slice(0, limitFetchMessage)
               : listMessages),
           ],
         }),
@@ -216,7 +218,6 @@ function ConversationBox() {
             avaUrl: infoUser.avaUrl,
             email: infoUser.email,
           },
-          messageCount: conversation.messageCount + 1,
         },
         receiverId,
       });

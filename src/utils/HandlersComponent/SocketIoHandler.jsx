@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import messageSound from "../../assets/sounds/message.mp3";
 import { handleGetAllConversations } from "../../components/Conversation/ListConversations";
 import { getDataInfoUser } from "../../services/api";
-import { TIME_DELAY_FETCH_API } from "../constant";
+import { TIME_DELAY_SEARCH_INPUT } from "../constant";
 import {
   conversationSubs,
   socketIoSubs,
@@ -15,6 +15,7 @@ import {
   debounce,
   getCurrentReceiverId,
   isChanged,
+  limitFetchMessage,
 } from "../utilities";
 
 let timerForceConnectSocket;
@@ -93,7 +94,7 @@ export const SocketIoHandler = () => {
 
     debounce(() => {
       conversationSubs.updateState(dataUpdate);
-    }, TIME_DELAY_FETCH_API)();
+    }, TIME_DELAY_SEARCH_INPUT)();
   };
 
   const handleUpdateMessageSocket = async (data) => {
@@ -103,7 +104,7 @@ export const SocketIoHandler = () => {
     }
 
     const newMessageSound = new Audio(messageSound);
-    const { message, targetSocketId, conversation } = data;
+    const { message, targetSocketId, conversation, receiver } = data;
     const { sender } = message;
     const { listMessages } = conversationSubs.state || {};
 
@@ -111,7 +112,8 @@ export const SocketIoHandler = () => {
       return;
     }
 
-    const inConversationWithSender = getCurrentReceiverId() === sender;
+    const inConversationWithSender =
+      getCurrentReceiverId() === sender || userId === sender;
     const usersRead = inConversationWithSender ? [userId] : [sender];
 
     const updatedConversations = updateConversations(conversation, usersRead);
@@ -135,27 +137,51 @@ export const SocketIoHandler = () => {
     conversationSubs.state = { ...conversationSubs.state, ...dataUpdate };
 
     debounce(() => {
+      const isCurrentUser = conversation?.receiver?._id === userId;
+
       conversationSubs.updateState(dataUpdate);
-      newMessageSound.play();
-    }, TIME_DELAY_FETCH_API)();
+      !isCurrentUser && newMessageSound.play();
+    }, TIME_DELAY_SEARCH_INPUT)();
   };
 
   function updateConversations(updatedConversation, usersRead) {
     const { listConversations } = conversationSubs.state || {};
+    const { _id: newConversationId, receiver } = updatedConversation || {};
+    const isCurrentUser = receiver?._id === userId;
+
+    const isExistConversation = listConversations.some(
+      (item) => item?._id === newConversationId
+    );
+
+    if (!isExistConversation) {
+      listConversations.push(updatedConversation);
+    }
 
     return uniqBy(
-      [updatedConversation, ...listConversations].map((item) =>
-        item?._id === updatedConversation?._id
-          ? { ...updatedConversation, usersRead }
-          : item
-      ),
+      listConversations.map((item) => {
+        if (item?._id === updatedConversation?._id) {
+          return {
+            ...item,
+            usersRead: isCurrentUser ? [userId] : updatedConversation.userRead,
+            lastMessage: updatedConversation.lastMessage,
+          };
+        }
+
+        return item;
+      }),
       "_id"
     );
   }
 
   function updateMessages(newMessage, existingMessages) {
-    if (newMessage?.sender === getCurrentReceiverId()) {
-      return uniqBy([newMessage, ...existingMessages], "_id");
+    if (
+      newMessage?.sender === getCurrentReceiverId() ||
+      newMessage?.sender === userId
+    ) {
+      return uniqBy(
+        [newMessage, ...existingMessages].slice(0, limitFetchMessage),
+        "_id"
+      );
     }
 
     return getCurrentReceiverId() ? existingMessages : [];

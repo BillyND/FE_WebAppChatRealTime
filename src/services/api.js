@@ -1,7 +1,7 @@
 import { KEY_INFO_USER, initInfoUser } from "@utils/constant";
 import { infoUserSubscription } from "@utils/globalStates/initGlobalState";
 import { passLocalStorage } from "@utils/passLocalStorage";
-import { firstCharToLowerCase } from "../utils/utilities";
+import { firstCharToLowerCase, limitFetchPost } from "../utils/utilities";
 import axios, { getInfoUserLocal } from "./customAxios";
 import { history } from "../utils/HandlersComponent/NavigationHandler";
 import { isEmpty } from "lodash";
@@ -64,7 +64,7 @@ export const updatePost = (dataPost) => {
   return axios.put(`post/${postId}/${userId}`, dataPost, tokenHeaders());
 };
 
-export const getPost = (page = 1, limit = 5, email) => {
+export const getPost = (page = 1, limit = limitFetchPost, email) => {
   if (["undefined", "null"].includes(email)) {
     history.navigate("/");
     return;
@@ -115,7 +115,7 @@ export const updateCommentOfPost = (payload) => {
 };
 
 // <===Api User===>
-export const getUser = (page = 1, limit = 10) => {
+export const getUser = (page = 1, limit = limitFetchPost) => {
   return axios.get(`users?page=${page}&limit=${limit}`, tokenHeaders());
 };
 

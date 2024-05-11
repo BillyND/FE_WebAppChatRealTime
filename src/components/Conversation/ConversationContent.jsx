@@ -20,6 +20,7 @@ import {
 } from "../../utils/utilities";
 import MessageList from "../Message/MessageList";
 import { handleGetMessage } from "./ConversationBox";
+import { isEmpty } from "lodash";
 
 export const handleReadConversation = debounce(async () => {
   const { listMessages, conversationId } = conversationSubs.state || {};
@@ -27,12 +28,6 @@ export const handleReadConversation = debounce(async () => {
   const lastMessageId = listMessages[0]?._id;
 
   if (!conversationId || !lastMessageId) return;
-
-  socketIoSubs.state.socketIo?.emit("readMessage", {
-    conversationId,
-    messageRead: { [userId]: lastMessageId },
-    receiverId: getCurrentReceiverId(),
-  });
 
   const newList = conversationSubs.state.listConversations.map((conversation) =>
     conversation._id === conversationId
@@ -43,6 +38,15 @@ export const handleReadConversation = debounce(async () => {
   if (isChanged([conversationSubs.state.listConversations, newList])) {
     conversationSubs.updateState({ listConversations: newList });
   }
+
+  socketIoSubs.state.socketIo?.emit("readMessage", {
+    conversationId,
+    messageRead: {
+      [getCurrentReceiverId()]: lastMessageId,
+      [userId]: lastMessageId,
+    },
+    receiverId: getCurrentReceiverId(),
+  });
 
   updateUsersReadConversation(conversationId, lastMessageId);
 }, TIME_DELAY_FETCH_API);
