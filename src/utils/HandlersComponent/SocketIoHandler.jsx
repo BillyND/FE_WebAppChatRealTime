@@ -18,15 +18,17 @@ import {
   limitFetchMessage,
 } from "../utilities";
 
-let timerForceConnectSocket;
 export const SocketIoHandler = () => {
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs);
 
   const {
-    state: { conversationId },
-  } = useSubscription(conversationSubs);
+    state: { conversationId, listConversations },
+  } = useSubscription(conversationSubs, [
+    "conversationId",
+    "listConversations",
+  ]);
 
   const {
     infoUser: { _id: userId, email },
@@ -34,9 +36,46 @@ export const SocketIoHandler = () => {
   } = useAuthUser();
 
   useEffect(() => {
-    handleApplyNewInfoUser();
+    debounce(() => {
+      const currentConversation = listConversations.find(
+        (item) => item?._id === conversationId
+      );
+
+      if (currentConversation) {
+        socketIo?.emit("emitConversationSameUser", {
+          currentConversation,
+          userId,
+        });
+      }
+
+      socketIo?.on(
+        "getConversationSameUer",
+        debounce((data) => {
+          const { targetSocketId, currentConversation } = data || {};
+
+          if (
+            targetSocketId === socketIo?.id ||
+            currentConversation?._id === conversationId
+          ) {
+            return;
+          }
+
+          const newListConversation = listConversations.map((item) =>
+            item._id === currentConversation?._id ? currentConversation : item
+          );
+
+          if (isChanged([newListConversation, listConversations])) {
+            conversationSubs.updateState({
+              listConversations: newListConversation,
+            });
+          }
+        }, 50)
+      );
+    }, 500)();
+  }, [listConversations]);
+
+  useEffect(() => {
     initFunction();
-    connectUserToSocket();
 
     if (!userId) {
       socketIo?.disconnect();
@@ -50,7 +89,6 @@ export const SocketIoHandler = () => {
   useEffect(() => {
     socketIo?.on("getMessage", handleUpdateMessageSocket);
     socketIo?.on("receiveReadMessage", handleUpdateMessageRead);
-    socketIo?.on("receiveConnect", () => clearTimeout(timerForceConnectSocket));
     socketIo?.on("usersOnline", (data) => {
       const { usersOnline, infoUserOnline = {} } = data;
 
@@ -114,7 +152,7 @@ export const SocketIoHandler = () => {
 
     const inConversationWithSender =
       getCurrentReceiverId() === sender || userId === sender;
-    const usersRead = inConversationWithSender ? [userId] : [sender];
+    const usersRead = inConversationWithSender ? [userId, sender] : [sender];
 
     const updatedConversations = updateConversations(conversation, usersRead);
     const updatedMessages = updateMessages(message, listMessages);
@@ -160,9 +198,11 @@ export const SocketIoHandler = () => {
     return uniqBy(
       listConversations.map((item) => {
         if (item?._id === updatedConversation?._id) {
+          item.messageCount = updatedConversation.messageCount;
+
           return {
             ...item,
-            usersRead: isCurrentUser ? [userId] : usersRead,
+            usersRead: isCurrentUser ? [...usersRead, userId] : usersRead,
             lastMessage: updatedConversation.lastMessage,
           };
         }
@@ -195,7 +235,9 @@ export const SocketIoHandler = () => {
   };
 
   const initFunction = () => {
-    handleGetAllConversations(false);
+    handleGetAllConversations();
+    handleApplyNewInfoUser();
+    connectUserToSocket();
   };
 
   return null;

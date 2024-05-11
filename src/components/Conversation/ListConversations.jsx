@@ -14,7 +14,7 @@ import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
-import { debounce, showPopupError } from "../../utils/utilities";
+import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
 let timerGetAllConversation;
@@ -30,7 +30,11 @@ export const handleGetAllConversations = async () => {
     try {
       const resConversation = await getConversations();
 
-      if (typeof resConversation === "object" && resConversation.length) {
+      if (
+        typeof resConversation === "object" &&
+        resConversation.length &&
+        isChanged([resConversation, conversationSubs.state.listConversations])
+      ) {
         conversationSubs.updateState({ listConversations: resConversation });
       }
     } catch (error) {
