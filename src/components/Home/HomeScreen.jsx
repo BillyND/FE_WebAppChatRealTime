@@ -45,7 +45,8 @@ export default function HomeScreen() {
       is-mobile={isMobile ? isMobile.toString() : undefined}
       is-tablet={isTablet ? isTablet.toString() : undefined}
     >
-      {!isMobile && <NewPost />}
+      <NewPost />
+
       <Flex vertical gap={20} className={`${isMobile ? "pb-5" : undefined}`}>
         <ListPost
           loading={loading}

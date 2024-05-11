@@ -182,10 +182,8 @@ export const WrapDetailPost = styled.div`
   }
 
   .line-left-post {
-    background-color: ${(p) =>
-      p.type === TYPE_STYLE_APP.DARK ? "#333638" : "#e5e5e5"};
-
-    width: 1.5px;
+    background-color: #7777773b;
+    width: 1px;
     height: 100%;
     margin-left: 16px;
     border-radius: 200px;
@@ -236,6 +234,6 @@ export const StyledMenuDetailPost = styled.div`
 export const WrapListPost = styled.div`
   .list-post-container {
     display: grid;
-    gap: 16px;
+    gap: 12px;
   }
 `;

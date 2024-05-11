@@ -17,7 +17,7 @@ function NewPost() {
   };
 
   return (
-    <WrapCreateNewPost className="none-copy pt-3">
+    <WrapCreateNewPost className="none-copy pt-3 px-3">
       <Flex align="center" gap={16}>
         <UserThumbnail avaUrl={avaUrl} />
         <span
