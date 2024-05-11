@@ -162,7 +162,7 @@ export const SocketIoHandler = () => {
         if (item?._id === updatedConversation?._id) {
           return {
             ...item,
-            usersRead: isCurrentUser ? [userId] : updatedConversation.userRead,
+            usersRead: isCurrentUser ? [userId] : usersRead,
             lastMessage: updatedConversation.lastMessage,
           };
         }

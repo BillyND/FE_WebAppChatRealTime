@@ -1,12 +1,16 @@
 import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { UserThumbnail } from "@UI/UserThumbnail";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { Flex } from "antd";
+import { Flex, message } from "antd";
 import { useSubscription } from "global-state-hook";
 import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { updateUsersReadConversation } from "../../services/api";
-import { TIME_DELAY_FETCH_API, boxMessageId } from "../../utils/constant";
+import {
+  TIME_DELAY_FETCH_API,
+  TIME_DELAY_SEARCH_INPUT,
+  boxMessageId,
+} from "../../utils/constant";
 import {
   conversationSubs,
   infoUserSubscription,
@@ -20,7 +24,6 @@ import {
 } from "../../utils/utilities";
 import MessageList from "../Message/MessageList";
 import { handleGetMessage } from "./ConversationBox";
-import { isEmpty } from "lodash";
 
 export const handleReadConversation = debounce(async () => {
   const { listMessages, conversationId } = conversationSubs.state || {};
@@ -48,8 +51,10 @@ export const handleReadConversation = debounce(async () => {
     receiverId: getCurrentReceiverId(),
   });
 
-  updateUsersReadConversation(conversationId, lastMessageId);
-}, TIME_DELAY_FETCH_API);
+  debounce(() => {
+    updateUsersReadConversation(conversationId, lastMessageId);
+  }, TIME_DELAY_FETCH_API)();
+}, TIME_DELAY_SEARCH_INPUT);
 
 const ConversationContent = ({ avaUrl, username, email }) => {
   const { state } = useSubscription(conversationSubs, ["listMessages", "next"]);
@@ -64,7 +69,7 @@ const ConversationContent = ({ avaUrl, username, email }) => {
 
   useEffect(() => {
     loadMore && setLoadMore(false);
-    handleReadConversation(true);
+    handleReadConversation();
   }, [listMessages]);
 
   const handleScrollToTop = () => {
