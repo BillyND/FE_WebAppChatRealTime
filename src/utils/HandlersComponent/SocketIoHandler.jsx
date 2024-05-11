@@ -1,10 +1,11 @@
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSubscription } from "global-state-hook";
-import { throttle, uniqBy } from "lodash";
+import { uniqBy } from "lodash";
 import { useEffect } from "react";
 import messageSound from "../../assets/sounds/message.mp3";
 import { handleGetAllConversations } from "../../components/Conversation/ListConversations";
 import { getDataInfoUser } from "../../services/api";
+import { TIME_DELAY_FETCH_API } from "../constant";
 import {
   conversationSubs,
   socketIoSubs,
@@ -15,7 +16,6 @@ import {
   getCurrentReceiverId,
   isChanged,
 } from "../utilities";
-import { TIME_DELAY_FETCH_API, TIME_DELAY_SEARCH_INPUT } from "../constant";
 
 let timerForceConnectSocket;
 export const SocketIoHandler = () => {
@@ -35,18 +35,14 @@ export const SocketIoHandler = () => {
   useEffect(() => {
     handleApplyNewInfoUser();
     initFunction();
-    handleVisibilityChange();
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    connectUserToSocket();
 
     if (!userId) {
       socketIo?.disconnect();
     }
 
     return () => {
-      console.log("===>disconnect");
-
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      socketIo?.disconnect();
     };
   }, [userId]);
 
@@ -62,42 +58,26 @@ export const SocketIoHandler = () => {
         isChanged([conversationSubs.state.usersOnline, usersOnline])
       ) {
         conversationSubs.updateState({ usersOnline });
-      }
 
-      if (email === import.meta.env.VITE_EMAIL_ADMIN) {
-        const formatInfoUserOnline = Object.keys(infoUserOnline).reduce(
-          (acc, key) => {
-            acc[infoUserOnline[key].email] = infoUserOnline[key];
-            return acc;
-          },
-          {}
-        );
+        if (email === import.meta.env.VITE_EMAIL_ADMIN) {
+          const formatInfoUserOnline = Object.keys(infoUserOnline).reduce(
+            (acc, key) => {
+              acc[infoUserOnline[key].email] = infoUserOnline[key];
+              return acc;
+            },
+            {}
+          );
 
-        console.log("===>infoUserOnline", formatInfoUserOnline);
+          console.log("===>infoUserOnline", formatInfoUserOnline);
+        }
       }
     });
   }, [conversationId, socketIo]);
 
-  const handleVisibilityChange = () => {
-    if (!socketIo?.connected) {
-      connectUserToSocket();
-
-      return;
-    }
-
-    socketIo?.emit("checkConnect", userId);
-
-    clearTimeout(timerForceConnectSocket);
-
-    timerForceConnectSocket = setTimeout(async () => {
-      connectUserToSocket();
-    }, 3000);
-  };
-
   const handleUpdateMessageRead = (data) => {
     const { conversationId, messageRead } = data || {};
 
-    conversationSubs.updateState({
+    const dataUpdate = {
       listConversations: conversationSubs.state.listConversations.map(
         (item) => {
           if (item?._id === conversationId) {
@@ -107,7 +87,13 @@ export const SocketIoHandler = () => {
           return item;
         }
       ),
-    });
+    };
+
+    conversationSubs.state = { ...conversationSubs.state, ...dataUpdate };
+
+    debounce(() => {
+      conversationSubs.updateState(dataUpdate);
+    }, TIME_DELAY_FETCH_API)();
   };
 
   const handleUpdateMessageSocket = async (data) => {
@@ -151,7 +137,7 @@ export const SocketIoHandler = () => {
     debounce(() => {
       conversationSubs.updateState(dataUpdate);
       newMessageSound.play();
-    }, TIME_DELAY_SEARCH_INPUT)();
+    }, TIME_DELAY_FETCH_API)();
   };
 
   function updateConversations(updatedConversation, usersRead) {

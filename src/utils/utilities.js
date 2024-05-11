@@ -8,6 +8,7 @@ import {
   listPostSubs,
   socketIoSubs,
 } from "./globalStates/initGlobalState";
+import { history } from "./HandlersComponent/NavigationHandler";
 
 /**
  * Fetches and handles the list of posts.
@@ -505,20 +506,32 @@ export function isMobileDevice() {
 }
 
 let newSocket;
-export const connectUserToSocket = async (force) => {
+
+export const connectUserToSocket = async () => {
   const { infoUser } = infoUserSubscription.state || {};
   const { _id: userId, username, email } = infoUser || {};
 
-  if (!newSocket?.connected || force) {
+  if (!newSocket?.connected) {
     if (userId) {
       newSocket = io(import.meta.env.VITE_SOCKET_URL, {
-        transports: ["websocket"],
+        transports: ["websocket"], // Use only WebSocket transport
+        reconnection: true, // Enable reconnection
+        reconnectionDelay: 1000, // Initial delay before attempting to reconnect
+        reconnectionAttempts: Infinity, // Number of reconnection attempts (-1 for infinite)
       });
 
       socketIoSubs.updateState({ socketIo: newSocket });
-      newSocket?.emit("connectUser", { userId, username, email });
 
-      return;
+      // Emit a custom event when the client successfully reconnects
+      newSocket.on("connect", () => {
+        console.log("===>Auto connect");
+        newSocket.emit("connectUser", { userId, username, email });
+        history.navigate(
+          `${window.location.pathname}${window.location.search}`
+        );
+      });
+
+      newSocket?.emit("connectUser", { userId, username, email });
     }
   }
 };
