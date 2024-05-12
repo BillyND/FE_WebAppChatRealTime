@@ -1,10 +1,14 @@
-import { DownCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { DownCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { Flex } from "antd";
+import { Flex, Upload } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
+import { IconImage } from "../../assets/icons/icon";
 import { boxMessageId } from "../../utils/constant";
-import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
+import {
+  previewImageFullScreenSubs,
+  socketIoSubs,
+} from "../../utils/globalStates/initGlobalState";
 import {
   debounce,
   getCurrentReceiverId,
@@ -12,12 +16,17 @@ import {
   scrollToTopOfElement,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
+import Dragger from "antd/es/upload/Dragger";
 
 function ConversationFooter({ handleSendMessage }) {
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);
   const [message, setMessage] = useState("");
   const isDisableButtonSend = !message?.trim();
+  const [fileList, setFileList] = useState([]);
+
   const refInput = useRef(null);
+  const refImage = useRef(null);
+  const refBtnUpImage = useRef(null);
 
   const {
     infoUser: { _id: userId },
@@ -74,6 +83,14 @@ function ConversationFooter({ handleSendMessage }) {
     setMessage("");
   };
 
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+
+  const handleOpenPickImg = () => {
+    if (refBtnUpImage.current) {
+      refBtnUpImage.current.click();
+    }
+  };
+
   return (
     <Flex className="footer-conversation" justify="start" vertical>
       <DownCircleOutlined
@@ -85,8 +102,25 @@ function ConversationFooter({ handleSendMessage }) {
 
       <hr className="gray width-100-per" />
 
+      <Upload
+        method="get"
+        className={`${fileList.length > 0 ? "has-file" : ""}`}
+        multiple
+        accept="image/*"
+        listType="picture"
+        fileList={fileList}
+        onPreview={(e) => {
+          previewImageFullScreenSubs.updateState({ imgSrc: e?.thumbUrl });
+        }}
+        onChange={handleChange}
+      >
+        <span className="btn-up-img-message" ref={refBtnUpImage}></span>
+      </Upload>
+
       <Flex className={`px-3 pt-2 pb-3 mt-1 `} gap={12} align="center">
-        <PlusCircleOutlined className="icon-show-more-option" />
+        <Flex className="mx-1" align="center" justify="center">
+          <IconImage className="press-active" onClick={handleOpenPickImg} />
+        </Flex>
 
         <textarea
           autoComplete="off"

@@ -24,6 +24,8 @@ import {
 } from "../../utils/utilities";
 import MessageList from "../Message/MessageList";
 import { handleGetMessage } from "./ConversationBox";
+import Dragger from "antd/es/upload/Dragger";
+import { InboxOutlined } from "@ant-design/icons";
 
 export const handleReadConversation = debounce(async () => {
   const { listMessages, conversationId } = conversationSubs.state || {};
@@ -79,10 +81,35 @@ const ConversationContent = ({ avaUrl, username, email }) => {
 
   return (
     <div
+      onDragOver={(e) => {
+        boxMessageElement.current?.classList.add("drag-image");
+        // console.log("===>drop:", e);
+      }}
       className="content-conversation"
       id={boxMessageId}
       ref={boxMessageElement}
     >
+      <Dragger
+        multiple
+        maxCount={10}
+        method="get"
+        onMouseOut={() => {
+          console.log("===>here");
+          boxMessageElement.current?.classList.remove("drag-image");
+        }}
+        onChange={() => {
+          console.log("===>here");
+          boxMessageElement.current?.classList.remove("drag-image");
+        }}
+        className="drop-image-message"
+      >
+        <p className="ant-upload-drag-icon">
+          <InboxOutlined />
+        </p>
+        <p className="ant-upload-text">
+          Click or drag file to this area to upload
+        </p>
+      </Dragger>
       <InfiniteScroll
         dataLength={listMessages.length}
         style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
@@ -94,7 +121,6 @@ const ConversationContent = ({ avaUrl, username, email }) => {
       >
         <MessageList listMessages={listMessages} userId={userId} />
       </InfiniteScroll>
-
       {!next && (
         <Flex
           vertical

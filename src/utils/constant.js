@@ -72,7 +72,7 @@ export const styleDark = {
   type: TYPE_STYLE_APP.DARK,
   STROKE_COLOR_ICON: {
     ACTIVE: "#fff",
-    DE_ACTIVE: "#4D4D4D",
+    DE_ACTIVE: "gray",
   },
   FILL_COLOR_ICON: {
     ACTIVE: "#fff",

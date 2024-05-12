@@ -29,7 +29,11 @@ function App() {
   });
 
   return (
-    <WrapStyledApp style={styleApp} className="App" type-style={typeStyle}>
+    <WrapStyledApp
+      style={styleApp}
+      className={`App type-app-${typeStyle} ${!isMobile ? "not-mobile" : ""}`}
+      type-style={typeStyle}
+    >
       <BrowserRouter>
         {/* Component to trigger navigate */}
         <NavigationHandler />

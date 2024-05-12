@@ -22,6 +22,12 @@ export const WrapMessageScreen = styled.div`
     z-index: ${(p) => (p?.["is-mobile"] ? "1000" : undefined)};
     background-color: ${(p) => (p?.["is-dark"] ? "#101010" : "#FFFFFF")};
 
+    .drag-image {
+      .drop-image-message {
+        display: block;
+      }
+    }
+
     .btn-view-profile {
       border-radius: 16px;
       border: none;

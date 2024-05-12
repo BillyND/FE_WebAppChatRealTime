@@ -19,6 +19,7 @@ import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { listPostSubs } from "../../utils/globalStates/initGlobalState";
 import { WrapModalNewPost } from "./StyledPost";
+import { IconImage } from "../../assets/icons/icon";
 
 function ModalNewPost({ placeHolderInputPost }) {
   const { isMobile } = useWindowSize();
@@ -253,8 +254,11 @@ function ModalNewPost({ placeHolderInputPost }) {
               />
             </>
           ) : (
-            <label htmlFor="fileInputPost" className="container-upload-image">
-              <div className="upload-image"></div>
+            <label
+              htmlFor="fileInputPost"
+              className="press-active container-upload-image"
+            >
+              <IconImage />
               <span>Add image</span>
             </label>
           )}
