@@ -1,14 +1,13 @@
 import { DownCircleOutlined } from "@ant-design/icons";
+import asyncWait from "@utils/asyncWait";
+import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { Flex, Tooltip, Upload } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { IconImage } from "../../assets/icons/icon";
 import { TIME_DELAY_SEARCH_INPUT, boxMessageId } from "../../utils/constant";
-import {
-  previewImageFullScreenSubs,
-  socketIoSubs,
-} from "../../utils/globalStates/initGlobalState";
+import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
 import {
   debounce,
   getCurrentReceiverId,
@@ -16,8 +15,6 @@ import {
   scrollToTopOfElement,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
-import asyncWait from "@utils/asyncWait";
-import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
 
 function ConversationFooter({ handleSendMessage }) {
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);
@@ -106,15 +103,15 @@ function ConversationFooter({ handleSendMessage }) {
 
     for (const img of imgList) {
       await sendTempMessage(tempMessage, img);
-      tempMessage = ""; // Clear tempMessage after sending the first message with an image
-      setMessage(tempMessage);
+      tempMessage = "";
     }
 
     if (!fileList.length) {
       handleSendMessage(tempMessage);
-      tempMessage = ""; // Clear tempMessage after sending the final message
-      setMessage(tempMessage);
+      tempMessage = "";
     }
+
+    setMessage(tempMessage);
   };
 
   const handleChange = async ({ fileList: newFileList }) => {
@@ -139,7 +136,7 @@ function ConversationFooter({ handleSendMessage }) {
       <hr className="gray width-100-per" />
 
       <Upload
-        maxCount={10}
+        maxCount={5}
         method="get"
         className={`${fileList.length > 0 ? "has-file" : ""}`}
         multiple
