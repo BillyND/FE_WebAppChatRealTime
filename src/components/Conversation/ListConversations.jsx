@@ -16,6 +16,7 @@ import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
+import { IconImage } from "../../assets/icons/icon";
 
 let timerGetAllConversation;
 
@@ -152,7 +153,7 @@ function ListConversations() {
       usersRead,
     } = previewConversation || {};
     const { avaUrl, username, _id: receiverId } = receiver || {};
-    const { timeSendLast, text, sender } = lastMessage || {};
+    const { timeSendLast, text, sender, img } = lastMessage || {};
 
     const isSelected = selectedConversation === id;
     const formattedTime = formatTimeAgo(timeSendLast);
@@ -184,7 +185,16 @@ function ListConversations() {
           <Flex justify="space-between" className="info-last-message">
             <span
               className={`content-last-message ${isRead ? "read" : "un-read"}`}
-            >{`${isSender ? "Me: " : ""}${text}`}</span>
+            >
+              <Flex align="center" justify="center" gap={4}>
+                {`${isSender ? `${"Me:"} ` : ""}${text}`}
+                {img && (
+                  <>
+                    <IconImage width="15" /> Image
+                  </>
+                )}
+              </Flex>
+            </span>
             <span className="font-size-14">{formattedTime}</span>
           </Flex>
         </Flex>

@@ -141,6 +141,7 @@ function MessageItem({
         } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
       >
         <img
+          loading="lazy"
           draggable="false"
           className={`wrap-message press-active img-message ${
             isSender ? "sender" : "receiver"

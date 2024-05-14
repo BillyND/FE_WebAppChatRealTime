@@ -545,3 +545,27 @@ export const limitFetchMessage = Math.max(
 );
 
 export const limitFetchPost = Math.max(Math.floor(window.innerHeight / 150), 3);
+
+export async function uploadFile(file) {
+  const url = "https://imgbb.com/json";
+  const formData = new FormData();
+  const timestamp = Date.now();
+
+  formData.append("source", file);
+  formData.append("type", "file");
+  formData.append("action", "upload");
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    document.getElementById("status").textContent = "Error occurred: " + error;
+  }
+}

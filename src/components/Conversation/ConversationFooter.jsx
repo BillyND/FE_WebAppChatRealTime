@@ -6,13 +6,18 @@ import { Flex, Tooltip, Upload } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { IconImage } from "../../assets/icons/icon";
-import { TIME_DELAY_SEARCH_INPUT, boxMessageId } from "../../utils/constant";
+import {
+  MAX_IMG_PICK,
+  TIME_DELAY_SEARCH_INPUT,
+  boxMessageId,
+} from "../../utils/constant";
 import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
 import {
   debounce,
   getCurrentReceiverId,
   preventKeydown,
   scrollToTopOfElement,
+  uploadFile,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
 
@@ -21,13 +26,17 @@ function ConversationFooter({ handleSendMessage }) {
   const [message, setMessage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [imgList, setImgList] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   const refInput = useRef(null);
   const refBtnUpImage = useRef(null);
-  const isDisablePickImg = fileList.length >= 10;
+  const isDisablePickImg = fileList.length >= MAX_IMG_PICK;
   const isDisableButtonSend =
     (!message?.trim() && !fileList.length) ||
-    imgList.length !== fileList.length;
+    imgList.length < fileList.length ||
+    uploading;
+
+  console.log("===>imgList:", imgList);
 
   const {
     infoUser: { _id: userId },
@@ -47,20 +56,22 @@ function ConversationFooter({ handleSendMessage }) {
   }, [boxMessage]);
 
   useEffect(() => {
-    handleResizeImage(fileList);
+    // handleResizeImage(fileList);
   }, [fileList.length]);
 
-  const handleResizeImage = debounce(async (imgList) => {
-    const imgExtracted = [];
+  console.log("===>resUpload:", imgList);
 
-    for (const img of imgList) {
-      const resizedFile = await resizeImage(img?.originFileObj);
-      const dataURL = await readFileAsDataURL(resizedFile);
-      imgExtracted.push(dataURL);
-    }
+  // const handleResizeImage = debounce(async (imgList) => {
+  //   const imgExtracted = [];
 
-    setImgList(imgExtracted);
-  }, TIME_DELAY_SEARCH_INPUT);
+  //   for (const img of imgList) {
+  //     const resizedFile = await resizeImage(img?.originFileObj);
+  //     const dataURL = await readFileAsDataURL(resizedFile);
+  //     imgExtracted.push(dataURL);
+  //   }
+
+  //   setImgList(imgExtracted);
+  // }, TIME_DELAY_SEARCH_INPUT);
 
   const handleScrollBoxMessage = () => {
     setBackFirstMessage(Math.abs(boxMessage?.scrollTop) > 100);
@@ -113,6 +124,7 @@ function ConversationFooter({ handleSendMessage }) {
     }
 
     setMessage(tempMessage);
+    setImgList([]);
   };
 
   const handleChange = async ({ fileList: newFileList }) => {
@@ -137,8 +149,19 @@ function ConversationFooter({ handleSendMessage }) {
       <hr className="gray width-100-per" />
 
       <Upload
-        maxCount={5}
-        method="get"
+        maxCount={MAX_IMG_PICK}
+        customRequest={async (e) => {
+          const { file, onSuccess } = e || {};
+          setUploading(true);
+          const resizedFile = await resizeImage(file);
+          const resUpload = await uploadFile(resizedFile);
+
+          setImgList((prev) =>
+            prev.length < MAX_IMG_PICK ? [resUpload.image.url, ...prev] : prev
+          );
+          onSuccess("Ok");
+          setUploading(false);
+        }}
         className={`${fileList.length > 0 ? "has-file" : ""}`}
         multiple
         accept="image/*"

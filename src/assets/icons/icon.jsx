@@ -428,12 +428,12 @@ export const IconImage = (props) => {
 
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="26"
       height="26"
       viewBox="0 0 24 24"
       fill="none"
+      {...props}
     >
       <path
         fillRule="evenodd"

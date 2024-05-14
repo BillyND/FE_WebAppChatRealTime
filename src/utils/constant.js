@@ -119,3 +119,5 @@ export const styleLight = {
     color: "#000000",
   },
 };
+
+export const MAX_IMG_PICK = 5;
