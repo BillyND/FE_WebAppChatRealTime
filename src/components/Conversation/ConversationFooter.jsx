@@ -26,7 +26,8 @@ function ConversationFooter({ handleSendMessage }) {
   const refBtnUpImage = useRef(null);
   const isDisablePickImg = fileList.length >= 10;
   const isDisableButtonSend =
-    !message?.trim() && !fileList.length && imgList.length !== fileList.length;
+    (!message?.trim() && !fileList.length) ||
+    imgList.length !== fileList.length;
 
   const {
     infoUser: { _id: userId },

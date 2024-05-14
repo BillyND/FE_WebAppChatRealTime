@@ -157,8 +157,7 @@ export const WrapMessageScreen = styled.div`
     }
 
     &.text-message {
-      /* background-color: ${(p) =>
-        p?.["is-dark"] ? "#2d2d2d" : "#efefef"}; */
+      background-color: ${(p) => (p?.["is-dark"] ? "#2d2d2d" : "#efefef")};
       padding: 6px 12px;
     }
 

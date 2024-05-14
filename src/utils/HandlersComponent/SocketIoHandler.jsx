@@ -183,34 +183,41 @@ export const SocketIoHandler = () => {
   };
 
   function updateConversations(updatedConversation, usersRead) {
-    const { listConversations } = conversationSubs.state || {};
-    const { _id: newConversationId, receiver } = updatedConversation || {};
+    const { listConversations = [] } = conversationSubs.state || {};
+    const {
+      _id: newConversationId,
+      receiver,
+      lastMessage,
+      messageCount,
+    } = updatedConversation || {};
+
     const isCurrentUser = receiver?._id === userId;
 
-    const isExistConversation = listConversations.some(
-      (item) => item?._id === newConversationId
-    );
+    const updatedList = listConversations.map((item) => {
+      if (item?._id === newConversationId) {
+        return {
+          ...item,
+          messageCount,
+          usersRead: isCurrentUser ? [...usersRead, userId] : usersRead,
+          lastMessage,
+        };
+      }
+      return item;
+    });
 
-    if (!isExistConversation) {
-      listConversations.push(updatedConversation);
+    if (!updatedList.some((item) => item?._id === newConversationId)) {
+      updatedList.push(updatedConversation);
     }
 
-    return uniqBy(
-      listConversations.map((item) => {
-        if (item?._id === updatedConversation?._id) {
-          item.messageCount = updatedConversation.messageCount;
+    const uniqueList = uniqBy(updatedList, "_id");
 
-          return {
-            ...item,
-            usersRead: isCurrentUser ? [...usersRead, userId] : usersRead,
-            lastMessage: updatedConversation.lastMessage,
-          };
-        }
-
-        return item;
-      }),
-      "_id"
+    uniqueList.sort(
+      (a, b) =>
+        new Date(b.lastMessage?.timeSendLast) -
+        new Date(a.lastMessage?.timeSendLast)
     );
+
+    return uniqueList;
   }
 
   function updateMessages(newMessage, existingMessages) {
