@@ -73,6 +73,15 @@ export const WrapMessageScreen = styled.div`
   .footer-conversation {
     position: relative;
 
+    .disable-pick-img {
+      opacity: 0.5;
+      cursor: no-drop;
+
+      &::active {
+        scale: 1 !important;
+      }
+    }
+
     .icon-back-first-message {
       top: -60px;
       font-size: 30px;
@@ -137,16 +146,23 @@ export const WrapMessageScreen = styled.div`
   }
 
   .wrap-message {
-    background-color: ${(p) => (p?.["is-dark"] ? "#2d2d2d" : "#efefef")};
-    padding: 6px 12px;
     border-radius: 18px;
     max-width: 70%;
     word-break: break-word;
     overflow-wrap: break-word;
     position: relative;
 
+    &.img-message {
+      max-width: 250px;
+    }
+
+    &.text-message {
+      /* background-color: ${(p) =>
+        p?.["is-dark"] ? "#2d2d2d" : "#efefef"}; */
+      padding: 6px 12px;
+    }
+
     &.sender {
-      background-color: #3797f0;
       color: #fff;
       border-top-right-radius: 6px;
       border-bottom-right-radius: 6px;

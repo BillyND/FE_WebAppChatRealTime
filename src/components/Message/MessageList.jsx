@@ -2,12 +2,14 @@ import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { UserThumbnail } from "@UI/UserThumbnail";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
+import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useState } from "react";
 import { TYPE_STYLE_APP } from "../../utils/constant";
 import {
   conversationSubs,
+  previewImageFullScreenSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import {
@@ -15,7 +17,6 @@ import {
   formatTimeAgo,
   getCurrentReceiverId,
 } from "../../utils/utilities";
-import { useWindowSize } from "@utils/hooks/useWindowSize";
 
 function MessageList({ listMessages }) {
   const receiverId = getCurrentReceiverId();
@@ -63,7 +64,7 @@ function MessageItem({
   const { styleApp } = useStyleApp();
 
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
-  const { _id, text, isSending, updatedAt } = message || {};
+  const { _id, text, isSending, updatedAt, img } = message || {};
   const { messageRead } = currentConversation || {};
   const { conversationColor, receiver, listMessages, next } = state || {};
   const { avaUrl } = receiver || {};
@@ -108,51 +109,95 @@ function MessageItem({
     (isMessageTimeGapBigCurrent && isMessageTimeGapBigPrev) ||
     isMessageTimeGapBigCurrent;
 
+  const MessageTime = ({ updatedAt, isDark }) => (
+    <Flex
+      align="center"
+      justify="center"
+      className="time-message"
+      style={{ backgroundColor: isDark ? "#e7e7e78c" : "#0000008c" }}
+    >
+      {formatTimeAgo(updatedAt || Date.now())}
+    </Flex>
+  );
+
+  const TextMessage = () => (
+    <div
+      style={{ backgroundColor: isSender ? conversationColor : undefined }}
+      className={`wrap-message text-message ${
+        isSender ? "sender" : "receiver"
+      } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
+    >
+      <span dangerouslySetInnerHTML={{ __html: formatHtmlToText(text) }} />
+      <MessageTime updatedAt={updatedAt} isDark={isDark} />
+    </div>
+  );
+
+  const ImageMessage = () =>
+    img && (
+      <Flex
+        vertical
+        className={`wrap-message press-active img-message ${
+          isSender ? "sender" : "receiver"
+        } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
+      >
+        <img
+          draggable="false"
+          className={`wrap-message press-active img-message ${
+            isSender ? "sender" : "receiver"
+          } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
+          onClick={() =>
+            previewImageFullScreenSubs.updateState({ imgSrc: img })
+          }
+          src={img}
+        />
+        <MessageTime updatedAt={updatedAt} isDark={isDark} />
+      </Flex>
+    );
+
   return (
-    <Flex vertical>
+    <Flex vertical key={_id}>
       {isMessageTimeGapBigCurrent && (
         <Flex justify="center" className="m-2">
-          <span className={`last-time-message mt-2`}>
+          <span className="last-time-message mt-2">
             {formatTimeAgo(updatedAt || Date.now())}
           </span>
         </Flex>
       )}
 
-      <Flex
-        className={`${isMobile ? "mx-2" : "ml-2 "} ${isEnd ? "mt-3" : "mt-1"}`}
-        justify={isSender ? "end" : "start"}
-        align="center"
-        gap={6}
-        key={_id}
-      >
-        {isSending && <SpinnerLoading className="icon-load-send-message" />}
+      <Flex vertical>
+        {text?.trim() && (
+          <Flex
+            className={`${isMobile ? "mx-2" : "ml-2 "} ${
+              isEnd ? "mt-3" : "mt-1"
+            }`}
+            justify={isSender ? "end" : "start"}
+            align="center"
+            gap={6}
+          >
+            {isSending && <SpinnerLoading className="icon-load-send-message" />}
+            <TextMessage />
+          </Flex>
+        )}
 
-        <div
-          style={{
-            backgroundColor: isSender ? conversationColor : undefined,
-          }}
-          className={`wrap-message
-          ${isSender ? "sender" : "receiver"}
-          ${isStart ? "start" : ""}
-          ${isEnd ? "end" : ""}`}
-        >
-          <span dangerouslySetInnerHTML={{ __html: formatHtmlToText(text) }} />
-
+        {img && (
           <Flex
             align="center"
-            justify="center"
-            className={`time-message`}
-            style={{ backgroundColor: isDark ? "#e7e7e78c" : "#0000008c" }}
+            gap={6}
+            className={`${isMobile ? "mx-2" : "ml-2 "} ${
+              isEnd ? "mt-3" : "mt-1"
+            }`}
+            justify={isSender ? "end" : "start"}
           >
-            {formatTimeAgo(updatedAt || Date.now())}
+            {isSending && <SpinnerLoading className="icon-load-send-message" />}
+            <ImageMessage />
           </Flex>
-        </div>
+        )}
       </Flex>
 
       {showIconRead && (
         <Flex
           className={`${isMobile ? "mx-2" : "ml-2"} px-1 mt-1`}
-          justify={"end"}
+          justify="end"
         >
           <UserThumbnail avaUrl={avaUrl} size={16} />
         </Flex>

@@ -95,13 +95,7 @@ function ConversationBox() {
   const { isMobile } = useWindowSize();
   const { state, setState } = useSubscription(conversationSubs);
 
-  let {
-    receiver,
-    listMessages,
-    conversationId,
-    fetchingMessage,
-    listConversations,
-  } = state || {};
+  let { receiver, conversationId, fetchingMessage } = state || {};
 
   const { username, email, avaUrl, _id: receiverIdChat } = receiver || {};
   const [receiverId] = useSearchParams(["receiverId"]);
@@ -120,18 +114,25 @@ function ConversationBox() {
 
   if (isMobile && !receiverId) return null;
 
-  const handleSendMessage = async (message) => {
+  const handleSendMessage = async (message, img) => {
     try {
       // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
+      const optionSend = {
+        text: message,
+        sender: userId,
+        img,
+        isSending: true,
+        key: keyNewMessage,
+      };
+
       // Process creating a new conversation asynchronously
-      const newConversation = await processCreateNewConversation(
+      const newConversation = await processCreateNewConversation({
+        optionSend,
         conversationId,
         receiverId,
-        keyNewMessage,
-        message
-      );
+      });
 
       // Extract the new conversation ID or use the existing one
       const { _id: newConversationId } = newConversation || {};
@@ -140,15 +141,12 @@ function ConversationBox() {
       // If no updated conversation ID is available, return early
       if (!updatedConversationId) return;
 
-      // Prepare the message send option
-      const optionSend = {
-        conversationId: updatedConversationId,
-        text: message,
-        sender: userId,
-      };
+      optionSend.conversationId = updatedConversationId;
 
       // Create a copy of the list of conversations
-      let updatedListConversation = [...listConversations];
+      let updatedListConversation = [
+        ...conversationSubs.state.listConversations,
+      ];
 
       // If a new conversation was created, add it to the beginning of the list
       if (newConversation) {
@@ -182,15 +180,6 @@ function ConversationBox() {
       setState({
         conversationId: updatedConversationId,
         listConversations: updatedListConversation,
-        // If it's not a new conversation, add the message to the list of messages
-        ...(!newConversation && {
-          listMessages: [
-            { ...optionSend, key: keyNewMessage, isSending: true },
-            ...(conversationSubs?.state?.next
-              ? listMessages.slice(0, limitFetchMessage)
-              : listMessages),
-          ],
-        }),
       });
 
       // Send the message
@@ -227,22 +216,18 @@ function ConversationBox() {
     }
   };
 
-  const processCreateNewConversation = async (
+  const processCreateNewConversation = async ({
     conversationId,
     receiverId,
-    keyNewMessage,
-    message
-  ) => {
+    optionSend,
+  }) => {
     try {
       setState({
         listMessages: [
-          {
-            text: message,
-            sender: userId,
-            key: keyNewMessage,
-            isSending: true,
-          },
-          ...conversationSubs.state.listMessages,
+          { ...optionSend, sender: userId },
+          ...(conversationSubs?.state?.next
+            ? conversationSubs.state.listMessages.slice(0, limitFetchMessage)
+            : conversationSubs.state.listMessages),
         ],
       });
 

@@ -10,8 +10,8 @@ const baseURL = import.meta.env.VITE_BACKEND_URL;
 // Header to indicate no retry for failed requests
 const NO_RETRY_HEADER = "x-no-retry";
 // Check if the API is local
-const isLocalApi = ["127.0.0.1", "localhost", "billy"].some((substring) =>
-  baseURL?.includes(substring)
+const isLocalApi = ["127.0.0.1", "localhost", "billynd.site"].some(
+  (substring) => baseURL?.includes(substring)
 );
 
 // Create an instance of Axios with baseURL
@@ -19,7 +19,7 @@ const instance = axios.create({ baseURL: baseURL + "v1/api/" });
 
 const handleDelayApiLocal = async () => {
   if (isLocalApi) {
-    await asyncWait(300);
+    await asyncWait(1000);
   }
 };
 

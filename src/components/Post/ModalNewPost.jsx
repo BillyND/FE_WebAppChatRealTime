@@ -167,6 +167,8 @@ function ModalNewPost({ placeHolderInputPost }) {
     setLoadings({ ...loadings, parseFile: true });
     const selectedFile = event.target.files[0];
 
+    console.log("===>selectedFile", selectedFile);
+
     if (!selectedFile) {
       setLoadings({ ...loadings, parseFile: false });
       return;

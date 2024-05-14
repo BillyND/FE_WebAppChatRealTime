@@ -1,10 +1,10 @@
 import { DownCircleOutlined } from "@ant-design/icons";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { Flex, Upload } from "antd";
+import { Flex, Tooltip, Upload } from "antd";
 import { useSubscription } from "global-state-hook";
 import React, { useEffect, useRef, useState } from "react";
 import { IconImage } from "../../assets/icons/icon";
-import { boxMessageId } from "../../utils/constant";
+import { TIME_DELAY_SEARCH_INPUT, boxMessageId } from "../../utils/constant";
 import {
   previewImageFullScreenSubs,
   socketIoSubs,
@@ -16,17 +16,20 @@ import {
   scrollToTopOfElement,
 } from "../../utils/utilities";
 import { ButtonSend } from "../Post/ModalCommentPost";
-import Dragger from "antd/es/upload/Dragger";
+import asyncWait from "@utils/asyncWait";
+import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
 
 function ConversationFooter({ handleSendMessage }) {
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);
   const [message, setMessage] = useState("");
-  const isDisableButtonSend = !message?.trim();
   const [fileList, setFileList] = useState([]);
+  const [imgList, setImgList] = useState([]);
 
   const refInput = useRef(null);
-  const refImage = useRef(null);
   const refBtnUpImage = useRef(null);
+  const isDisablePickImg = fileList.length >= 10;
+  const isDisableButtonSend =
+    !message?.trim() && !fileList.length && imgList.length !== fileList.length;
 
   const {
     infoUser: { _id: userId },
@@ -44,6 +47,22 @@ function ConversationFooter({ handleSendMessage }) {
       boxMessage?.removeEventListener("scroll", handleScrollBoxMessage);
     };
   }, [boxMessage]);
+
+  useEffect(() => {
+    handleResizeImage(fileList);
+  }, [fileList.length]);
+
+  const handleResizeImage = debounce(async (imgList) => {
+    const imgExtracted = [];
+
+    for (const img of imgList) {
+      const resizedFile = await resizeImage(img?.originFileObj);
+      const dataURL = await readFileAsDataURL(resizedFile);
+      imgExtracted.push(dataURL);
+    }
+
+    setImgList(imgExtracted);
+  }, TIME_DELAY_SEARCH_INPUT);
 
   const handleScrollBoxMessage = () => {
     setBackFirstMessage(Math.abs(boxMessage?.scrollTop) > 100);
@@ -74,19 +93,36 @@ function ConversationFooter({ handleSendMessage }) {
     )();
   };
 
-  const handleSendLocalMessage = () => {
-    if (isDisableButtonSend) {
-      return;
+  const handleSendLocalMessage = async () => {
+    if (isDisableButtonSend) return;
+
+    let tempMessage = message;
+
+    const sendTempMessage = async (msg, img) => {
+      handleSendMessage(msg, img);
+      setFileList([]);
+      await asyncWait(300);
+    };
+
+    for (const img of imgList) {
+      await sendTempMessage(tempMessage, img);
+      tempMessage = ""; // Clear tempMessage after sending the first message with an image
+      setMessage(tempMessage);
     }
 
-    handleSendMessage(message);
-    setMessage("");
+    if (!fileList.length) {
+      handleSendMessage(tempMessage);
+      tempMessage = ""; // Clear tempMessage after sending the final message
+      setMessage(tempMessage);
+    }
   };
 
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = async ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
   const handleOpenPickImg = () => {
-    if (refBtnUpImage.current) {
+    if (refBtnUpImage.current && !isDisablePickImg) {
       refBtnUpImage.current.click();
     }
   };
@@ -103,15 +139,14 @@ function ConversationFooter({ handleSendMessage }) {
       <hr className="gray width-100-per" />
 
       <Upload
+        maxCount={10}
         method="get"
         className={`${fileList.length > 0 ? "has-file" : ""}`}
         multiple
         accept="image/*"
         listType="picture"
         fileList={fileList}
-        onPreview={(e) => {
-          previewImageFullScreenSubs.updateState({ imgSrc: e?.thumbUrl });
-        }}
+        onPreview={() => {}}
         onChange={handleChange}
       >
         <span className="btn-up-img-message" ref={refBtnUpImage}></span>
@@ -119,7 +154,16 @@ function ConversationFooter({ handleSendMessage }) {
 
       <Flex className={`px-3 pt-2 pb-3 mt-1 `} gap={12} align="center">
         <Flex className="mx-1" align="center" justify="center">
-          <IconImage className="press-active" onClick={handleOpenPickImg} />
+          <Tooltip
+            title={isDisablePickImg ? "The photo limit has been reached." : ""}
+          >
+            <IconImage
+              className={`press-active ${
+                isDisablePickImg ? "disable-pick-img" : ""
+              }`}
+              onClick={handleOpenPickImg}
+            />
+          </Tooltip>
         </Flex>
 
         <textarea
