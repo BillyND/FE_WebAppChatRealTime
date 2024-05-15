@@ -147,21 +147,23 @@ function ConversationFooter({ handleSendMessage }) {
       <Upload
         maxCount={MAX_IMG_PICK}
         customRequest={async (e) => {
-          const { file, onSuccess } = e || {};
+          const { file, onSuccess, onError } = e || {};
           setUploading(true);
           const resizedFile = await resizeImage(file);
           const resUpload = await uploadFile(resizedFile);
 
-          if (resUpload.medium && resUpload.medium.url) {
+          if (resUpload.image.url) {
             setImgList((prev) =>
-              prev.length < MAX_IMG_PICK
-                ? [resUpload.medium.url, ...prev]
-                : prev
+              prev.length < MAX_IMG_PICK ? [resUpload.image.url, ...prev] : prev
             );
+
+            onSuccess("Ok");
+            setUploading(false);
+
+            return;
           }
 
-          onSuccess("Ok");
-          setUploading(false);
+          onError("Ok");
         }}
         className={`${fileList.length > 0 ? "has-file" : ""}`}
         multiple

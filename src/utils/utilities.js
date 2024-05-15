@@ -549,10 +549,13 @@ export const limitFetchPost = Math.max(Math.floor(window.innerHeight / 150), 3);
 export async function uploadFile(file) {
   const url = "https://imgbb.com/json";
   const formData = new FormData();
+  const timestamp = Date.now();
 
   formData.append("source", file);
   formData.append("type", "file");
   formData.append("action", "upload");
+  formData.append("timestamp", "timestamp");
+  formData.append("auth_token", "9512d336a37f552caa3250ef672aced486f39f55");
 
   try {
     const response = await fetch(url, {
