@@ -549,7 +549,6 @@ export const limitFetchPost = Math.max(Math.floor(window.innerHeight / 150), 3);
 export async function uploadFile(file) {
   const url = "https://imgbb.com/json";
   const formData = new FormData();
-  const timestamp = Date.now();
 
   formData.append("source", file);
   formData.append("type", "file");

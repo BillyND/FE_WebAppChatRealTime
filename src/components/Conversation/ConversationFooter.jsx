@@ -36,8 +36,6 @@ function ConversationFooter({ handleSendMessage }) {
     imgList.length < fileList.length ||
     uploading;
 
-  console.log("===>imgList:", imgList);
-
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
@@ -58,8 +56,6 @@ function ConversationFooter({ handleSendMessage }) {
   useEffect(() => {
     // handleResizeImage(fileList);
   }, [fileList.length]);
-
-  console.log("===>resUpload:", imgList);
 
   // const handleResizeImage = debounce(async (imgList) => {
   //   const imgExtracted = [];
@@ -156,9 +152,14 @@ function ConversationFooter({ handleSendMessage }) {
           const resizedFile = await resizeImage(file);
           const resUpload = await uploadFile(resizedFile);
 
-          setImgList((prev) =>
-            prev.length < MAX_IMG_PICK ? [resUpload.image.url, ...prev] : prev
-          );
+          if (resUpload.medium && resUpload.medium.url) {
+            setImgList((prev) =>
+              prev.length < MAX_IMG_PICK
+                ? [resUpload.medium.url, ...prev]
+                : prev
+            );
+          }
+
           onSuccess("Ok");
           setUploading(false);
         }}
