@@ -1,4 +1,3 @@
-import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { message } from "antd";
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -13,9 +12,9 @@ import { placeHolderInputPost } from "./components/Post/NewPost";
 import SearchScreen from "./components/Search/SearchScreen";
 import UserScreen from "./components/User/UserScreen";
 import "./global.scss";
-
 import { NavigationHandler } from "./utils/HandlersComponent/NavigationHandler";
 import { SocketIoHandler } from "./utils/HandlersComponent/SocketIoHandler";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 function App() {
   const {
