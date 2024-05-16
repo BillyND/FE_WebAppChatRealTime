@@ -152,9 +152,9 @@ function ConversationFooter({ handleSendMessage }) {
           const resizedFile = await resizeImage(file);
           const resUpload = await uploadFile(resizedFile);
 
-          if (resUpload.image.url) {
+          if (resUpload?.url) {
             setImgList((prev) =>
-              prev.length < MAX_IMG_PICK ? [resUpload.image.url, ...prev] : prev
+              prev.length < MAX_IMG_PICK ? [resUpload, ...prev] : prev
             );
 
             onSuccess("Ok");

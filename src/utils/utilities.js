@@ -547,9 +547,11 @@ export const limitFetchMessage = Math.max(
 export const limitFetchPost = Math.max(Math.floor(window.innerHeight / 150), 3);
 
 export async function uploadFile(file) {
+  // const url = "https://api.imgur.com/3/image";
   const url = "https://imgbb.com/json";
   const formData = new FormData();
-  const timestamp = Date.now();
+
+  // formData.append("image", file);
 
   formData.append("source", file);
   formData.append("type", "file");
@@ -564,8 +566,20 @@ export async function uploadFile(file) {
     });
 
     if (response.ok) {
-      const data = await response.json();
-      return data;
+      let finalData = { url: "", aspectRatio: 1 };
+      const resUpload = await response.json();
+
+      if (resUpload.image) {
+        const { width, height, url } = resUpload.image;
+        finalData = {
+          width,
+          height,
+          url,
+          aspectRatio: Number(width) / Number(height),
+        };
+      }
+
+      return finalData;
     }
   } catch (error) {
     document.getElementById("status").textContent = "Error occurred: " + error;

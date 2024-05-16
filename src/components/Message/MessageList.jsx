@@ -132,28 +132,38 @@ function MessageItem({
     </div>
   );
 
-  const ImageMessage = () =>
-    img && (
+  const ImageMessage = () => {
+    const { url, aspectRatio, width } = img || {};
+
+    if (!img) return;
+
+    return (
       <Flex
         vertical
-        className={`wrap-message press-active img-message ${
+        className={`wrap-message img-message ${
           isSender ? "sender" : "receiver"
         } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
+        onClick={() =>
+          previewImageFullScreenSubs.updateState({ imgSrc: url || img })
+        }
       >
         <img
           loading="lazy"
+          style={{
+            aspectRatio: `${aspectRatio}`,
+            height: "auto",
+            width: width < 250 ? `${width}px` : "250px",
+          }}
           draggable="false"
           className={`wrap-message press-active img-message ${
             isSender ? "sender" : "receiver"
           } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
-          onClick={() =>
-            previewImageFullScreenSubs.updateState({ imgSrc: img })
-          }
-          src={img}
+          src={url || img}
         />
         <MessageTime updatedAt={updatedAt} isDark={isDark} />
       </Flex>
     );
+  };
 
   return (
     <Flex vertical key={_id}>
@@ -208,7 +218,7 @@ function MessageItem({
         <Flex
           justify="center"
           align="center"
-          className={`user-typing wrap-message m-2 wrap-message-typing receiver ${
+          className={`user-typing text-message wrap-message m-2 wrap-message-typing receiver ${
             isTyping ? "typing" : "not-typing"
           }`}
         >

@@ -190,7 +190,7 @@ function ListConversations() {
                 {`${isSender ? `${"Me:"} ` : ""}${text}`}
                 {img && (
                   <>
-                    <IconImage width="15" /> Image
+                    <IconImage width="10" /> Image
                   </>
                 )}
               </Flex>
