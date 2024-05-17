@@ -106,7 +106,7 @@ function ConversationFooter({ handleSendMessage }) {
     const sendTempMessage = async (msg, img) => {
       handleSendMessage(msg, img);
       setFileList([]);
-      await asyncWait(300);
+      await asyncWait(200);
     };
 
     for (const img of imgList) {

@@ -547,17 +547,12 @@ export const limitFetchMessage = Math.max(
 export const limitFetchPost = Math.max(Math.floor(window.innerHeight / 150), 3);
 
 export async function uploadFile(file) {
-  // const url = "https://api.imgur.com/3/image";
   const url = "https://imgbb.com/json";
   const formData = new FormData();
-
-  // formData.append("image", file);
 
   formData.append("source", file);
   formData.append("type", "file");
   formData.append("action", "upload");
-  formData.append("timestamp", "timestamp");
-  formData.append("auth_token", "9512d336a37f552caa3250ef672aced486f39f55");
 
   try {
     const response = await fetch(url, {
@@ -582,6 +577,6 @@ export async function uploadFile(file) {
       return finalData;
     }
   } catch (error) {
-    document.getElementById("status").textContent = "Error occurred: " + error;
+    console.error("===> Error uploadFile:", error);
   }
 }
