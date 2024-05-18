@@ -51,6 +51,7 @@ const DetailPost = (props) => {
     createdAt,
     userEmail,
     userId: authorPostId,
+    aspectRatio,
   } = post;
   const [openComment, setOpenComment] = useState(false);
   const {
@@ -65,6 +66,8 @@ const DetailPost = (props) => {
   const { state } = useSubscription(conversationSubs, ["usersOnline"]);
   const { usersOnline } = state || {};
   const isOnline = usersOnline?.[authorPostId];
+
+  console.log("===>post:", post);
 
   useEffect(() => {
     socketIo?.on("getPost", (post) => {
@@ -199,6 +202,8 @@ const DetailPost = (props) => {
           {imageUrl && (
             <div className="image">
               <img
+                loading="lazy"
+                style={{ aspectRatio }}
                 draggable={false}
                 src={imageUrl}
                 className="img-post cursor-pointer transition-02 press-active"
