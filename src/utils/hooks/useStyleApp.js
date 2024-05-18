@@ -17,7 +17,7 @@ export const useStyleApp = () => {
     const styleFromLocalStorage = passLocalStorage.getItem(KEY_STYLE_APP);
 
     if (isChanged([styleFromLocalStorage, state.type])) {
-      updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.DARK);
+      updateStyleApp(styleFromLocalStorage || TYPE_STYLE_APP.LIGHT);
     }
   }, []);
 
