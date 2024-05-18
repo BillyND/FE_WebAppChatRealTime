@@ -83,7 +83,6 @@ const ConversationContent = ({ avaUrl, username, email }) => {
     <div
       onDragOver={(e) => {
         boxMessageElement.current?.classList.add("drag-image");
-        // console.log("===>drop:", e);
       }}
       className="content-conversation"
       id={boxMessageId}
@@ -94,11 +93,9 @@ const ConversationContent = ({ avaUrl, username, email }) => {
         maxCount={10}
         method="get"
         onMouseOut={() => {
-          console.log("===>here");
           boxMessageElement.current?.classList.remove("drag-image");
         }}
         onChange={() => {
-          console.log("===>here");
           boxMessageElement.current?.classList.remove("drag-image");
         }}
         className="drop-image-message"

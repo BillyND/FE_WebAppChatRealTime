@@ -67,8 +67,6 @@ const DetailPost = (props) => {
   const { usersOnline } = state || {};
   const isOnline = usersOnline?.[authorPostId];
 
-  console.log("===>post:", post);
-
   useEffect(() => {
     socketIo?.on("getPost", (post) => {
       handleUpdatePostSocket(
