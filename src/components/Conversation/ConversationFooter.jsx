@@ -1,17 +1,16 @@
 import { DownCircleOutlined } from "@ant-design/icons";
 import asyncWait from "@utils/asyncWait";
-import { readFileAsDataURL, resizeImage } from "@utils/handleImages";
+import { resizeImage } from "@utils/handleImages";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { Flex, Tooltip, Upload } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconImage } from "../../assets/icons/icon";
+import { MAX_IMG_PICK, boxMessageId } from "../../utils/constant";
 import {
-  MAX_IMG_PICK,
-  TIME_DELAY_SEARCH_INPUT,
-  boxMessageId,
-} from "../../utils/constant";
-import { socketIoSubs } from "../../utils/globalStates/initGlobalState";
+  dataImageMessage,
+  socketIoSubs,
+} from "../../utils/globalStates/initGlobalState";
 import {
   debounce,
   getCurrentReceiverId,
@@ -22,15 +21,20 @@ import {
 import { ButtonSend } from "../Post/ModalCommentPost";
 
 function ConversationFooter({ handleSendMessage }) {
+  const { state } = useSubscription(dataImageMessage, [
+    "fileList",
+    "imgList",
+    "uploading",
+  ]);
+
+  const { fileList, imgList, uploading } = state || {};
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);
   const [message, setMessage] = useState("");
-  const [fileList, setFileList] = useState([]);
-  const [imgList, setImgList] = useState([]);
-  const [uploading, setUploading] = useState(false);
 
   const refInput = useRef(null);
   const refBtnUpImage = useRef(null);
   const isDisablePickImg = fileList.length >= MAX_IMG_PICK;
+
   const isDisableButtonSend =
     (!message?.trim() && !fileList.length) ||
     imgList.length < fileList.length ||
@@ -105,7 +109,7 @@ function ConversationFooter({ handleSendMessage }) {
 
     const sendTempMessage = async (msg, img) => {
       handleSendMessage(msg, img);
-      setFileList([]);
+      dataImageMessage.updateState({ fileList: [] });
       await asyncWait(200);
     };
 
@@ -120,11 +124,11 @@ function ConversationFooter({ handleSendMessage }) {
     }
 
     setMessage(tempMessage);
-    setImgList([]);
+    dataImageMessage.updateState({ imgList: [], fileList: [] });
   };
 
-  const handleChange = async ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const handleChange = async ({ fileList }) => {
+    dataImageMessage.updateState({ fileList });
   };
 
   const handleOpenPickImg = () => {
@@ -148,17 +152,20 @@ function ConversationFooter({ handleSendMessage }) {
         maxCount={MAX_IMG_PICK}
         customRequest={async (e) => {
           const { file, onSuccess, onError } = e || {};
-          setUploading(true);
+          dataImageMessage.updateState({ uploading: true });
           const resizedFile = await resizeImage(file);
           const resUpload = await uploadFile(resizedFile);
 
           if (resUpload?.url) {
-            setImgList((prev) =>
-              prev.length < MAX_IMG_PICK ? [resUpload, ...prev] : prev
-            );
+            dataImageMessage.updateState({
+              imgList:
+                dataImageMessage.state.imgList.length < MAX_IMG_PICK
+                  ? [resUpload, ...dataImageMessage.state.imgList]
+                  : dataImageMessage.state.imgList,
+            });
 
             onSuccess("Ok");
-            setUploading(false);
+            dataImageMessage.updateState({ uploading: false });
 
             return;
           }

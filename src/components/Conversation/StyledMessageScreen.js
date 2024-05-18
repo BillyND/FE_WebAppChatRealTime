@@ -45,7 +45,6 @@ export const WrapMessageScreen = styled.div`
     .content-conversation {
       display: flex;
       flex-direction: column-reverse;
-      gap: 50px;
       overflow-y: scroll;
       overflow-x: hidden;
       height: 100dvh;

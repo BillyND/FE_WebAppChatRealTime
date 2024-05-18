@@ -1,18 +1,24 @@
 import { SpinnerLoading } from "@UI/SpinnerLoading";
 import { UserThumbnail } from "@UI/UserThumbnail";
+import { InboxOutlined } from "@ant-design/icons";
+import asyncWait from "@utils/asyncWait";
+import { resizeImage } from "@utils/handleImages";
 import { useAuthUser } from "@utils/hooks/useAuthUser";
-import { Flex, message } from "antd";
+import { Flex } from "antd";
+import Dragger from "antd/es/upload/Dragger";
 import { useSubscription } from "global-state-hook";
 import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { updateUsersReadConversation } from "../../services/api";
 import {
+  MAX_IMG_PICK,
   TIME_DELAY_FETCH_API,
   TIME_DELAY_SEARCH_INPUT,
   boxMessageId,
 } from "../../utils/constant";
 import {
   conversationSubs,
+  dataImageMessage,
   infoUserSubscription,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
@@ -21,11 +27,10 @@ import {
   debounce,
   getCurrentReceiverId,
   isChanged,
+  uploadFile,
 } from "../../utils/utilities";
 import MessageList from "../Message/MessageList";
 import { handleGetMessage } from "./ConversationBox";
-import Dragger from "antd/es/upload/Dragger";
-import { InboxOutlined } from "@ant-design/icons";
 
 export const handleReadConversation = debounce(async () => {
   const { listMessages, conversationId } = conversationSubs.state || {};
@@ -59,8 +64,16 @@ export const handleReadConversation = debounce(async () => {
 }, TIME_DELAY_SEARCH_INPUT);
 
 const ConversationContent = ({ avaUrl, username, email }) => {
+  const { state: stateImageMessage } = useSubscription(dataImageMessage, [
+    "fileList",
+    "imgList",
+    "uploading",
+  ]);
+
+  const { fileList } = stateImageMessage || {};
   const { state } = useSubscription(conversationSubs, ["listMessages", "next"]);
   let { listMessages, next } = state || {};
+
   const navigate = useNavigateCustom();
   const boxMessageElement = useRef(null);
   const [loadMore, setLoadMore] = useState(false);
@@ -79,34 +92,74 @@ const ConversationContent = ({ avaUrl, username, email }) => {
     next && handleGetMessage({ ...next, allowFetching: false });
   };
 
+  const handlePreventDnd = (e, type) => {
+    e.preventDefault();
+    boxMessageElement.current?.classList.add("drag-image");
+  };
+
   return (
     <div
-      onDragOver={(e) => {
-        boxMessageElement.current?.classList.add("drag-image");
-      }}
+      onDragEnter={handlePreventDnd}
+      onDragLeave={handlePreventDnd}
+      onDragOver={handlePreventDnd}
+      onDrop={handlePreventDnd}
+      onDragEnd={handlePreventDnd}
       className="content-conversation"
       id={boxMessageId}
       ref={boxMessageElement}
     >
-      <Dragger
-        multiple
-        maxCount={10}
-        method="get"
-        onMouseOut={() => {
+      <div
+        onMouseOut={async () => {
+          await asyncWait(100);
           boxMessageElement.current?.classList.remove("drag-image");
         }}
-        onChange={() => {
+        onMouseEnter={async () => {
+          await asyncWait(100);
           boxMessageElement.current?.classList.remove("drag-image");
         }}
-        className="drop-image-message"
       >
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-      </Dragger>
+        <Dragger
+          accept="image/*"
+          fileList={fileList}
+          multiple
+          maxCount={MAX_IMG_PICK}
+          method="get"
+          onChange={({ fileList }) => {
+            dataImageMessage.updateState({ fileList });
+            boxMessageElement.current?.classList.remove("drag-image");
+          }}
+          className="drop-image-message"
+          customRequest={async (e) => {
+            const { file, onSuccess, onError } = e || {};
+            dataImageMessage.updateState({ uploading: true });
+            const resizedFile = await resizeImage(file);
+            const resUpload = await uploadFile(resizedFile);
+
+            if (resUpload?.url) {
+              dataImageMessage.updateState({
+                imgList:
+                  dataImageMessage.state.imgList.length < MAX_IMG_PICK
+                    ? [resUpload, ...dataImageMessage.state.imgList]
+                    : dataImageMessage.state.imgList,
+              });
+
+              onSuccess("Ok");
+              dataImageMessage.updateState({ uploading: false });
+
+              return;
+            }
+
+            onError("Ok");
+          }}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+        </Dragger>
+      </div>
       <InfiniteScroll
         dataLength={listMessages.length}
         style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.

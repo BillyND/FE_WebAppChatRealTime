@@ -37,3 +37,9 @@ export const initConversationSubs = {
   usersOnline: {},
 };
 export const conversationSubs = createSubscription(initConversationSubs);
+
+export const dataImageMessage = createSubscription({
+  fileList: [],
+  imgList: [],
+  uploading: false,
+});
