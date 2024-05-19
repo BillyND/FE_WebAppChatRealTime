@@ -5,7 +5,7 @@ import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TYPE_STYLE_APP } from "../../utils/constant";
 import {
   conversationSubs,
@@ -15,21 +15,20 @@ import {
 import {
   formatHtmlToText,
   formatTimeAgo,
-  getCurrentReceiverId,
+  getDataSearchParams,
 } from "../../utils/utilities";
 
 function MessageList({ listMessages }) {
-  const receiverId = getCurrentReceiverId();
-  const { state } = useSubscription(conversationSubs, [
-    "listConversations",
-    "conversationId",
-  ]);
   const {
     infoUser: { _id: userId },
   } = useAuthUser();
-  const { listConversations, conversationId } = state || {};
+
+  const receiverId = getDataSearchParams("receiverId");
+  const { state } = useSubscription(conversationSubs, ["listConversations"]);
+  const { listConversations } = state || {};
+
   const currentConversation = listConversations.find(
-    (item) => item?._id === conversationId
+    (item) => item?._id === getDataSearchParams("conversationId")
   );
 
   return (

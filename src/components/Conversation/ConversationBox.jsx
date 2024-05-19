@@ -4,21 +4,16 @@ import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { isEmpty, unionBy, uniqBy } from "lodash";
-import React, { useEffect } from "react";
-import {
-  createConversation,
-  createMessage,
-  getConversationByReceiver,
-} from "../../services/api";
-import { boxMessageId } from "../../utils/constant";
+import { isEmpty, unionBy } from "lodash";
+import { useEffect, useRef } from "react";
+import { createConversation, createMessage } from "../../services/api";
 import {
   conversationSubs,
   initConversationSubs,
   socketIoSubs,
 } from "../../utils/globalStates/initGlobalState";
 import {
-  getCurrentReceiverId,
+  handleGetMessage,
   limitFetchMessage,
   scrollToTopOfElement,
   showPopupError,
@@ -26,61 +21,7 @@ import {
 import ConversationContent from "./ConversationContent";
 import ConversationFooter from "./ConversationFooter";
 import ConversationHeader from "./ConversationHeader";
-import { history } from "../../utils/HandlersComponent/NavigationHandler";
-
-export const handleGetMessage = async ({
-  limit = limitFetchMessage,
-  allowFetching = true,
-}) => {
-  allowFetching && conversationSubs.updateState({ fetchingMessage: true });
-
-  if (!getCurrentReceiverId()) {
-    conversationSubs.updateState({ fetchingMessage: false });
-    return;
-  }
-
-  const page =
-    parseInt(conversationSubs?.state?.listMessages.length / limit) + 1;
-
-  try {
-    const resConversation = await getConversationByReceiver(
-      getCurrentReceiverId(),
-      page,
-      limit
-    );
-
-    if (resConversation.success === 0 || !resConversation?.receiver) {
-      history.navigate("/message");
-    }
-
-    const mergeMessage =
-      !allowFetching && conversationSubs.state.listMessages
-        ? uniqBy(
-            [
-              ...conversationSubs.state.listMessages,
-              ...resConversation.listMessages,
-            ],
-            "_id"
-          )
-        : resConversation.listMessages;
-
-    conversationSubs.updateState({
-      ...resConversation,
-      listMessages: mergeMessage,
-      fetchingMessage: false,
-    });
-
-    if (allowFetching) {
-      scrollToTopOfElement(boxMessageId);
-    }
-  } catch (error) {
-    console.error("===>Error handleGetMessage:", error);
-    conversationSubs.updateState({
-      fetchingMessage: false,
-    });
-    showPopupError(error);
-  }
-};
+import { boxMessageId } from "@utils/constant";
 
 function ConversationBox() {
   const {
@@ -92,13 +33,19 @@ function ConversationBox() {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
 
+  const { state, setState } = useSubscription(conversationSubs, [
+    "receiver",
+    "fetchingMessage",
+  ]);
+
   const { isMobile } = useWindowSize();
-  const { state, setState } = useSubscription(conversationSubs);
-
-  let { receiver, conversationId, fetchingMessage } = state || {};
-
+  const { receiver, fetchingMessage } = state || {};
   const { username, email, avaUrl, _id: receiverIdChat } = receiver || {};
-  const [receiverId] = useSearchParams(["receiverId"]);
+
+  const [receiverId, conversationId] = useSearchParams([
+    "receiverId",
+    "conversationId",
+  ]);
 
   useEffect(() => {
     handleGetMessage({});
@@ -110,12 +57,14 @@ function ConversationBox() {
         usersOnline: conversationSubs.state.usersOnline,
       };
     };
-  }, [receiverId]);
+  }, [receiverId, conversationId]);
 
   if (isMobile && !receiverId) return null;
 
   const handleSendMessage = async (message, img) => {
     try {
+      scrollToTopOfElement(boxMessageId);
+
       // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
@@ -222,7 +171,7 @@ function ConversationBox() {
     optionSend,
   }) => {
     try {
-      setState({
+      conversationSubs.updateState({
         listMessages: [
           { ...optionSend, sender: userId },
           ...(conversationSubs?.state?.next

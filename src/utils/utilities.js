@@ -1,14 +1,24 @@
-import { getPost } from "@services/api";
+import {
+  getConversationByReceiver,
+  getPost,
+  updateUsersReadConversation,
+} from "@services/api";
 import { message } from "antd";
 import { cloneDeep, uniqBy } from "lodash";
 import { io } from "socket.io-client";
+import { history } from "./HandlersComponent/NavigationHandler";
 import {
+  conversationSubs,
   detailPostSubs,
   infoUserSubscription,
   listPostSubs,
   socketIoSubs,
 } from "./globalStates/initGlobalState";
-import { history } from "./HandlersComponent/NavigationHandler";
+import {
+  TIME_DELAY_FETCH_API,
+  TIME_DELAY_SEARCH_INPUT,
+  boxMessageId,
+} from "./constant";
 
 /**
  * Fetches and handles the list of posts.
@@ -465,11 +475,19 @@ export const preventKeydown = (event, key, functionPrevent) => {
   }
 };
 
-export const getCurrentReceiverId = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const currentReceiverId = searchParams.get("receiverId");
+export const getDataSearchParams = (keys) => {
+  // Normalize keys to always be an array
+  const normalizedKeys = Array.isArray(keys) ? keys : [keys];
 
-  return currentReceiverId;
+  const dataSearchParams = [];
+  const searchParams = new URLSearchParams(window.location.search);
+
+  // Iterate over normalized keys and get corresponding search parameters
+  normalizedKeys.forEach((key) => {
+    dataSearchParams.push(searchParams.get(key));
+  });
+
+  return dataSearchParams?.[1] ? dataSearchParams : dataSearchParams?.[0];
 };
 
 export function firstCharToLowerCase(str) {
@@ -580,3 +598,117 @@ export async function uploadFile(file) {
     console.error("===> Error uploadFile:", error);
   }
 }
+
+export const handleGetMessage = async ({
+  limit = limitFetchMessage,
+  allowFetching = true,
+}) => {
+  allowFetching && conversationSubs.updateState({ fetchingMessage: true });
+
+  if (!getDataSearchParams("receiverId")) {
+    conversationSubs.updateState({ fetchingMessage: false });
+    return;
+  }
+
+  const page =
+    parseInt(conversationSubs?.state?.listMessages.length / limit) + 1;
+
+  try {
+    const resConversation = await getConversationByReceiver(
+      getDataSearchParams("receiverId"),
+      page,
+      limit
+    );
+
+    if (resConversation.success === 0 || !resConversation?.receiver) {
+      history.navigate("/message");
+    }
+
+    const mergeMessage =
+      !allowFetching && conversationSubs.state.listMessages
+        ? uniqBy(
+            [
+              ...conversationSubs.state.listMessages,
+              ...resConversation.listMessages,
+            ],
+            "_id"
+          )
+        : resConversation.listMessages;
+
+    conversationSubs.updateState({
+      ...(isChanged([
+        resConversation.receiver,
+        conversationSubs.state.receiver,
+      ]) && {
+        receiver: resConversation.receiver,
+      }),
+
+      ...(isChanged([
+        resConversation.conversationId,
+        conversationSubs.state.conversationId,
+      ]) && {
+        conversationId: resConversation.conversationId,
+      }),
+
+      ...(isChanged([resConversation.next, conversationSubs.state.next]) && {
+        next: resConversation.next,
+      }),
+
+      ...(isChanged([
+        resConversation.conversationColor,
+        conversationSubs.state.conversationColor,
+      ]) && {
+        conversationColor: resConversation.conversationColor,
+      }),
+
+      ...(isChanged([mergeMessage, conversationSubs.state.listMessages]) && {
+        listMessages: mergeMessage,
+      }),
+
+      fetchingMessage: false,
+    });
+
+    if (allowFetching) {
+      scrollToTopOfElement(boxMessageId);
+    }
+  } catch (error) {
+    console.error("===>Error handleGetMessage:", error);
+    conversationSubs.updateState({
+      fetchingMessage: false,
+    });
+    showPopupError(error);
+  }
+};
+
+export const handleReadConversation = debounce(async () => {
+  const { listMessages } = conversationSubs.state || {};
+  const conversationId = getDataSearchParams("conversationId");
+
+  const { _id: userId } = infoUserSubscription.state.infoUser || {};
+  const lastMessageId = listMessages[0]?._id;
+
+  if (!conversationId || !lastMessageId) return;
+
+  const newList = conversationSubs.state.listConversations.map((conversation) =>
+    conversation._id === conversationId
+      ? { ...conversation, usersRead: [userId] }
+      : conversation
+  );
+
+  if (isChanged([conversationSubs.state.listConversations, newList])) {
+    conversationSubs.updateState({ listConversations: newList });
+  }
+
+  socketIoSubs.state.socketIo?.emit("readMessage", {
+    conversationId,
+    messageRead: {
+      [getDataSearchParams("receiverId")]: lastMessageId,
+      [userId]: lastMessageId,
+    },
+    receiverId: getDataSearchParams("receiverId"),
+  });
+
+  debounce(() => {
+    updateUsersReadConversation(conversationId, lastMessageId);
+  }, TIME_DELAY_FETCH_API)();
+}, TIME_DELAY_SEARCH_INPUT);

@@ -5,18 +5,18 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { formatTimeAgo } from "@utils/utilities";
+import { formatTimeAgo, getDataSearchParams } from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { isEmpty } from "lodash";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { IconImage } from "../../assets/icons/icon";
 import { getConversations, searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
 import { debounce, isChanged, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
-import { IconImage } from "../../assets/icons/icon";
 
 let timerGetAllConversation;
 
@@ -51,13 +51,11 @@ function ListConversations() {
     "listConversations",
     "fetchingConversation",
     "usersOnline",
-    "receiver",
   ]);
 
   const [selectedConversation, setSelectedConversation] = useState(-1);
   const { isMobile } = useWindowSize();
-  const { listConversations, fetchingConversation, usersOnline, receiver } =
-    state || {};
+  const { listConversations, fetchingConversation, usersOnline } = state || {};
   const [receiverIdParams] = useSearchParams(["receiverId"]);
   const { infoUser } = useAuthUser();
   const { _id: userId } = infoUser;
@@ -130,14 +128,18 @@ function ListConversations() {
 
   const handleSelectConversation = (receiverId, conversationId) => {
     setSelectedConversation(conversationId);
+    const currentConversationId = getDataSearchParams("conversationId");
 
-    if (conversationId !== conversationSubs.state.conversationId) {
-      setState({ conversationId });
+    if (
+      receiverIdParams === receiverId &&
+      currentConversationId === conversationId
+    ) {
+      return;
     }
 
-    if (receiverIdParams === receiverId) return;
-
-    navigate(`/message?receiverId=${receiverId}`);
+    navigate(
+      `/message?receiverId=${receiverId}&conversationId=${conversationId}`
+    );
   };
 
   const handleClearInputSearch = () => {
@@ -152,14 +154,14 @@ function ListConversations() {
       lastMessage,
       usersRead,
     } = previewConversation || {};
+
     const { avaUrl, username, _id: receiverId } = receiver || {};
     const { timeSendLast, text, sender, img } = lastMessage || {};
-
     const isSelected = selectedConversation === id;
     const formattedTime = formatTimeAgo(timeSendLast);
+
     const isSender = sender === userId;
     const isRead = usersRead?.includes(userId);
-
     const isOnline = usersOnline?.[receiverId];
 
     return (

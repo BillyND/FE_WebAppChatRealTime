@@ -13,10 +13,11 @@ import {
 import {
   connectUserToSocket,
   debounce,
-  getCurrentReceiverId,
+  getDataSearchParams,
   isChanged,
   limitFetchMessage,
 } from "../utilities";
+import { useSearchParams } from "@utils/hooks/useSearchParams";
 
 export const SocketIoHandler = () => {
   const {
@@ -24,11 +25,10 @@ export const SocketIoHandler = () => {
   } = useSubscription(socketIoSubs);
 
   const {
-    state: { conversationId, listConversations },
-  } = useSubscription(conversationSubs, [
-    "conversationId",
-    "listConversations",
-  ]);
+    state: { listConversations },
+  } = useSubscription(conversationSubs, ["listConversations"]);
+
+  const [conversationId] = useSearchParams(["conversationId"]);
 
   const {
     infoUser: { _id: userId, email },
@@ -151,7 +151,7 @@ export const SocketIoHandler = () => {
     }
 
     const inConversationWithSender =
-      getCurrentReceiverId() === sender || userId === sender;
+      getDataSearchParams("receiverId") === sender || userId === sender;
     const usersRead = inConversationWithSender ? [userId, sender] : [sender];
 
     const updatedConversations = updateConversations(conversation, usersRead);
@@ -167,7 +167,7 @@ export const SocketIoHandler = () => {
         listMessages: updatedMessages,
       }),
 
-      ...(getCurrentReceiverId() === conversation.receiver?._id && {
+      ...(getDataSearchParams("receiverId") === conversation.receiver?._id && {
         receiver: conversation.receiver,
       }),
     };
@@ -222,7 +222,7 @@ export const SocketIoHandler = () => {
 
   function updateMessages(newMessage, existingMessages) {
     if (
-      newMessage?.sender === getCurrentReceiverId() ||
+      newMessage?.sender === getDataSearchParams("receiverId") ||
       newMessage?.sender === userId
     ) {
       return uniqBy(
@@ -231,7 +231,7 @@ export const SocketIoHandler = () => {
       );
     }
 
-    return getCurrentReceiverId() ? existingMessages : [];
+    return getDataSearchParams("receiverId") ? existingMessages : [];
   }
 
   const handleApplyNewInfoUser = async () => {
