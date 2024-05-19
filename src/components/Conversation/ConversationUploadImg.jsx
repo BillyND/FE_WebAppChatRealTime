@@ -65,6 +65,11 @@ export function ManualUploadImage({ refBtnUpImage }) {
 
   useEffect(() => {
     handleUploadImage(fileList);
+
+    return () => {
+      // Clear data image message
+      dataImageMessage.state = { imgList: [], fileList: [] };
+    };
   }, [fileList.length]);
 
   /**
