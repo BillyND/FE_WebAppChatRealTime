@@ -139,9 +139,9 @@ function MessageItem({
     return (
       <Flex
         vertical
-        className={`wrap-message img-message ${
-          isSender ? "sender" : "receiver"
-        } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
+        className={`wrap-message ${isSender ? "sender" : "receiver"} ${
+          isStart ? "start" : ""
+        } ${isEnd ? "end" : ""}`}
         onClick={() =>
           previewImageFullScreenSubs.updateState({ imgSrc: url || img })
         }

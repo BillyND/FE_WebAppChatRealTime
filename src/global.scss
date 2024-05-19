@@ -8,6 +8,11 @@ textarea::placeholder {
   font-size: 14px;
 }
 
+textarea,
+input {
+  font-size: 16px;
+}
+
 body {
   overflow: hidden;
 }
@@ -711,10 +716,6 @@ img {
 
 .font-size-14 {
   font-size: 14px;
-}
-
-textarea {
-  font-size: 16px;
 }
 
 label {

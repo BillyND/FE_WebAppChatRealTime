@@ -153,6 +153,7 @@ export const WrapMessageScreen = styled.div`
 
     &.img-message {
       max-width: 250px;
+      border: 0.1px solid #3b3b3b29;
     }
 
     &.text-message {
