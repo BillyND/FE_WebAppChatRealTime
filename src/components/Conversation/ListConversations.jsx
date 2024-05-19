@@ -189,15 +189,20 @@ function ListConversations() {
               className={`content-last-message ${isRead ? "read" : "un-read"}`}
             >
               <Flex align="center" justify="center" gap={4}>
-                {`${isSender ? `${"Me:"} ` : ""}${text}`}
-                {img && (
-                  <>
-                    <IconImage width="10" /> Image
-                  </>
-                )}
+                {img
+                  ? `${
+                      isSender
+                        ? "You have sent a photo."
+                        : "You have received a photo."
+                    }`
+                  : `${isSender ? `You: ${text}` : text}`}
               </Flex>
             </span>
-            <span className="font-size-14">{formattedTime}</span>
+            <span
+              className={`time-last-message ${isRead ? "read" : "un-read"}`}
+            >
+              {formattedTime}
+            </span>
           </Flex>
         </Flex>
       </Flex>

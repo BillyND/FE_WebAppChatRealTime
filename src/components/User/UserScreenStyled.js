@@ -13,7 +13,7 @@ export const WrapUserScreen = styled.div`
   .btn-create-new-post {
     height: 30px;
     border-radius: 8px;
-    border: 0.5px solid #64646473;
+    border: 0.1px solid #64646473;
     width: fit-content;
     margin: auto;
     padding: 0 16px !important;
@@ -23,7 +23,7 @@ export const WrapUserScreen = styled.div`
     .btn-edit-profile {
       height: 34px;
       border-radius: 8px;
-      border: 0.5px solid #64646473;
+      border: 0.1px solid #64646473;
     }
   }
 `;

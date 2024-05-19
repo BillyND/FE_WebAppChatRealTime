@@ -35,7 +35,7 @@ export const WrapModalNewPost = styled.div`
       min-width: 100px;
       max-width: 200px;
       max-height: 200px;
-      border: 0.5px solid #313131;
+      border: 0.1px solid #313131;
       border-radius: 8px;
     }
 
