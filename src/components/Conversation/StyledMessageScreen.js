@@ -150,6 +150,9 @@ export const WrapMessageScreen = styled.div`
     word-break: break-word;
     overflow-wrap: break-word;
     position: relative;
+    * {
+      transition: 0.2s;
+    }
 
     &.img-message {
       max-width: 250px;
