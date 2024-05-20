@@ -16,13 +16,13 @@ function ButtonBackToFirstMessage({ boxMessageElement }) {
   const boxMessage = document.getElementById(boxMessageId);
 
   useEffect(() => {
-    boxMessageElement.current?.addEventListener(
+    boxMessageElement?.current?.addEventListener(
       "scroll",
       handleScrollBoxMessage
     );
 
     return () => {
-      boxMessageElement.current.current?.removeEventListener(
+      boxMessageElement.current?.removeEventListener(
         "scroll",
         handleScrollBoxMessage
       );
