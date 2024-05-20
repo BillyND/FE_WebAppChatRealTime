@@ -2,36 +2,48 @@ import { DownCircleOutlined } from "@ant-design/icons";
 import { conversationSubs } from "@utils/globalStates/initGlobalState";
 import { Flex } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { boxMessageId } from "../../utils/constant";
-import { limitFetchMessage, scrollToTopOfElement } from "../../utils/utilities";
+import { TIME_DELAY_SEARCH_INPUT, boxMessageId } from "../../utils/constant";
+import {
+  debounce,
+  limitFetchMessage,
+  scrollToTopOfElement,
+} from "../../utils/utilities";
 import { ButtonPickImage, ManualUploadImage } from "./ConversationUploadImg";
 import InputMessage from "./InputMessage";
 
-function ButtonBackToFirstMessage() {
+function ButtonBackToFirstMessage({ boxMessageElement }) {
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);
   const boxMessage = document.getElementById(boxMessageId);
 
   useEffect(() => {
-    boxMessage?.addEventListener("scroll", handleScrollBoxMessage);
+    boxMessageElement.current?.addEventListener(
+      "scroll",
+      handleScrollBoxMessage
+    );
 
     return () => {
-      boxMessage?.removeEventListener("scroll", handleScrollBoxMessage);
+      boxMessageElement.current.current?.removeEventListener(
+        "scroll",
+        handleScrollBoxMessage
+      );
     };
   }, [boxMessage]);
 
-  const handleScrollBoxMessage = () => {
-    setBackFirstMessage(Math.abs(boxMessage?.scrollTop) > 100);
-  };
+  const handleScrollBoxMessage = debounce(() => {
+    setBackFirstMessage(Math.abs(boxMessageElement.current?.scrollTop) > 100);
+
+    if (boxMessageElement.current?.scrollTop === 0) {
+      conversationSubs.updateState({
+        listMessages: conversationSubs.state.listMessages.slice(
+          0,
+          limitFetchMessage
+        ),
+      });
+    }
+  }, TIME_DELAY_SEARCH_INPUT);
 
   const handleScrollToFirstMessage = () => {
     scrollToTopOfElement(boxMessageId);
-
-    conversationSubs.updateState({
-      listMessages: conversationSubs.state.listMessages.slice(
-        0,
-        limitFetchMessage
-      ),
-    });
   };
 
   return (
@@ -44,12 +56,12 @@ function ButtonBackToFirstMessage() {
   );
 }
 
-function ConversationFooter({ handleSendMessage }) {
+function ConversationFooter({ handleSendMessage, boxMessageElement }) {
   const refBtnUpImage = useRef(null);
 
   return (
     <Flex className="footer-conversation" justify="start" vertical>
-      <ButtonBackToFirstMessage />
+      <ButtonBackToFirstMessage boxMessageElement={boxMessageElement} />
       <hr className="gray width-100-per" />
       <ManualUploadImage refBtnUpImage={refBtnUpImage} />
 

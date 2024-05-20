@@ -15,10 +15,14 @@ import {
 import MessageList from "../Message/MessageList";
 import { DraggerUploadImage } from "./ConversationUploadImg";
 
-const ConversationContent = ({ avaUrl, username, email }) => {
+const ConversationContent = ({
+  avaUrl,
+  username,
+  email,
+  boxMessageElement,
+}) => {
   const { state } = useSubscription(conversationSubs, ["listMessages", "next"]);
   let { listMessages, next } = state || {};
-  const boxMessageElement = useRef(null);
   const navigate = useNavigateCustom();
   const [loadMore, setLoadMore] = useState(false);
 

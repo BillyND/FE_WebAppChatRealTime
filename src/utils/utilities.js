@@ -155,7 +155,7 @@ export const scrollToTopOfElement = (elementId) => {
   const currentScrollTop = elementHasScrollTop.scrollTop;
 
   /*** Number of steps for smooth scrolling, adjust as needed for desired smoothness ***/
-  const numSteps = 10;
+  const numSteps = 20;
 
   /*** Calculate the distance to move in each step ***/
   const scrollStep = currentScrollTop / numSteps;

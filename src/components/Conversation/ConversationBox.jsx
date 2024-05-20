@@ -38,6 +38,7 @@ function ConversationBox() {
     "fetchingMessage",
   ]);
 
+  const boxMessageElement = useRef(null);
   const { isMobile } = useWindowSize();
   const { receiver, fetchingMessage } = state || {};
   const { username, email, avaUrl, _id: receiverIdChat } = receiver || {};
@@ -63,8 +64,6 @@ function ConversationBox() {
 
   const handleSendMessage = async (message, img) => {
     try {
-      scrollToTopOfElement(boxMessageId);
-
       // Generate a unique key for the new message based on the current timestamp
       const keyNewMessage = Date.now();
 
@@ -82,6 +81,8 @@ function ConversationBox() {
         conversationId,
         receiverId,
       });
+
+      scrollToTopOfElement(boxMessageId);
 
       // Extract the new conversation ID or use the existing one
       const { _id: newConversationId } = newConversation || {};
@@ -222,9 +223,17 @@ function ConversationBox() {
         receiverIdChat={receiverIdChat}
       />
 
-      <ConversationContent avaUrl={avaUrl} username={username} email={email} />
+      <ConversationContent
+        avaUrl={avaUrl}
+        username={username}
+        email={email}
+        boxMessageElement={boxMessageElement}
+      />
 
-      <ConversationFooter handleSendMessage={handleSendMessage} />
+      <ConversationFooter
+        handleSendMessage={handleSendMessage}
+        boxMessageElement={boxMessageElement}
+      />
     </Flex>
   );
 }
