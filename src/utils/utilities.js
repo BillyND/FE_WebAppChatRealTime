@@ -1,12 +1,18 @@
 import {
   getConversationByReceiver,
+  getConversations,
   getPost,
   updateUsersReadConversation,
 } from "@services/api";
 import { message } from "antd";
-import { cloneDeep, uniqBy } from "lodash";
+import { cloneDeep, isEmpty, uniqBy } from "lodash";
 import { io } from "socket.io-client";
 import { history } from "./HandlersComponent/NavigationHandler";
+import {
+  TIME_DELAY_FETCH_API,
+  TIME_DELAY_SEARCH_INPUT,
+  boxMessageId,
+} from "./constant";
 import {
   conversationSubs,
   detailPostSubs,
@@ -14,11 +20,6 @@ import {
   listPostSubs,
   socketIoSubs,
 } from "./globalStates/initGlobalState";
-import {
-  TIME_DELAY_FETCH_API,
-  TIME_DELAY_SEARCH_INPUT,
-  boxMessageId,
-} from "./constant";
 
 /**
  * Fetches and handles the list of posts.
@@ -613,71 +614,73 @@ export const handleGetMessage = async ({
   const page =
     parseInt(conversationSubs?.state?.listMessages.length / limit) + 1;
 
-  try {
-    const resConversation = await getConversationByReceiver(
-      getDataSearchParams("receiverId"),
-      page,
-      limit
-    );
+  debounce(async () => {
+    try {
+      const resConversation = await getConversationByReceiver(
+        getDataSearchParams("receiverId"),
+        page,
+        limit
+      );
 
-    if (resConversation.success === 0 || !resConversation?.receiver) {
-      history.navigate("/message");
+      if (resConversation.success === 0 || !resConversation?.receiver) {
+        history.navigate("/message");
+      }
+
+      const mergeMessage =
+        !allowFetching && conversationSubs.state.listMessages
+          ? uniqBy(
+              [
+                ...conversationSubs.state.listMessages,
+                ...resConversation.listMessages,
+              ],
+              "_id"
+            )
+          : resConversation.listMessages;
+
+      conversationSubs.updateState({
+        ...(isChanged([
+          resConversation.receiver,
+          conversationSubs.state.receiver,
+        ]) && {
+          receiver: resConversation.receiver,
+        }),
+
+        ...(isChanged([
+          resConversation.conversationId,
+          conversationSubs.state.conversationId,
+        ]) && {
+          conversationId: resConversation.conversationId,
+        }),
+
+        ...(isChanged([resConversation.next, conversationSubs.state.next]) && {
+          next: resConversation.next,
+        }),
+
+        ...(isChanged([
+          resConversation.conversationColor,
+          conversationSubs.state.conversationColor,
+        ]) && {
+          conversationColor: resConversation.conversationColor,
+        }),
+
+        ...(isChanged([mergeMessage, conversationSubs.state.listMessages]) && {
+          listMessages: mergeMessage,
+        }),
+
+        fetchingMessage: false,
+      });
+
+      if (allowFetching) {
+        scrollToTopOfElement(boxMessageId);
+      }
+    } catch (error) {
+      console.error("===>Error handleGetMessage:", error);
+      conversationSubs.updateState({
+        fetchingMessage: false,
+      });
+      showPopupError(error);
     }
-
-    const mergeMessage =
-      !allowFetching && conversationSubs.state.listMessages
-        ? uniqBy(
-            [
-              ...conversationSubs.state.listMessages,
-              ...resConversation.listMessages,
-            ],
-            "_id"
-          )
-        : resConversation.listMessages;
-
-    conversationSubs.updateState({
-      ...(isChanged([
-        resConversation.receiver,
-        conversationSubs.state.receiver,
-      ]) && {
-        receiver: resConversation.receiver,
-      }),
-
-      ...(isChanged([
-        resConversation.conversationId,
-        conversationSubs.state.conversationId,
-      ]) && {
-        conversationId: resConversation.conversationId,
-      }),
-
-      ...(isChanged([resConversation.next, conversationSubs.state.next]) && {
-        next: resConversation.next,
-      }),
-
-      ...(isChanged([
-        resConversation.conversationColor,
-        conversationSubs.state.conversationColor,
-      ]) && {
-        conversationColor: resConversation.conversationColor,
-      }),
-
-      ...(isChanged([mergeMessage, conversationSubs.state.listMessages]) && {
-        listMessages: mergeMessage,
-      }),
-
-      fetchingMessage: false,
-    });
-
-    if (allowFetching) {
-      scrollToTopOfElement(boxMessageId);
-    }
-  } catch (error) {
-    console.error("===>Error handleGetMessage:", error);
-    conversationSubs.updateState({
-      fetchingMessage: false,
-    });
-    showPopupError(error);
-  }
+  }, TIME_DELAY_SEARCH_INPUT)();
 };
 
 export const handleReadConversation = debounce(async () => {
@@ -739,3 +742,35 @@ export function rgbaToHex(rgba) {
 
   return `#${r}${g}${b}${a}`;
 }
+
+export const handleGetAllConversations = async () => {
+  // Helper function to update fetching state
+  const setFetchingState = (state) => {
+    if (conversationSubs.state.fetchingConversation !== state) {
+      conversationSubs.updateState({ fetchingConversation: state });
+    }
+  };
+
+  // Check and set initial fetching state
+  if (isEmpty(conversationSubs.state.listConversations)) {
+    setFetchingState(true);
+  }
+
+  debounce(async () => {
+    try {
+      const resConversation = await getConversations();
+
+      if (
+        Array.isArray(resConversation) &&
+        resConversation.length &&
+        isChanged([resConversation, conversationSubs.state.listConversations])
+      ) {
+        conversationSubs.updateState({ listConversations: resConversation });
+        setFetchingState(false);
+      }
+    } catch (error) {
+      showPopupError(error);
+      setFetchingState(false);
+    }
+  }, TIME_DELAY_SEARCH_INPUT)();
+};

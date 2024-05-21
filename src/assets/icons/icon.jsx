@@ -539,9 +539,6 @@ export const IconSend = (props) => {
 };
 
 export const IconTick = (props) => {
-  const { styleApp } = useStyleApp();
-  const { STROKE_COLOR_ICON } = styleApp || {};
-
   return (
     <svg
       {...props}
@@ -554,7 +551,7 @@ export const IconTick = (props) => {
       <g clipPath="url(#clip0_213_2)">
         <path
           d="M18.1028 2.8829C17.7978 2.57679 17.2978 2.57679 16.9928 2.8829L7.75915 12.1143L3.00387 7.32647C2.69888 7.01924 2.20216 7.01924 1.89494 7.32647L0.228738 8.99155C-0.076246 9.29541 -0.076246 9.7955 0.228738 10.1016L7.19964 17.1185C7.50462 17.4223 8.00134 17.4223 8.30969 17.1185L19.7679 5.65915C20.0774 5.35305 20.0774 4.85184 19.7679 4.54461L18.1028 2.8829Z"
-          fill={STROKE_COLOR_ICON.ACTIVE}
+          fill="#fff"
         />
       </g>
       <defs>

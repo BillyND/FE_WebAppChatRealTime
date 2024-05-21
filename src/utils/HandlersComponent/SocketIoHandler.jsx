@@ -3,7 +3,6 @@ import { useSubscription } from "global-state-hook";
 import { uniqBy } from "lodash";
 import { useEffect } from "react";
 import messageSound from "../../assets/sounds/message.mp3";
-import { handleGetAllConversations } from "../../components/Conversation/ListConversations";
 import { getDataInfoUser } from "../../services/api";
 import { TIME_DELAY_SEARCH_INPUT } from "../constant";
 import {
@@ -14,6 +13,7 @@ import {
   connectUserToSocket,
   debounce,
   getDataSearchParams,
+  handleGetAllConversations,
   isChanged,
   limitFetchMessage,
 } from "../utilities";

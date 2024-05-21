@@ -5,49 +5,23 @@ import { useAuthUser } from "@utils/hooks/useAuthUser";
 import { useSearchParams } from "@utils/hooks/useSearchParams";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
 import { useWindowSize } from "@utils/hooks/useWindowSize";
-import { formatTimeAgo, getDataSearchParams } from "@utils/utilities";
+import {
+  formatTimeAgo,
+  getDataSearchParams,
+  handleGetAllConversations,
+} from "@utils/utilities";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
-import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
-import { IconImage } from "../../assets/icons/icon";
-import { getConversations, searchUserByName } from "../../services/api";
+import { searchUserByName } from "../../services/api";
 import { TIME_DELAY_FETCH_API, TYPE_STYLE_APP } from "../../utils/constant";
 import { conversationSubs } from "../../utils/globalStates/initGlobalState";
 import { useNavigateCustom } from "../../utils/hooks/useNavigateCustom";
-import { debounce, isChanged, showPopupError } from "../../utils/utilities";
+import { debounce, showPopupError } from "../../utils/utilities";
 import { WrapListConversation, WrapSearchUser } from "./StyledMessageScreen";
 
-let timerGetAllConversation;
-
-export const handleGetAllConversations = async () => {
-  if (isEmpty(conversationSubs.state.listConversations)) {
-    conversationSubs.updateState({ fetchingConversation: true });
-  }
-
-  clearTimeout(timerGetAllConversation);
-
-  timerGetAllConversation = setTimeout(async () => {
-    try {
-      const resConversation = await getConversations();
-
-      if (
-        typeof resConversation === "object" &&
-        resConversation.length &&
-        isChanged([resConversation, conversationSubs.state.listConversations])
-      ) {
-        conversationSubs.updateState({ listConversations: resConversation });
-      }
-    } catch (error) {
-      showPopupError(error);
-    } finally {
-      conversationSubs.updateState({ fetchingConversation: false });
-    }
-  }, TIME_DELAY_FETCH_API);
-};
-
 function ListConversations() {
-  const { state, setState } = useSubscription(conversationSubs, [
+  const { state } = useSubscription(conversationSubs, [
     "listConversations",
     "fetchingConversation",
     "usersOnline",
