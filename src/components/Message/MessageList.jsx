@@ -6,7 +6,10 @@ import { useWindowSize } from "@utils/hooks/useWindowSize";
 import { Flex } from "antd";
 import { useSubscription } from "global-state-hook";
 import { useEffect, useState } from "react";
-import { TYPE_STYLE_APP } from "../../utils/constant";
+import {
+  OPTIONS_STYLE_CONVERSATION,
+  TYPE_STYLE_APP,
+} from "../../utils/constant";
 import {
   conversationSubs,
   previewImageFullScreenSubs,
@@ -57,6 +60,7 @@ function MessageItem({
   const {
     state: { socketIo },
   } = useSubscription(socketIoSubs, ["socketIo"]);
+
   const { isMobile } = useWindowSize();
   const [isTyping, setIsTyping] = useState(false);
   const { state } = useSubscription(conversationSubs, ["conversationColor"]);
@@ -64,9 +68,10 @@ function MessageItem({
 
   const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
   const { _id, text, isSending, updatedAt, img } = message || {};
-  const { messageRead } = currentConversation || {};
-  const { conversationColor, receiver, listMessages, next } = state || {};
+  const { receiver, listMessages, conversationColor } = state || {};
+
   const { avaUrl } = receiver || {};
+  const { messageRead } = currentConversation || {};
   const showIconRead = _id && messageRead?.[receiverId] === _id;
 
   useEffect(() => {

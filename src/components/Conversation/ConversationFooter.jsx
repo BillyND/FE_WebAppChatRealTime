@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { TIME_DELAY_SEARCH_INPUT, boxMessageId } from "../../utils/constant";
 import {
   debounce,
+  isChanged,
   limitFetchMessage,
   scrollToTopOfElement,
 } from "../../utils/utilities";
@@ -33,12 +34,14 @@ function ButtonBackToFirstMessage({ boxMessageElement }) {
     setBackFirstMessage(Math.abs(boxMessageElement.current?.scrollTop) > 100);
 
     if (boxMessageElement.current?.scrollTop === 0) {
-      conversationSubs.updateState({
-        listMessages: conversationSubs.state.listMessages.slice(
-          0,
-          limitFetchMessage
-        ),
-      });
+      if (conversationSubs.state.listMessages.length > limitFetchMessage) {
+        conversationSubs.updateState({
+          listMessages: conversationSubs.state.listMessages.slice(
+            0,
+            limitFetchMessage
+          ),
+        });
+      }
     }
   }, TIME_DELAY_SEARCH_INPUT);
 

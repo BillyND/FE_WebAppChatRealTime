@@ -28,10 +28,6 @@ export const InputComment = (props) => {
 
   const isDisableButtonSend = !value.trim() || loading || posting;
 
-  useEffect(() => {
-    focus && refInput?.current?.focus();
-  }, [focus]);
-
   return (
     <Flex style={{ width: "100%" }} align="center" gap={8}>
       <textarea
@@ -44,7 +40,7 @@ export const InputComment = (props) => {
         onChange={(e) => setValue(e.target.value)}
         rows={1}
         placeholder="Type a comment..."
-        className={`input-comment ${focus || value.trim() ? "full" : "mini"}`}
+        className={`input-comment ${focus ? "full" : "mini"}`}
         style={{
           minWidth: `calc(100% - 55px)`,
         }}
@@ -73,7 +69,7 @@ export const FooterComment = (props) => {
   const { comments, loading, posting, tempComment = "" } = post;
   const [localValueComment, setLocalValue] = useState(tempComment);
   const refInputComment = useRef(null);
-  const [focusInput, setFocusInput] = useState(true);
+  const [focusInput, setFocusInput] = useState(false);
 
   const handlePostComment = async (e) => {
     e.stopPropagation();

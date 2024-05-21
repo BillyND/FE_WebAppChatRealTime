@@ -146,7 +146,7 @@ export const DetailComment = (props) => {
                   value={localValueComment}
                   setValue={setLocalValue}
                   onUpdate={handleUpdateComment}
-                  focus={true}
+                  focus={focus}
                   subControl={
                     localValueComment.trim() && (
                       <a

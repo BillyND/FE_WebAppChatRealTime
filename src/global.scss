@@ -87,6 +87,10 @@ body {
   * {
     overflow-x: hidden !important;
   }
+
+  .icon-more-detail {
+    display: none;
+  }
 }
 
 .ant-modal-title {
@@ -120,12 +124,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .btn-ok {
-    background-color: #b43c46;
+    background-color: #fff;
     position: relative;
-    color: #fff;
+    color: #000000;
 
     .spinner-ok {
       position: absolute !important;
@@ -133,14 +134,6 @@ body {
       svg {
         fill: #fff;
       }
-    }
-
-    &:hover {
-      background-color: #ff2f40 !important;
-    }
-
-    &:active {
-      background-color: #ff2f40 !important;
     }
   }
 
@@ -432,6 +425,19 @@ img {
 
     .button-send:hover {
       background-color: #3838381c;
+    }
+
+    .ant-modal-footer {
+      .btn-ok {
+        background-color: #000000;
+        color: #fff;
+
+        .spinner-ok {
+          svg {
+            fill: #000000;
+          }
+        }
+      }
     }
   }
 

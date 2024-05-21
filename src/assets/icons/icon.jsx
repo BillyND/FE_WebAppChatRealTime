@@ -337,6 +337,53 @@ export const IconSettings = (props) => {
   );
 };
 
+export const IconSettingsCircle = (props) => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON } = styleApp || {};
+
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M13.5 7C13.7761 7 14 6.77614 14 6.5C14 6.22386 13.7761 6 13.5 6C13.2239 6 13 6.22386 13 6.5C13 6.77614 13.2239 7 13.5 7Z"
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="1.66667"
+        strokeLinecap="round"
+      />
+      <path
+        d="M17.5 11C17.7761 11 18 10.7761 18 10.5C18 10.2239 17.7761 10 17.5 10C17.2239 10 17 10.2239 17 10.5C17 10.7761 17.2239 11 17.5 11Z"
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="1.66667"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8.5 8C8.77614 8 9 7.77614 9 7.5C9 7.22386 8.77614 7 8.5 7C8.22386 7 8 7.22386 8 7.5C8 7.77614 8.22386 8 8.5 8Z"
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="1.66667"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6.5 13C6.77614 13 7 12.7761 7 12.5C7 12.2239 6.77614 12 6.5 12C6.22386 12 6 12.2239 6 12.5C6 12.7761 6.22386 13 6.5 13Z"
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="1.66667"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C12.926 22 13.648 21.254 13.648 20.312C13.648 19.875 13.468 19.477 13.211 19.187C12.921 18.898 12.773 18.535 12.773 18.062C12.7692 17.8419 12.8098 17.6233 12.8922 17.4192C12.9747 17.2151 13.0975 17.0298 13.2531 16.8741C13.4088 16.7185 13.5941 16.5957 13.7982 16.5132C14.0023 16.4308 14.2209 16.3902 14.441 16.394H16.437C19.488 16.394 21.992 13.891 21.992 10.84C21.965 6.012 17.461 2 12 2Z"
+        stroke={STROKE_COLOR_ICON.ACTIVE}
+        strokeWidth="1.66667"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
 export const IconSunlight = (props) => {
   const { styleApp } = useStyleApp();
   const { FILL_COLOR_ICON } = styleApp || {};
@@ -487,6 +534,33 @@ export const IconSend = (props) => {
         d="M5.81267 15.5933C5.20724 15.9515 5.2239 16.8911 5.84044 17.22C6.02374 17.3198 6.16815 17.3374 6.83468 17.3374C7.50121 17.3374 7.64562 17.3198 7.82892 17.22C8.45657 16.8852 8.45657 15.9104 7.82892 15.5757C7.64562 15.4759 7.50676 15.4582 6.82357 15.4582C6.10705 15.4582 6.00707 15.47 5.81267 15.5933Z"
         fill={FILL_COLOR_ICON.ACTIVE}
       />
+    </svg>
+  );
+};
+
+export const IconTick = (props) => {
+  const { styleApp } = useStyleApp();
+  const { STROKE_COLOR_ICON } = styleApp || {};
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+    >
+      <g clipPath="url(#clip0_213_2)">
+        <path
+          d="M18.1028 2.8829C17.7978 2.57679 17.2978 2.57679 16.9928 2.8829L7.75915 12.1143L3.00387 7.32647C2.69888 7.01924 2.20216 7.01924 1.89494 7.32647L0.228738 8.99155C-0.076246 9.29541 -0.076246 9.7955 0.228738 10.1016L7.19964 17.1185C7.50462 17.4223 8.00134 17.4223 8.30969 17.1185L19.7679 5.65915C20.0774 5.35305 20.0774 4.85184 19.7679 4.54461L18.1028 2.8829Z"
+          fill={STROKE_COLOR_ICON.ACTIVE}
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_213_2">
+          <rect width="20" height="20" fill="white" />
+        </clipPath>
+      </defs>
     </svg>
   );
 };

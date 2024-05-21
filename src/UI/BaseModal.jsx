@@ -1,13 +1,10 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import { Flex, Modal } from "antd";
-import React from "react";
 import { useStyleApp } from "@utils/hooks/useStyleApp";
-import PerfectScrollbar from "react-perfect-scrollbar";
+import { Flex, Modal } from "antd";
 
 function BaseModal(props) {
   const {
     onOk,
-    onCancel,
     children,
     loadingFooter,
     footer,
@@ -30,21 +27,17 @@ function BaseModal(props) {
         footer || (
           <Flex justify="end" gap={8} className="none-copy">
             <div
-              className="btn-cancel press-active"
-              type="primary"
-              onClick={onCancel}
-            >
-              Cancel
-            </div>
-            <div
               className="btn-ok press-active"
               onClick={onOk}
               style={{
                 opacity: loadingFooter ? "0.7" : "1",
               }}
             >
-              {loadingFooter && <LoadingOutlined className="spinner-ok" />}
-              Ok
+              {loadingFooter ? (
+                <LoadingOutlined className="spinner-ok" />
+              ) : (
+                "Done"
+              )}
             </div>
           </Flex>
         )
@@ -58,8 +51,7 @@ function BaseModal(props) {
       <div
         id={scrollId}
         style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
+          overflow: "hidden",
           maxHeight: "calc(100dvh - 250px)",
         }}
       >

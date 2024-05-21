@@ -168,3 +168,7 @@ export const getConversationByReceiver = (receiverId, page, limit) => {
 export const updateUsersReadConversation = (conversationId, messageId) => {
   return axios.put(`conversation/users-read`, { conversationId, messageId });
 };
+
+export const updateStyleConversation = (conversationId, style) => {
+  return axios.put(`conversation/style`, { conversationId, style });
+};

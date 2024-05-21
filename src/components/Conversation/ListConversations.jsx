@@ -75,9 +75,9 @@ function ListConversations() {
 
   useEffect(() => {
     applyInitDataConversation();
-  }, [JSON.stringify(listConversations), receiverIdParams]);
+  }, [listConversations.length, receiverIdParams]);
 
-  const applyInitDataConversation = () => {
+  const applyInitDataConversation = debounce(() => {
     if (!listConversations?.length) return;
 
     const existConversation = listConversations.find(
@@ -92,7 +92,7 @@ function ListConversations() {
     }
 
     setSelectedConversation(-1);
-  };
+  }, 50);
 
   const debounceQueryUser = debounce(async (propValue) => {
     let finalListUser = [];

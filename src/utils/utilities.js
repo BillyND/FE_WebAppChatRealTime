@@ -712,3 +712,30 @@ export const handleReadConversation = debounce(async () => {
     updateUsersReadConversation(conversationId, lastMessageId);
   }, TIME_DELAY_FETCH_API)();
 }, TIME_DELAY_SEARCH_INPUT);
+
+/**
+ * Converts an RGBA or RGB string to a hex string.
+ * @param {string} rgba - The RGBA or RGB color string (e.g., "rgba(255, 255, 255, 0.5)" or "rgb(255, 255, 255)").
+ * @returns {string} The hex color string (e.g., "#ffffff" or "#ffffff80" for RGBA with alpha).
+ */
+export function rgbaToHex(rgba) {
+  const result = rgba && rgba.match(/\d+(\.\d+)?/g);
+
+  if (!result || result.length < 3) {
+    return rgba;
+  }
+
+  const r = parseInt(result[0]).toString(16).padStart(2, "0");
+  const g = parseInt(result[1]).toString(16).padStart(2, "0");
+  const b = parseInt(result[2]).toString(16).padStart(2, "0");
+  let a = "";
+
+  // Convert alpha value if present
+  if (result.length === 4) {
+    a = Math.round(parseFloat(result[3]) * 255)
+      .toString(16)
+      .padStart(2, "0");
+  }
+
+  return `#${r}${g}${b}${a}`;
+}

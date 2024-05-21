@@ -292,7 +292,7 @@ export const WrapListConversation = styled.div`
 
     .un-read {
       font-weight: 700;
-      color: ${(p) => (p?.["is-dark"] ? "#DADDE1" : "gray")} !important;
+      color: ${(p) => (p?.["is-dark"] ? "#DADDE1" : "#000000")} !important;
     }
 
     .read {
@@ -336,5 +336,26 @@ export const WrapListConversation = styled.div`
       text-overflow: ellipsis;
       max-width: 250px;
     }
+  }
+`;
+
+export const WrapBoxStyleConversation = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0;
+  overflow-y: hidden !important;
+
+  .item-style-conversation {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.6rem;
+    user-select: none;
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
