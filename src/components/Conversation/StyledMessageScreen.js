@@ -1,3 +1,4 @@
+import { styleDark, styleLight } from "@utils/constant";
 import styled from "styled-components";
 
 export const WrapMessageScreen = styled.div`
@@ -82,20 +83,25 @@ export const WrapMessageScreen = styled.div`
     }
 
     .icon-back-first-message {
-      top: -60px;
-      font-size: 30px;
       position: absolute;
       border-radius: 50%;
-      backdrop-filter: blur(5px);
-      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-      left: calc(50% - 12.5px);
+      left: calc(50% - 15px);
       padding: 2px;
-      scale: 0;
+      top: 0;
       opacity: 0;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      padding: 5px;
+      width: 30px;
+      height: 30px;
+      background-color: ${styleLight.backgroundColor};
 
       &.show-back-first {
+        top: -60px;
         opacity: 1;
-        scale: 1;
+      }
+
+      &.is-dark {
+        background-color: #2d2d2d;
       }
     }
 

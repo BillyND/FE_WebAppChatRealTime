@@ -2,7 +2,11 @@ import { DownCircleOutlined } from "@ant-design/icons";
 import { conversationSubs } from "@utils/globalStates/initGlobalState";
 import { Flex } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { TIME_DELAY_SEARCH_INPUT, boxMessageId } from "../../utils/constant";
+import {
+  TIME_DELAY_SEARCH_INPUT,
+  TYPE_STYLE_APP,
+  boxMessageId,
+} from "../../utils/constant";
 import {
   debounce,
   isChanged,
@@ -11,10 +15,14 @@ import {
 } from "../../utils/utilities";
 import { ButtonPickImage, ManualUploadImage } from "./ConversationUploadImg";
 import InputMessage from "./InputMessage";
+import { IconDown } from "@assets/icons/icon";
+import { useStyleApp } from "@utils/hooks/useStyleApp";
 
 function ButtonBackToFirstMessage({ boxMessageElement }) {
   const [canBackFirstMessage, setBackFirstMessage] = useState(false);
   const boxMessage = document.getElementById(boxMessageId);
+  const { styleApp } = useStyleApp();
+  const isDark = styleApp.type === TYPE_STYLE_APP.DARK;
 
   useEffect(() => {
     boxMessageElement?.current?.addEventListener(
@@ -50,11 +58,11 @@ function ButtonBackToFirstMessage({ boxMessageElement }) {
   };
 
   return (
-    <DownCircleOutlined
+    <IconDown
       onClick={handleScrollToFirstMessage}
       className={`icon-back-first-message press-active ${
-        canBackFirstMessage ? "show-back-first" : ""
-      }`}
+        isDark ? "is-dark" : ""
+      }  ${canBackFirstMessage ? "show-back-first" : ""}`}
     />
   );
 }
