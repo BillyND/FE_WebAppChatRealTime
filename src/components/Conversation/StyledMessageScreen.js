@@ -20,7 +20,7 @@ export const WrapMessageScreen = styled.div`
     width: ${(p) => (p?.["is-mobile"] ? "100vw" : undefined)};
     top: 0;
     position: ${(p) => (p?.["is-mobile"] ? "fixed" : "static")};
-    z-index: ${(p) => (p?.["is-mobile"] ? "1000" : undefined)};
+    z-index: ${(p) => (p?.["is-mobile"] ? "99" : undefined)};
     background-color: ${(p) => (p?.["is-dark"] ? "#101010" : "#FFFFFF")};
 
     .drag-image {
@@ -84,17 +84,16 @@ export const WrapMessageScreen = styled.div`
 
     .icon-back-first-message {
       position: absolute;
-      border-radius: 50%;
+      border-radius: 40px;
       left: calc(50% - 15px);
       padding: 2px;
       top: 0;
       opacity: 0;
-      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
       padding: 5px;
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
       background-color: ${styleLight.backgroundColor};
-
+      border: 0.1px dashed gray;
       &.show-back-first {
         top: -60px;
         opacity: 1;
@@ -162,7 +161,6 @@ export const WrapMessageScreen = styled.div`
 
     &.img-message {
       max-width: 250px;
-      border: 0.1px solid #3b3b3b29;
     }
 
     &.text-message {

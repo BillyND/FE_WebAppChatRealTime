@@ -152,7 +152,6 @@ export const WrapDetailPost = styled.div`
 
   .image {
     .img-post {
-      border: 0.5px solid #313131;
       border-radius: 8px;
       max-width: 100%;
       width: ${(p) => (p?.["is-mobile"] ? "100%" : "70%")};

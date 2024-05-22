@@ -22,7 +22,7 @@ function BaseModal(props) {
     <Modal
       {...props}
       className={`${type} ${className} ${hiddenClose ? "hidden-lose" : ""}`}
-      zIndex={2000}
+      zIndex={100}
       footer={
         footer || (
           <Flex justify="end" gap={8} className="none-copy">

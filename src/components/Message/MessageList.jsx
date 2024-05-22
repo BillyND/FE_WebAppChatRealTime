@@ -159,7 +159,7 @@ function MessageItem({
             width: width < 250 ? `${width}px` : "250px",
           }}
           draggable="false"
-          className={`wrap-message press-active img-message ${
+          className={`wrap-message press-active img-message border-image-dashed ${
             isSender ? "sender" : "receiver"
           } ${isStart ? "start" : ""} ${isEnd ? "end" : ""}`}
           src={url || img}

@@ -204,7 +204,7 @@ const DetailPost = (props) => {
                 style={{ aspectRatio }}
                 draggable={false}
                 src={imageUrl}
-                className="img-post cursor-pointer transition-02 press-active"
+                className="img-post border-image-dashed cursor-pointer transition-02 press-active"
                 onClick={() =>
                   previewImageFullScreenSubs.updateState({ imgSrc: imageUrl })
                 }

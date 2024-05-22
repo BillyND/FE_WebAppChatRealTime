@@ -1,4 +1,4 @@
-import React from "react";
+import { Switch } from "antd";
 import styled from "styled-components";
 
 const ToggleSwitch = ({ active, onToggle }) => {
@@ -10,30 +10,20 @@ const ToggleSwitch = ({ active, onToggle }) => {
   };
 
   return (
-    <SwitchContainer onClick={handleToggle} isActive={active}>
-      <div className="switch-handle" />
+    <SwitchContainer>
+      <Switch size="small" checked={active} onClick={handleToggle} />
     </SwitchContainer>
   );
 };
 
 const SwitchContainer = styled.div`
-  width: 32px;
-  height: 18px;
-  background-color: ${({ isActive }) => (isActive ? "#4CAF50" : "#ccc")};
-  border-radius: 10px;
-  position: relative;
-  cursor: pointer;
-  transition: 0.2s !important;
+  .ant-switch {
+    background-color: #ccc !important;
+    outline: none !important;
+  }
 
-  .switch-handle {
-    width: 14px;
-    height: 14px;
-    background-color: #fff;
-    border-radius: 14px;
-    position: absolute;
-    top: 2px;
-    left: ${({ isActive }) => (isActive ? "16px" : "2px !important")};
-    transition: 0.2s !important;
+  .ant-switch-checked {
+    background-color: #4caf50 !important;
   }
 `;
 

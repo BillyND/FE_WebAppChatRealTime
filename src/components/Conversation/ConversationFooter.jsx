@@ -60,7 +60,7 @@ function ButtonBackToFirstMessage({ boxMessageElement }) {
   return (
     <IconDown
       onClick={handleScrollToFirstMessage}
-      className={`icon-back-first-message press-active ${
+      className={`icon-back-first-message border-image-dashed press-active ${
         isDark ? "is-dark" : ""
       }  ${canBackFirstMessage ? "show-back-first" : ""}`}
     />

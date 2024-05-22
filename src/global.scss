@@ -14,7 +14,6 @@ input {
 }
 
 body {
-  overflow: hidden;
 }
 
 .cursor-pointer {
@@ -364,8 +363,9 @@ img {
 
 .avatar {
   border-radius: 50%;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
 * {
@@ -808,9 +808,10 @@ label {
 }
 
 .ant-image-preview-img {
-  min-width: 300px;
-  background-color: #fff;
+  object-fit: contain;
+  height: 100%;
   border-radius: 4px;
+  border: 0.1px dashed rgba(128, 128, 128, 0.344);
 }
 
 .drop-image-message {
@@ -835,4 +836,8 @@ label {
     width: calc(100vw - 350px) !important;
     height: calc(100dvh - 70px);
   }
+}
+
+.border-image-dashed {
+  border: 0.1px dashed rgba(128, 128, 128, 0.344);
 }
