@@ -49,9 +49,10 @@ function BaseModal(props) {
         style={{ marginLeft: "-16px", marginRight: "-16px" }}
       />
       <div
+        className="container-base-modal"
         id={scrollId}
         style={{
-          overflow: "hidden",
+          overflowY: "scroll",
           maxHeight: "calc(100dvh - 250px)",
         }}
       >

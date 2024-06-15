@@ -841,3 +841,7 @@ label {
 .border-image-dashed {
   border: 0.1px dashed rgba(128, 128, 128, 0.344);
 }
+
+.container-base-modal::-webkit-scrollbar {
+  display: none !important;
+}
