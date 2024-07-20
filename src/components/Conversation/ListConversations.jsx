@@ -112,7 +112,9 @@ function ListConversations() {
     }
 
     navigate(
-      `/message?receiverId=${receiverId}&conversationId=${conversationId}`
+      `/message?receiverId=${receiverId}${
+        conversationId ? `&conversationId=${conversationId}` : ""
+      } `
     );
   };
 
