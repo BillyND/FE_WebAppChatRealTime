@@ -766,8 +766,9 @@ export const handleGetAllConversations = async () => {
         isChanged([resConversation, conversationSubs.state.listConversations])
       ) {
         conversationSubs.updateState({ listConversations: resConversation });
-        setFetchingState(false);
       }
+
+      setFetchingState(false);
     } catch (error) {
       showPopupError(error);
       setFetchingState(false);
