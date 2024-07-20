@@ -341,6 +341,26 @@ img {
 // Custom scrollbar
 @media only screen and (min-width: 700px) {
   /* For WebKit browsers (Safari, Chrome, etc.) */
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #9595957f;
+    border-radius: 0px;
+    border: 0px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(130, 130, 130, 0.939);
+  }
+
+  /* For WebKit browsers (Safari, Chrome, etc.) */
   :not(.ant-modal, .ant-upload-list)::-webkit-scrollbar {
     width: 17px;
   }
