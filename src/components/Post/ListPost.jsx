@@ -56,13 +56,22 @@ const ModalDeletePost = (props) => {
 };
 
 function ListPost(props) {
+  const {
+    state: { listHidden },
+  } = useSubscription(listPostSubs, ["listHidden"]);
   const { listPost } = props;
   const { infoUser } = useAuthUser();
+
+  console.log("===>listHidden:", listHidden);
+
+  const listPostWithOutHidden = listPost?.filter(
+    (post) => !listHidden?.includes(post?._id)
+  );
 
   return (
     <WrapListPost>
       <div className="list-post-container">
-        {listPost?.map((post = {}) => {
+        {listPostWithOutHidden?.map((post = {}) => {
           const { _id: postId, comments, countComment } = post;
           const isAuthorOfPost = post.userId === infoUser._id;
 

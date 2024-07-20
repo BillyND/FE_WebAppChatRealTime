@@ -361,11 +361,15 @@ export const handleUpdateCommentSocket = (commentSocket, commentId, keys) => {
 
 export const handleHiddenPost = (postId) => {
   const { listPost, next } = listPostSubs.state || {};
-  const newListPost = listPost.filter((post) => post?._id !== postId);
 
   listPostSubs.updateState({
-    listPost: newListPost,
+    ...listPostSubs.state,
+    listHidden: [...listPostSubs.state.listHidden, postId],
   });
+
+  const newListPost = listPost.filter(
+    (post) => ![...listPostSubs.state.listHidden, postId]?.includes(post?._id)
+  );
 
   if (newListPost.length < limitFetchPost && next) {
     handleGetListPost(next);

@@ -9,6 +9,7 @@ export const listPostSubs = createSubscription({
   listPostByUser: [],
   nextByUser: { page: 1, limit: 5 },
   loading: true,
+  listHidden: [],
 });
 
 export const detailPostSubs = createSubscription({});
